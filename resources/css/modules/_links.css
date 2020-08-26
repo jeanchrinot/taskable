@@ -1,0 +1,28 @@
+.links{
+	ul{
+		list-style:none;
+	}
+}
+
+
+.links > a {
+                color: $tsk-green;
+                padding: 0 25px;
+                font-size: 13px;
+                font-weight: 400;
+                letter-spacing: .1rem;
+                text-decoration: none;
+        }
+
+
+.links--float{
+	float: left;
+	position: relative;
+	top: 21px;
+}
+.links--horizontal{
+	li{
+		float: left;
+		margin-right: 20px;
+	}
+}

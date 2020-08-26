@@ -1,0 +1,79 @@
+.links{
+	ul{
+		list-style:none;
+	}
+
+	a:hover{
+	 text-decoration:none;
+	 color: $tsk-green;
+	 top:1px;
+	 .underline{
+	 	width: 100%;
+	 	position: relative;
+	 }
+	}
+	a{
+		color:#000;
+		font-size: 1rem;
+    	font-weight: 500;
+    	transition: all 0.5s;
+    	position: relative;
+    	top: 0;
+    	font-weight: 700;
+    	.underline{
+    		width: 0;
+    		transition: width 0.3s;
+    		height: 1px;
+    	}
+	}
+}
+
+
+.links > a {
+                color: $tsk-green;
+                padding: 0 25px;
+                font-size: 13px;
+                font-weight: 600;
+                letter-spacing: .1rem;
+                text-decoration: none;
+        }
+
+
+.links--float{
+	float: left;
+	position: relative;
+	top: 21px;
+}
+.links--horizontal{
+	li{
+		float: left;
+		margin-right: 20px;
+	}
+}
+
+.links--signup{
+	li a{
+		color:$tsk-green;
+	}
+	.btn-link{
+		display: inline-block;
+	    padding: 3px 18px;
+	    border: 1px solid #00a15d;
+	    border-radius: 16px;
+	    margin-left: 15px;
+	    font-size: 0.8rem;
+	    color: $tsk-green;
+	}
+	.btn-link:hover{
+		border-color: $tsk-yellow;
+		color:$tsk-yellow;
+	}
+	.btn-link--fill{
+		background-color: $tsk-green;
+		color:#fff;
+	}
+	.btn-link--fill:hover{
+		background-color: $tsk-yellow;
+		color:#fff;
+	}
+}
