@@ -7,6 +7,19 @@
                 margin: 0;
             }
 
+.dark-bg{
+    background-color: #ccc;
+}
+.white-bg{
+    background-color: #fff;
+}
+.no-padding{
+    padding:0!important;
+}
+*{
+    box-sizing: border-box;
+}
+
             .full-height {
                 height: 100vh;
             }
@@ -34,6 +47,9 @@
             .title {
                 font-size: 60px;
                 color: $tsk-yellow;
+                &--small{
+                    font-size: 16px;
+                }
             }
 
             .m-b-md {

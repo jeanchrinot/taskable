@@ -30,3 +30,24 @@ Vue.component('example-component', require('./components/ExampleComponent.vue').
 const app = new Vue({
     el: '#app',
 });
+
+$(function () {
+  $('[data-toggle="tooltip"]').tooltip()
+})
+
+// Task Filter 
+$("#priority").change(function(){
+  $value = this.value.toLowerCase();
+  var url = window.location.href;
+  $urlBase = url.substring(0, url.lastIndexOf("?"));
+  //console.log($urlBase);
+  window.location.replace($urlBase+"?priority="+$value);
+});
+
+$("#status").change(function(){
+  $value = this.value.toLowerCase();
+  var url = window.location.href;
+  $urlBase = url.substring(0, url.lastIndexOf("?"));
+  //console.log($urlBase);
+  window.location.replace($urlBase+"?status="+$value);
+});

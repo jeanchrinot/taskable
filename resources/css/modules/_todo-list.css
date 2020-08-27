@@ -1,0 +1,41 @@
+.todo-list{
+	list-style: none;
+	padding:0;
+	li{
+		width: 100%;
+		margin:0 10px;
+    	padding: 5px;
+    	border-radius:0;
+    	background-color: #fff;
+    	transition: all 0.5s ease;
+    	&:hover{
+    		background-color: #eee;
+    		border-radius: 5px;
+    	}
+	}
+	.list-style{
+		display: inline-block;
+		width: 10px;
+		height: 10px;
+		border-radius: 5px;
+		background-color: $tsk-yellow;
+		margin-right: 10px;
+		&--warning{
+			background-color: #ffc107;
+		}
+		&--info{
+			background-color: #17a2b8;
+		}
+		&--danger{
+			background-color: #dc3545;
+		}
+		&--success{
+			background-color: #28a745;
+		}
+
+	}
+	&__item-checked{
+		text-decoration: line-through;
+		font-style: italic;
+	}
+}

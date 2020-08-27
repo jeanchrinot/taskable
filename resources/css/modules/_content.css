@@ -1,0 +1,66 @@
+.content{
+	width: 83%;
+	float: left;
+	overflow: hidden;
+	&__header{
+	display: block;
+    height: auto;
+    padding: 8px;
+    background: #fff;
+    text-align: left;
+	}
+	&__title{
+		font-size: 16px;
+	    line-height: 20px;
+	    text-transform: uppercase;
+	    position: relative;
+	    top: 7px;
+	    margin-left: 20px;
+	    left: 20px;
+	    font-weight: bold;
+	}
+	&__main{
+		padding:20px;
+	}
+}
+
+.numbers{
+	display: flex;
+	position: relative;
+	&__item{
+		width:25% ;
+		height: 65px;
+		margin:10px;
+		background-color: #fff;
+		padding:10px;
+		display: flex;
+		text-align: center;
+		&__icon{
+			width: 45px;
+			height: 45px;
+			background-color: $tsk-yellow;
+			border-radius: 50%;
+			color: #fff;
+			i{
+				color: #fff;
+			    position: relative;
+			    top: 10px;
+			}
+		}
+		&__value{
+			margin-left: 10px;
+			font-size: 15px;
+		}
+	}
+}
+
+.card{
+	margin:10px;
+	border-radius: 0;
+}
+
+.modal-dialog{
+	&__large{
+		max-width: 80%;
+	}
+}

@@ -1,5 +1,6 @@
+
 <!doctype html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="dark-bg">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -15,17 +16,18 @@
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet">
-
+    <!-- Font Awesome Css -->
+    <link href="/assets/plugins/font-awesome/css/font-awesome.min.css" rel="stylesheet" />
     <!-- Styles -->
-    <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+    <link href="{{ mix('css/app.css') }}" rel="stylesheet">
 </head>
-<body>
+<body class="dark-bg">
     <div id="app">
         <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
             <div class="container">
                 <div class="logo">
                     <a class="navbar-brand" href="{{ url('/') }}">
-                    <img class="logo-img" src="img/taskable-logo-horizontal.png">
+                    <img class="logo-img" src="/img/taskable-logo-horizontal.png">
                     </a>
                 </div>
                 
@@ -75,10 +77,17 @@
             </div>
         </nav>
 
-        <main class="py-4">
+        <main>
+             <div class="all-content-wrapper">
             @yield('content')
+            </div>
         </main>
-        @include('includes.footer')
+        
     </div>
+    @include('includes.footer')
+
+    <script src="/assets/plugins/jquery/dist/jquery.min.js"></script>
+    <!-- Metis Menu Js -->
+    <script src="/assets/plugins/metisMenu/dist/metisMenu.js"></script>
 </body>
 </html>

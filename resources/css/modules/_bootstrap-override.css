@@ -1,0 +1,10 @@
+.page-item.active .page-link {
+    background-color: $tsk-green;
+    border-color: $tsk-green;
+}
+.page-link {
+	color:$tsk-green;
+	&:hover{
+		color:$tsk-green;
+	}
+}

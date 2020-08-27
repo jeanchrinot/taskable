@@ -6,11 +6,17 @@
 
 
 @import 'bootstrap/dist/css/bootstrap.min.css';
+@import 'normalize.css/normalize.css';
 
 @import 'base/_mixins';
 @import './base/_global';
 @import './modules/_wrapper';
 @import './modules/_links';
 @import './modules/_buttons';
+@import './modules/_sidebar';
+@import './modules/_content';
+@import './modules/_todo-list';
+@import './modules/_form';
+@import './modules/_bootstrap-override';
 
 @import './modules/_footer';

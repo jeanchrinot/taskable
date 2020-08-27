@@ -15,6 +15,7 @@
                     @endif
 
                     You are logged in!
+                    {{ Auth::user()->hasRole('user') ? 'Your are an active user': 'You are not an active user' }}
                 </div>
             </div>
         </div>

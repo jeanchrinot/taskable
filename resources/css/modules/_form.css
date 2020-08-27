@@ -1,0 +1,13 @@
+.filter-form{
+	display: flex;
+	margin-bottom: 0;
+	.form-control{
+		width: 120px;
+		height: 30px;
+	}
+	label{
+		margin-right: 10px;
+		position: relative;
+		top:4px;
+	}
+}
