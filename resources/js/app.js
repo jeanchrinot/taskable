@@ -19,7 +19,9 @@ window.Vue = require('vue');
 // const files = require.context('./', true, /\.vue$/i)
 // files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default))
 
-Vue.component('example-component', require('./components/ExampleComponent.vue').default);
+// Vue.component('example-component', require('./components/ExampleComponent.vue').default);
+Vue.component('delete-button', require('./components/DeleteButton.vue').default);
+Vue.component('task-list', require('./components/TaskList.vue').default);
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to
@@ -35,19 +37,42 @@ $(function () {
   $('[data-toggle="tooltip"]').tooltip()
 })
 
-// Task Filter 
-$("#priority").change(function(){
-  $value = this.value.toLowerCase();
-  var url = window.location.href;
-  $urlBase = url.substring(0, url.lastIndexOf("?"));
-  //console.log($urlBase);
-  window.location.replace($urlBase+"?priority="+$value);
-});
+// // Task Filter 
+// $("#priority").change(function(){
+//   $value = this.value.toLowerCase();
+//   var url = window.location.href;
+//   $urlBase = url.substring(0, url.lastIndexOf("?"));
+//   //console.log($urlBase);
+//   window.location.replace($urlBase+"?priority="+$value);
+// });
 
-$("#status").change(function(){
-  $value = this.value.toLowerCase();
-  var url = window.location.href;
-  $urlBase = url.substring(0, url.lastIndexOf("?"));
-  //console.log($urlBase);
-  window.location.replace($urlBase+"?status="+$value);
-});
+// $("#status").change(function(){
+//   $value = this.value.toLowerCase();
+//   var url = window.location.href;
+//   $urlBase = url.substring(0, url.lastIndexOf("?"));
+//   //console.log($urlBase);
+//   window.location.replace($urlBase+"?status="+$value);
+// });
+
+$('.toast').toast();
+
+// var timeoutId = null;
+
+// $( "#dblclicktest" ).click(function() {
+  
+//         if(!timeoutId)
+//         {
+//             timeoutId = setTimeout(() => {
+//                 // simple click
+//                 alert("simple click");
+//                 clearTimeout(timeoutId);
+//             }, 20);//tolerance in ms
+
+//         }else{
+//             clearTimeout(timeoutId);
+//             timeoutId = null;
+//             // double click
+//             alert("double click");
+//         }
+
+// });

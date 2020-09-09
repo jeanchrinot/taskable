@@ -4055,6 +4055,12 @@ html, body {
             }
 
 
+html, body {
+    max-width: 100%;
+    overflow-x: hidden;
+}
+
+
 .dark-bg{
     background-color: #ccc;
 }
@@ -4067,6 +4073,16 @@ html, body {
 
 .no-padding{
     padding:0!important;
+}
+
+
+.color-green{
+    color:#00a15d!important;
+}
+
+
+.color-red{
+    color:#dc3545!important;
 }
 
 
@@ -4154,6 +4170,23 @@ a:hover{
             text-decoration:none;
             color: #00a15d;
         }
+
+
+.mr-10{
+    margin-right: 10px!important;
+}
+
+
+main{
+    min-height: 518px;
+}
+
+
+.input-group-sm .datetime{
+    font-size: 11px!important;
+    padding: 2px 3px!important;
+    height: calc(1.5em + 1rem + -2px)!important;
+}
 
 
 .wrapper{
@@ -4486,14 +4519,34 @@ a:hover{
 .todo-list li{
 		width: 100%;
 		margin:0 10px;
-    	padding: 5px;
-    	border-radius:0;
-    	background-color: #fff;
-    	transition: all 0.5s ease;
 	}
 
 
-.todo-list li:hover{
+.todo-list li .list-item{
+			width: 90%;
+			padding: 5px;
+		    border-radius: 0;
+		    background-color: #fff;
+		    transition: all 0.5s ease;
+		    float: left;
+		}
+
+
+.todo-list li .list-action{
+			display: flex;
+		    width: 10%;
+		    float: left;
+		    padding: 5px 5px;
+		}
+
+
+.todo-list li:hover .list-item{
+    		background-color: #eee;
+    		border-radius: 5px;
+    	}
+
+
+.todo-list li.current .list-item{
     		background-color: #eee;
     		border-radius: 5px;
     	}
@@ -4530,9 +4583,76 @@ a:hover{
 		}
 
 
+.todo-list .list-style--light{
+			background-color: #f8f9fa;
+		}
+
+
 .todo-list__item-checked{
 		text-decoration: line-through;
 		font-style: italic;
+	}
+
+
+.list-label{
+	display: inline-block;
+	width: 100%;
+	margin:0;
+	margin-bottom: 0;
+}
+
+
+.task-name{
+	float: left;
+    display: inline-block;
+    padding: 10px 0;
+}
+
+
+.task-title{
+	display: block;
+    float: left;
+    padding: 10px 10px;
+    width: 100%;
+}
+
+
+.task-date{
+	font-size: 13px;
+    float: right;
+    position: absolute;
+    right: 20px;
+    top: 14px;
+}
+
+
+.task-list{
+	float: left;
+	width: 100%;
+}
+
+
+.add-task-btn{
+	float: right;
+    right: 20px;
+    position: absolute;
+    top: 0px;
+}
+
+
+.edit-item-icon{
+	float: left;
+    margin-left: 9px;
+    color: #00a15d;
+    opacity: 0;
+    transition: all 0.3s linear;
+    margin-top: 2px;
+    cursor: pointer;
+}
+
+
+.edit-item-icon-parent:hover .edit-item-icon{
+		opacity: 1;
 	}
 
 
@@ -4555,6 +4675,11 @@ a:hover{
 	}
 
 
+.input-group-sm .input-group-prepend {
+    	height: calc(1.5em + .5rem + -1px);
+	}
+
+
 .page-item.active .page-link {
     background-color: #00a15d;
     border-color: #00a15d;
@@ -4569,6 +4694,43 @@ a:hover{
 .page-link:hover{
 		color:#00a15d;
 	}
+
+
+.modal--small .modal-content {
+    		width: 80%;
+    	}
+
+
+.modal--small .modal-header {
+		 	padding: 6px 20px;
+		}
+
+
+.modal--small .modal-footer {
+		    padding: 5px;
+		}
+
+
+.toast.show{
+		z-index:0;
+	}
+
+
+.toast--error{
+		color: #fff;
+		background-color: rgba(228,136,136,0.85);
+	}
+
+
+.toast--error .toast-header {
+		    color: #fff;
+		    background-color: rgba(222,55,55,0.3);
+		}
+
+
+.toast.show {
+     z-index: 3!important;
+}
 
 
 .footer{

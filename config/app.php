@@ -176,6 +176,8 @@ return [
         App\Providers\RouteServiceProvider::class,
         App\Providers\PermissionsServiceProvider::class, // Custom Permissions Provider
 
+        Eloquence\EloquenceServiceProvider::class,
+
     ],
 
     /*

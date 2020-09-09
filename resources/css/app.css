@@ -16,7 +16,9 @@
 @import './modules/_sidebar';
 @import './modules/_content';
 @import './modules/_todo-list';
+@import './modules/_edit-item-icon';
 @import './modules/_form';
 @import './modules/_bootstrap-override';
+@import './modules/_flash-messages';
 
 @import './modules/_footer';

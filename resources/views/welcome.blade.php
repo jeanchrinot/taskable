@@ -29,7 +29,7 @@
             @if (Route::has('login'))
                 <div class="top-right links links--signup">
                     @auth
-                        <a href="{{ url('/home') }}" class="button">Home</a>
+                        <a href="{{ url('/dashboard') }}" class="button">Dashboard</a>
                     @else
                         <a href="{{ route('login') }}" class="button">Login</a>
 
@@ -46,7 +46,7 @@
                         Create and Manage your tasks and to-do list.
                     </div>
                     <div>
-                       <a href="#" class="button button--green">Try it for free</a>
+                       <a href="{{ route('register') }}" class="button button--green">Try it for free</a>
                     </div>
                 </div>
             </div>

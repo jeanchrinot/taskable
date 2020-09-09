@@ -1899,10 +1899,64 @@ module.exports = {
 
 /***/ }),
 
-/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/ExampleComponent.vue?vue&type=script&lang=js&":
-/*!***************************************************************************************************************************************************************************!*\
-  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/ExampleComponent.vue?vue&type=script&lang=js& ***!
-  \***************************************************************************************************************************************************************************/
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/DeleteButton.vue?vue&type=script&lang=js&":
+/*!***********************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/DeleteButton.vue?vue&type=script&lang=js& ***!
+  \***********************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+//
+//
+//
+//
+//
+//
+/* harmony default export */ __webpack_exports__["default"] = ({
+  props: ['itemType', 'itemId'],
+  mounted: function mounted() {
+    console.log('Delete Component mounted.');
+  },
+  methods: {
+    confirmDeleteTask: function confirmDeleteTask() {
+      $('#confirm-delete').replaceWith($('#confirm-delete').clone());
+      document.querySelector("#confirm-delete").addEventListener("click", this.deleteItem, false);
+    },
+    deleteItem: function deleteItem(e) {
+      var _this = this;
+
+      e.preventDefault(); //alert('type='+this.itemType+', id='+this.itemId);
+
+      fetch('/api/' + this.itemType + '/' + this.itemId, {
+        method: 'delete'
+      }).then(function (response) {
+        return response.json();
+      }).then(function (data) {
+        $("#deleteListModal").modal('hide');
+
+        if (_this.itemType == 'task') {
+          _this.$parent.getTasks('/api/tasks?page=' + _this.$parent.pagination.current_page);
+        } else if (_this.itemType == 'todo') {
+          _this.$parent.getTodos();
+
+          _this.$parent.updateTaskStatus(_this.$parent.current_task.id, _this.$parent.current_task.status); //alert(this.$parent.current_task.status);
+
+        }
+      })["catch"](function (err) {
+        return console.log(err);
+      });
+    }
+  }
+});
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/TaskList.vue?vue&type=script&lang=js&":
+/*!*******************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/TaskList.vue?vue&type=script&lang=js& ***!
+  \*******************************************************************************************************************************************************************/
 /*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -1924,9 +1978,597 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
-  mounted: function mounted() {
-    console.log('Component mounted.');
+  data: function data() {
+    return {
+      add_new_task: false,
+      tasks: [],
+      current_task: {},
+      pagination: {},
+      url_request: '',
+      todos: [],
+      todo: {
+        id: '',
+        name: '',
+        task_id: ''
+      },
+      update_task: false,
+      update_todo: false,
+      task_id: '',
+      task_new_name: {
+        id: '',
+        name: ''
+      },
+      todo_new_name: {
+        id: '',
+        name: ''
+      },
+      task_title: 'My Tasks',
+      task: {
+        id: '',
+        name: '',
+        priority: '',
+        start_date: '',
+        end_date: '',
+        complete: '',
+        count: ''
+      },
+      taskClickCounter: 0,
+      result: [],
+      delay: 100,
+      clicks: 0,
+      timer: null
+    };
+  },
+  created: function created() {
+    this.getTasks();
+  },
+  computed: {
+    nonNullTasks: function nonNullTasks() {
+      return this.tasks.filter(function (item) {
+        return item !== null;
+      });
+    },
+    nonNullTodos: function nonNullTodos() {
+      return this.todos.filter(function (item) {
+        return item !== null;
+      });
+    }
+  },
+  methods: {
+    getTasks: function getTasks(api_url) {
+      var _this = this;
+
+      var vm = this;
+      api_url = api_url || '/api/tasks';
+      fetch(api_url).then(function (response) {
+        return response.json();
+      }).then(function (response) {
+        _this.tasks = response.data;
+        _this.current_task = _this.tasks[0];
+        _this.todos = response.meta.todos;
+        vm.paginator(response.meta, response.links);
+      })["catch"](function (err) {
+        return console.log(err);
+      });
+    },
+    getTask: function getTask(id) {
+      var _this2 = this;
+
+      var api_url = '/api/task/' + id;
+      fetch(api_url).then(function (response) {
+        return response.json();
+      }).then(function (response) {
+        _this2.task = response.data;
+      })["catch"](function (err) {
+        return console.log(err);
+      });
+    },
+    paginator: function paginator(meta, links) {
+      this.pagination = {
+        current_page: meta.current_page,
+        last_page: meta.last_page,
+        next_page_url: links.next ? links.next + this.url_request : links.next,
+        prev_page_url: links.prev ? links.prev + this.url_request : links.prev,
+        total: meta.total
+      };
+    },
+    addTodo: function addTodo() {
+      var _this3 = this;
+
+      if (this.update_todo === false) {
+        fetch('/api/todo/' + this.current_task.id, {
+          method: 'post',
+          body: JSON.stringify(this.todo),
+          headers: {
+            'content-type': 'application/json'
+          }
+        }).then(function (response) {
+          return response.json();
+        }).then(function (response) {
+          if (response.data) {
+            _this3.clearTodoForm();
+
+            _this3.todos = response.data;
+            _this3.current_task = response.meta.current_task;
+
+            _this3.updateTaskStatus(_this3.current_task.id, _this3.current_task.status);
+          } else {
+            var errors = Object.values(response);
+
+            for (var i = errors.length - 1; i >= 0; i--) {
+              // console.log(errors[i][0]);
+              $('#error-toast').find('.toast-body').html(errors[i][0]);
+              $('#error-toast').toast('show');
+            }
+          }
+        })["catch"](function (err) {
+          return console.log(err);
+        });
+      } else {
+        fetch('/api/todo', {
+          method: 'put',
+          body: JSON.stringify(this.task),
+          headers: {
+            'content-type': 'application/json'
+          }
+        }).then(function (response) {
+          return response.json();
+        }).then(function (data) {
+          _this3.clearTodoForm();
+
+          _this3.getTasks();
+        })["catch"](function (err) {
+          return console.log(err);
+        });
+      }
+    },
+    getTodos: function getTodos() {
+      var _this4 = this;
+
+      var id = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
+      id = id == null ? this.current_task.id : id;
+      fetch('/api/todos/' + id).then(function (response) {
+        return response.json();
+      }).then(function (response) {
+        _this4.todos = response.data;
+        _this4.current_task = response.meta.current_task;
+      })["catch"](function (err) {
+        return console.log(err);
+      });
+    },
+    updateTask: function updateTask(task) {
+      this.update_task = true;
+      this.task.id = task.id;
+      this.task.name = task.name;
+      this.task.priority = task.priority;
+      this.task.start_date = task.start_date;
+      this.task.end_date = task.end_date;
+    },
+    clearTodoForm: function clearTodoForm() {
+      this.todo.id = null;
+      this.todo.task_id = null;
+      this.todo.name = '';
+    },
+    toggleComplete: function toggleComplete(id) {
+      var _this5 = this;
+
+      fetch('/api/todo/toggle/' + id, {
+        method: 'post'
+      }).then(function (response) {
+        return response.json();
+      }).then(function (response) {
+        // this.getTasks('/api/tasks?page='+this.pagination.current_page);
+        _this5.current_task = response.data;
+
+        _this5.updateTaskStatus(_this5.current_task.id, _this5.current_task.status);
+      })["catch"](function (err) {
+        return console.log(err);
+      });
+    },
+    taskStatus: function taskStatus(status, index) {
+      var statusArr = [['0', 'Not started', 'warning'], ['1', 'In progress', 'info'], ['2', 'Complete', 'success'], ['3', 'Canceled', 'danger']];
+      return statusArr[status][index];
+    },
+    taskPriority: function taskPriority(priority, index) {
+      var priorityArr = [['1', 'Low', 'light'], ['2', 'Medium', 'warning'], ['3', 'High', 'danger']]; // console.log(priorityArr[priority-1][index]);
+
+      return priorityArr[priority - 1][index];
+    },
+    isCurrent: function isCurrent(id) {
+      if (this.current_task.id == id) {
+        return true;
+      }
+
+      return false;
+    },
+    updateTaskStatus: function updateTaskStatus(id, status) {
+      var complete = this.current_task.complete;
+      var count = this.current_task.count;
+      var status_name = this.taskStatus(status, 1);
+      $("#status_" + id).attr('class', 'badge badge-' + this.taskStatus(status, 2));
+      $("#status_" + id).html(status_name + ' ' + complete + '/' + count);
+    },
+    editTaskName: function editTaskName(id) {
+      var _this6 = this;
+
+      var task_name = $('#task_name_' + id);
+      var name = $('#task_name_' + id).text();
+      task_name.html('');
+      $('<input></input>').attr({
+        'type': 'text',
+        'name': 'name',
+        'id': 'task_name_input_' + id,
+        'size': '30',
+        'value': name
+      }).appendTo('#task_name_' + id);
+      $('#task_name_input_' + id).focus();
+      $(document).on('blur', '#task_name_input_' + id, function () {
+        var name = $('#task_name_input_' + id).val(); // console.log(name);
+
+        _this6.task_new_name.id = id;
+        _this6.task_new_name.name = name;
+        fetch('/api/task/' + id, {
+          method: 'put',
+          body: JSON.stringify(_this6.task_new_name),
+          headers: {
+            'content-type': 'application/json'
+          }
+        }).then(function (response) {
+          return response.json();
+        }).then(function (response) {
+          if (response.data) {
+            $('#task_name_' + id).text(name);
+            _this6.current_task.name = name;
+          } else {
+            var errors = Object.values(response);
+
+            for (var i = errors.length - 1; i >= 0; i--) {
+              // console.log(errors[i][0]);
+              $('#error-toast').find('.toast-body').html(errors[i][0]);
+              $('#error-toast').toast('show');
+            }
+          }
+        })["catch"](function (err) {
+          return console.log(err);
+        });
+      });
+    },
+    editTodo: function editTodo(id) {
+      var _this7 = this;
+
+      var todo_name = $('#todo_name_' + id);
+      var name = $('#todo_name_' + id).text();
+      todo_name.html('');
+      $('<input></input>').attr({
+        'type': 'text',
+        'name': 'name',
+        'id': 'todo_name_input_' + id,
+        'size': '30',
+        'value': name
+      }).appendTo('#todo_name_' + id);
+      $('#todo_name_input_' + id).focus();
+      $(document).on('blur', '#todo_name_input_' + id, function () {
+        var name = $('#todo_name_input_' + id).val(); // console.log(name);
+
+        _this7.todo_new_name.id = id;
+        _this7.todo_new_name.name = name;
+        fetch('/api/todo/' + id, {
+          method: 'put',
+          body: JSON.stringify(_this7.todo_new_name),
+          headers: {
+            'content-type': 'application/json'
+          }
+        }).then(function (response) {
+          return response.json();
+        }).then(function (response) {
+          if (response.data) {
+            $('#todo_name_' + id).text(name);
+          } else {
+            var errors = Object.values(response);
+
+            for (var i = errors.length - 1; i >= 0; i--) {
+              // console.log(errors[i][0]);
+              $('#error-toast').find('.toast-body').html(errors[i][0]);
+              $('#error-toast').toast('show');
+            }
+          }
+        })["catch"](function (err) {
+          return console.log(err);
+        });
+      });
+    },
+    filterTask: function filterTask(filterType) {
+      var status = $("#status").val();
+      var priority = $("#priority").val();
+      var api_url = "/api/tasks";
+
+      if (status != "all" && priority != "all") {
+        api_url = api_url + "?priority=" + priority + "&status=" + status;
+        this.url_request = "&priority=" + priority + "&status=" + status;
+      } else if (status != "all") {
+        api_url = api_url + "?status=" + status;
+        this.url_request = "&status=" + status;
+      } else if (priority != "all") {
+        api_url = api_url + "?priority=" + priority;
+        this.url_request = "&priority=" + priority;
+      }
+
+      this.getTasks(api_url);
+    },
+    addTaskForm: function addTaskForm() {
+      var id = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
+
+      if (id != null) {
+        this.getTask(id);
+        this.update_task = true;
+        this.task_title = 'Edit task';
+        $('#new_task_name').focus();
+      } else {
+        this.add_new_task = true;
+        this.task_title = 'New task';
+        $('#new_task_name').focus();
+      }
+    },
+    addTask: function addTask() {
+      var _this8 = this;
+
+      var id = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
+      var api_url = '/api/task';
+      var method = 'post';
+
+      if (this.update_task == true && id != null) {
+        api_url = api_url + '/' + id;
+        method = 'put';
+      }
+
+      fetch(api_url, {
+        method: method,
+        body: JSON.stringify(this.task),
+        headers: {
+          'content-type': 'application/json'
+        }
+      }).then(function (response) {
+        return response.json();
+      }).then(function (response) {
+        if (response.data) {
+          _this8.clearTaskForm();
+
+          _this8.getTasks();
+
+          _this8.add_new_task = false;
+          _this8.update_task = false; //this.current_task = response.data;
+          // this.current_task = response.meta.current_task;
+          // this.updateTaskStatus(this.current_task.id,this.current_task.status);
+        } else {
+          var errors = Object.values(response);
+
+          for (var i = errors.length - 1; i >= 0; i--) {
+            // console.log(errors[i][0]);
+            $('#error-toast').find('.toast-body').html(errors[i][0]);
+            $('#error-toast').toast('show');
+          }
+        }
+      })["catch"](function (err) {
+        return console.log(err);
+      });
+    },
+    cancelNewTask: function cancelNewTask() {
+      var _this9 = this;
+
+      this.add_new_task = false;
+      this.update_task = false;
+      this.task_title = 'My tasks';
+      var checkExist = setInterval(function () {
+        if ($("#status_" + _this9.current_task.id).length) {
+          _this9.updateTaskStatus(_this9.current_task.id, _this9.current_task.status);
+
+          clearInterval(checkExist);
+        }
+      }, 100); // check every 100ms
+    },
+    clearTaskForm: function clearTaskForm() {
+      this.task.name = '';
+      this.task.priority = '', this.task.start_date = null;
+      this.task.end_date = null;
+    },
+    formatDate: function formatDate(date) {
+      //let options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+      var theDate = new Date(date);
+      return theDate.toLocaleDateString("en-US");
+    },
+    formatDateTimeLocal: function formatDateTimeLocal(date) {
+      var theDate = new Date(date);
+      var months = theDate.getMonth() + 1;
+      var days = theDate.getDate();
+      var hours = theDate.getHours();
+      var minutes = theDate.getMinutes(); // var ampm = hours >= 12 ? 'pm' : 'am';
+      // hours = hours % 12;
+      // hours = hours ? hours : 12; // the hour '0' should be '12'
+
+      months = months < 10 ? '0' + months : months;
+      days = days < 10 ? '0' + days : days;
+      hours = hours < 10 ? '0' + hours : hours;
+      minutes = minutes < 10 ? '0' + minutes : minutes;
+      var strTime = theDate.getFullYear() + "-" + months + "-" + days + "T" + hours + ':' + minutes;
+      return strTime;
+    },
+    bindTaskDate: function bindTaskDate(name) {
+      if (name == 'start_date') {
+        this.task.start_date = $('#new_task_start_date').val();
+      } else if (name == 'end_date') {
+        this.task.end_date = $('#new_task_end_date').val();
+      }
+    },
+    oneClick: function oneClick(event, id) {
+      var _this10 = this;
+
+      this.clicks++;
+
+      if (this.clicks === 1) {
+        var self = this;
+        this.timer = setTimeout(function () {
+          // self.result.push(event.type);
+          _this10.getTodos(id);
+
+          self.clicks = 0;
+        }, this.delay);
+      } else {
+        clearTimeout(this.timer); // this.result.push('dblclick');
+
+        this.editTaskName(id);
+        this.clicks = 0;
+      }
+    }
   }
 });
 
@@ -37499,10 +38141,10 @@ exports.clearImmediate = (typeof self !== "undefined" && self.clearImmediate) ||
 
 /***/ }),
 
-/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/ExampleComponent.vue?vue&type=template&id=299e239e&":
-/*!*******************************************************************************************************************************************************************************************************************!*\
-  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/ExampleComponent.vue?vue&type=template&id=299e239e& ***!
-  \*******************************************************************************************************************************************************************************************************************/
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/DeleteButton.vue?vue&type=template&id=25843a28&":
+/*!***************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/DeleteButton.vue?vue&type=template&id=25843a28& ***!
+  \***************************************************************************************************************************************************************************************************************/
 /*! exports provided: render, staticRenderFns */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -37514,30 +38156,943 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _vm._m(0)
+  return _c("div", [
+    _c("i", {
+      staticClass: "fa fa-trash edit-item-icon color-red",
+      attrs: { "data-toggle": "modal", "data-target": "#deleteListModal" },
+      on: {
+        click: function($event) {
+          return _vm.confirmDeleteTask()
+        }
+      }
+    })
+  ])
+}
+var staticRenderFns = []
+render._withStripped = true
+
+
+
+/***/ }),
+
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/TaskList.vue?vue&type=template&id=0afd8bae&":
+/*!***********************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/TaskList.vue?vue&type=template&id=0afd8bae& ***!
+  \***********************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", [
+    _c("div", { staticClass: "row" }, [
+      _c("div", { staticClass: "col-md-12 no-padding" }, [
+        _c("div", { staticClass: "card" }, [
+          _c("div", { staticClass: "card-header" }, [
+            _c("div", { staticClass: "row" }, [
+              _c("div", { staticClass: "form-group col-md-4 filter-form" }, [
+                _c("label", { attrs: { for: "status" } }, [
+                  _vm._v("Filter by status: ")
+                ]),
+                _vm._v(" "),
+                _c(
+                  "select",
+                  {
+                    staticClass: "form-control form-control-sm filter",
+                    attrs: { name: "status", id: "status" },
+                    on: {
+                      change: function($event) {
+                        return _vm.filterTask("status")
+                      }
+                    }
+                  },
+                  [
+                    _c("option", { attrs: { value: "all" } }, [_vm._v("All")]),
+                    _vm._v(" "),
+                    _c("option", { attrs: { value: "complete" } }, [
+                      _vm._v("Complete")
+                    ]),
+                    _vm._v(" "),
+                    _c("option", { attrs: { value: "in_progress" } }, [
+                      _vm._v("In Progress")
+                    ]),
+                    _vm._v(" "),
+                    _c("option", { attrs: { value: "not_started" } }, [
+                      _vm._v("Not Started")
+                    ])
+                  ]
+                )
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "form-group col-md-4 filter-form" }, [
+                _c("label", { attrs: { for: "priority" } }, [
+                  _vm._v("Filter by Priority: ")
+                ]),
+                _vm._v(" "),
+                _c(
+                  "select",
+                  {
+                    staticClass: "form-control form-control-sm filter",
+                    attrs: { name: "priority", id: "priority" },
+                    on: {
+                      change: function($event) {
+                        return _vm.filterTask("priority")
+                      }
+                    }
+                  },
+                  [
+                    _c("option", { attrs: { value: "all" } }, [_vm._v("All")]),
+                    _vm._v(" "),
+                    _c("option", { attrs: { value: "high" } }, [
+                      _vm._v("High")
+                    ]),
+                    _vm._v(" "),
+                    _c("option", { attrs: { value: "medium" } }, [
+                      _vm._v("Medium")
+                    ]),
+                    _vm._v(" "),
+                    _c("option", { attrs: { value: "low" } }, [_vm._v("Low")])
+                  ]
+                )
+              ]),
+              _vm._v(" "),
+              _vm._m(0)
+            ])
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "card-body" }, [
+            _vm.pagination.total
+              ? _c("div", { staticClass: "row" }, [
+                  _c("div", { staticClass: "col-md-6 col-sm-12" }, [
+                    _c("div", { staticClass: "task-name" }, [
+                      _vm.current_task
+                        ? _c("span", [
+                            _c("i", { staticClass: "fa fa-align-left" }),
+                            _vm._v(" " + _vm._s(_vm.current_task.name) + " ")
+                          ])
+                        : _vm._e(),
+                      _vm._v(" "),
+                      _vm.current_task
+                        ? _c("span", { staticClass: "task-date" }, [
+                            _c("i", { staticClass: "fa fa-calendar" }),
+                            _vm._v(
+                              "  " +
+                                _vm._s(
+                                  _vm.formatDate(_vm.current_task.start_date)
+                                ) +
+                                " - " +
+                                _vm._s(
+                                  _vm.formatDate(_vm.current_task.end_date)
+                                )
+                            )
+                          ])
+                        : _vm._e()
+                    ]),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "todo-list" }, [
+                      _c(
+                        "form",
+                        {
+                          on: {
+                            submit: function($event) {
+                              $event.preventDefault()
+                              return _vm.addTodo($event)
+                            }
+                          }
+                        },
+                        [
+                          _c("div", { staticClass: "input-group mb-3" }, [
+                            _c("input", {
+                              directives: [
+                                {
+                                  name: "model",
+                                  rawName: "v-model",
+                                  value: _vm.todo.name,
+                                  expression: "todo.name"
+                                }
+                              ],
+                              staticClass: "form-control",
+                              attrs: {
+                                type: "text",
+                                placeholder: "Add item to list...",
+                                "aria-label": "Add item to list",
+                                "aria-describedby": "basic-addon2"
+                              },
+                              domProps: { value: _vm.todo.name },
+                              on: {
+                                input: function($event) {
+                                  if ($event.target.composing) {
+                                    return
+                                  }
+                                  _vm.$set(
+                                    _vm.todo,
+                                    "name",
+                                    $event.target.value
+                                  )
+                                }
+                              }
+                            }),
+                            _vm._v(" "),
+                            _vm._m(1)
+                          ])
+                        ]
+                      ),
+                      _vm._v(" "),
+                      _c(
+                        "ul",
+                        { staticClass: "todo-list text-left" },
+                        _vm._l(_vm.nonNullTodos, function(todo) {
+                          return _c(
+                            "li",
+                            {
+                              key: todo.id,
+                              staticClass: "edit-item-icon-parent",
+                              attrs: { id: "todo_" + todo.id }
+                            },
+                            [
+                              _c("div", { staticClass: "list-item" }, [
+                                _c(
+                                  "label",
+                                  {
+                                    staticClass: "list-label",
+                                    attrs: { for: todo.id, role: "button" }
+                                  },
+                                  [
+                                    _c("input", {
+                                      directives: [
+                                        {
+                                          name: "model",
+                                          rawName: "v-model",
+                                          value: todo.complete,
+                                          expression: "todo.complete"
+                                        }
+                                      ],
+                                      attrs: { type: "checkbox", id: todo.id },
+                                      domProps: {
+                                        checked: Array.isArray(todo.complete)
+                                          ? _vm._i(todo.complete, null) > -1
+                                          : todo.complete
+                                      },
+                                      on: {
+                                        click: function($event) {
+                                          return _vm.toggleComplete(todo.id)
+                                        },
+                                        change: function($event) {
+                                          var $$a = todo.complete,
+                                            $$el = $event.target,
+                                            $$c = $$el.checked ? true : false
+                                          if (Array.isArray($$a)) {
+                                            var $$v = null,
+                                              $$i = _vm._i($$a, $$v)
+                                            if ($$el.checked) {
+                                              $$i < 0 &&
+                                                _vm.$set(
+                                                  todo,
+                                                  "complete",
+                                                  $$a.concat([$$v])
+                                                )
+                                            } else {
+                                              $$i > -1 &&
+                                                _vm.$set(
+                                                  todo,
+                                                  "complete",
+                                                  $$a
+                                                    .slice(0, $$i)
+                                                    .concat($$a.slice($$i + 1))
+                                                )
+                                            }
+                                          } else {
+                                            _vm.$set(todo, "complete", $$c)
+                                          }
+                                        }
+                                      }
+                                    }),
+                                    _vm._v(" "),
+                                    _c(
+                                      "span",
+                                      {
+                                        staticClass: "todo-list__text",
+                                        class: [
+                                          {
+                                            "todo-list__item-checked":
+                                              todo.complete
+                                          }
+                                        ],
+                                        attrs: { id: "todo_name_" + todo.id }
+                                      },
+                                      [_vm._v(_vm._s(todo.name))]
+                                    )
+                                  ]
+                                )
+                              ]),
+                              _vm._v(" "),
+                              _c(
+                                "div",
+                                { staticClass: "list-action" },
+                                [
+                                  _c("i", {
+                                    staticClass: "fa fa-pencil edit-item-icon",
+                                    on: {
+                                      click: function($event) {
+                                        return _vm.editTodo(todo.id)
+                                      }
+                                    }
+                                  }),
+                                  _vm._v(" "),
+                                  _c("delete-button", {
+                                    attrs: {
+                                      "item-id": todo.id,
+                                      "item-type": "todo"
+                                    }
+                                  })
+                                ],
+                                1
+                              )
+                            ]
+                          )
+                        }),
+                        0
+                      )
+                    ])
+                  ]),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "col-md-6 col-sm-12" }, [
+                    _c(
+                      "div",
+                      {
+                        staticClass: "task-title",
+                        attrs: { id: "task-title" }
+                      },
+                      [
+                        _c("div", { staticClass: "pull-left" }, [
+                          _c("span", [
+                            _c("i", { staticClass: "fa fa-tasks" }),
+                            _vm._v("  " + _vm._s(_vm.task_title))
+                          ])
+                        ]),
+                        _vm._v(" "),
+                        _c("div", { staticClass: "pull-right" }, [
+                          !_vm.add_new_task
+                            ? _c(
+                                "button",
+                                {
+                                  staticClass:
+                                    "btn btn-primary btn-sm add-task-btn",
+                                  attrs: { type: "button" },
+                                  on: {
+                                    click: function($event) {
+                                      return _vm.addTaskForm()
+                                    }
+                                  }
+                                },
+                                [
+                                  _c("i", { staticClass: "fa fa-plus" }),
+                                  _vm._v(" Add new task")
+                                ]
+                              )
+                            : _vm._e()
+                        ])
+                      ]
+                    ),
+                    _vm._v(" "),
+                    _vm.add_new_task || _vm.update_task
+                      ? _c("div", { staticClass: "task-list" }, [
+                          _c(
+                            "form",
+                            {
+                              on: {
+                                submit: function($event) {
+                                  $event.preventDefault()
+                                  return _vm.addTask(_vm.task.id)
+                                }
+                              }
+                            },
+                            [
+                              _c("div", { staticClass: "row" }, [
+                                _c(
+                                  "div",
+                                  { staticClass: "form-group col-md-8" },
+                                  [
+                                    _c("input", {
+                                      directives: [
+                                        {
+                                          name: "model",
+                                          rawName: "v-model",
+                                          value: _vm.task.name,
+                                          expression: "task.name"
+                                        }
+                                      ],
+                                      staticClass:
+                                        "form-control form-control-sm",
+                                      attrs: {
+                                        type: "text",
+                                        placeholder: "Type task list name...",
+                                        name: "name",
+                                        id: "new_task_name"
+                                      },
+                                      domProps: { value: _vm.task.name },
+                                      on: {
+                                        input: function($event) {
+                                          if ($event.target.composing) {
+                                            return
+                                          }
+                                          _vm.$set(
+                                            _vm.task,
+                                            "name",
+                                            $event.target.value
+                                          )
+                                        }
+                                      }
+                                    })
+                                  ]
+                                ),
+                                _vm._v(" "),
+                                _c(
+                                  "div",
+                                  { staticClass: "form-group col-md-4" },
+                                  [
+                                    _c(
+                                      "select",
+                                      {
+                                        directives: [
+                                          {
+                                            name: "model",
+                                            rawName: "v-model",
+                                            value: _vm.task.priority,
+                                            expression: "task.priority"
+                                          }
+                                        ],
+                                        staticClass:
+                                          "form-control form-control-sm",
+                                        attrs: {
+                                          name: "priority",
+                                          id: "new_task_priority"
+                                        },
+                                        on: {
+                                          change: function($event) {
+                                            var $$selectedVal = Array.prototype.filter
+                                              .call(
+                                                $event.target.options,
+                                                function(o) {
+                                                  return o.selected
+                                                }
+                                              )
+                                              .map(function(o) {
+                                                var val =
+                                                  "_value" in o
+                                                    ? o._value
+                                                    : o.value
+                                                return val
+                                              })
+                                            _vm.$set(
+                                              _vm.task,
+                                              "priority",
+                                              $event.target.multiple
+                                                ? $$selectedVal
+                                                : $$selectedVal[0]
+                                            )
+                                          }
+                                        }
+                                      },
+                                      [
+                                        _c("option", { attrs: { value: "" } }, [
+                                          _vm._v("Priority")
+                                        ]),
+                                        _vm._v(" "),
+                                        _c(
+                                          "option",
+                                          { attrs: { value: "1" } },
+                                          [_vm._v("Low")]
+                                        ),
+                                        _vm._v(" "),
+                                        _c(
+                                          "option",
+                                          { attrs: { value: "2" } },
+                                          [_vm._v("Medium")]
+                                        ),
+                                        _vm._v(" "),
+                                        _c(
+                                          "option",
+                                          { attrs: { value: "3" } },
+                                          [_vm._v("High")]
+                                        )
+                                      ]
+                                    )
+                                  ]
+                                )
+                              ]),
+                              _vm._v(" "),
+                              _c("div", { staticClass: "row" }, [
+                                _c(
+                                  "div",
+                                  {
+                                    staticClass:
+                                      "input-group input-group-sm col-md-6 mb-3"
+                                  },
+                                  [
+                                    _vm._m(2),
+                                    _vm._v(" "),
+                                    _c("input", {
+                                      staticClass: "form-control datetime",
+                                      attrs: {
+                                        type: "datetime-local",
+                                        placeholder: "Start Date",
+                                        "aria-label": "Start Date",
+                                        "aria-describedby": "basic-addon1",
+                                        id: "new_task_start_date"
+                                      },
+                                      domProps: {
+                                        value: _vm.formatDateTimeLocal(
+                                          _vm.task.start_date
+                                        )
+                                      },
+                                      on: {
+                                        change: function($event) {
+                                          return _vm.bindTaskDate("start_date")
+                                        }
+                                      }
+                                    })
+                                  ]
+                                ),
+                                _vm._v(" "),
+                                _c(
+                                  "div",
+                                  {
+                                    staticClass:
+                                      "input-group input-group-sm col-md-6 mb-3"
+                                  },
+                                  [
+                                    _vm._m(3),
+                                    _vm._v(" "),
+                                    _c("input", {
+                                      staticClass: "form-control datetime",
+                                      attrs: {
+                                        type: "datetime-local",
+                                        placeholder: "End Date",
+                                        "aria-label": "End Date",
+                                        "aria-describedby": "basic-addon2",
+                                        id: "new_task_end_date"
+                                      },
+                                      domProps: {
+                                        value: _vm.formatDateTimeLocal(
+                                          _vm.task.end_date
+                                        )
+                                      },
+                                      on: {
+                                        change: function($event) {
+                                          return _vm.bindTaskDate("end_date")
+                                        }
+                                      }
+                                    })
+                                  ]
+                                )
+                              ]),
+                              _vm._v(" "),
+                              _c("div", { staticClass: "row" }, [
+                                _c("div", { staticClass: "col-12" }, [
+                                  _c(
+                                    "button",
+                                    {
+                                      staticClass: "btn btn-primary btn-sm",
+                                      staticStyle: { "margin-right": "20px" },
+                                      attrs: { type: "submit" }
+                                    },
+                                    [_vm._v("Save")]
+                                  ),
+                                  _vm._v(" "),
+                                  _c(
+                                    "button",
+                                    {
+                                      staticClass: "btn btn-secondary btn-sm",
+                                      attrs: { type: "button" },
+                                      on: { click: _vm.cancelNewTask }
+                                    },
+                                    [_vm._v("Cancel")]
+                                  )
+                                ])
+                              ])
+                            ]
+                          )
+                        ])
+                      : _c(
+                          "div",
+                          {
+                            staticClass: "task-list",
+                            attrs: { id: "task-list" }
+                          },
+                          [
+                            _c(
+                              "ul",
+                              { staticClass: "todo-list text-left" },
+                              _vm._l(_vm.nonNullTasks, function(task) {
+                                return _c(
+                                  "li",
+                                  {
+                                    key: task.id,
+                                    staticClass: "edit-item-icon-parent",
+                                    class: [
+                                      { current: _vm.isCurrent(task.id) }
+                                    ],
+                                    attrs: { id: "task_" + task.id }
+                                  },
+                                  [
+                                    _c(
+                                      "div",
+                                      {
+                                        staticClass: "list-item",
+                                        attrs: { role: "button" },
+                                        on: {
+                                          click: function($event) {
+                                            return _vm.oneClick($event, task.id)
+                                          }
+                                        }
+                                      },
+                                      [
+                                        _c("span", {
+                                          staticClass: "list-style",
+                                          class:
+                                            "list-style--" +
+                                            _vm.taskPriority(task.priority, 2)
+                                        }),
+                                        _vm._v(" "),
+                                        _c(
+                                          "span",
+                                          {
+                                            staticClass: "todo-list__text",
+                                            attrs: {
+                                              id: "task_name_" + task.id
+                                            }
+                                          },
+                                          [_vm._v(_vm._s(task.name))]
+                                        ),
+                                        _vm._v(" "),
+                                        _c(
+                                          "span",
+                                          {
+                                            staticClass: "badge",
+                                            class:
+                                              "badge-" +
+                                              _vm.taskStatus(task.status, 2),
+                                            staticStyle: {
+                                              float: "right",
+                                              "margin-right": "8px",
+                                              "margin-top": "3px"
+                                            },
+                                            attrs: { id: "status_" + task.id }
+                                          },
+                                          [
+                                            _vm._v(
+                                              _vm._s(
+                                                _vm.taskStatus(task.status, 1)
+                                              ) +
+                                                " " +
+                                                _vm._s(
+                                                  task.complete +
+                                                    "/" +
+                                                    task.count
+                                                )
+                                            )
+                                          ]
+                                        )
+                                      ]
+                                    ),
+                                    _vm._v(" "),
+                                    _c(
+                                      "div",
+                                      { staticClass: "list-action" },
+                                      [
+                                        _c("i", {
+                                          staticClass:
+                                            "fa fa-pencil edit-item-icon color-green",
+                                          on: {
+                                            click: function($event) {
+                                              return _vm.addTaskForm(task.id)
+                                            }
+                                          }
+                                        }),
+                                        _vm._v(" "),
+                                        _c("delete-button", {
+                                          attrs: {
+                                            "item-id": task.id,
+                                            "item-type": "task"
+                                          }
+                                        })
+                                      ],
+                                      1
+                                    )
+                                  ]
+                                )
+                              }),
+                              0
+                            )
+                          ]
+                        ),
+                    _vm._v(" "),
+                    !_vm.add_new_task && !_vm.update_task
+                      ? _c(
+                          "div",
+                          {
+                            staticStyle: {
+                              width: "100%",
+                              float: "left",
+                              padding: "10px"
+                            },
+                            attrs: { id: "pagination" }
+                          },
+                          [
+                            _vm.pagination.total
+                              ? _c("nav", [
+                                  _c(
+                                    "ul",
+                                    {
+                                      staticClass:
+                                        "pagination justify-content-center"
+                                    },
+                                    [
+                                      _c(
+                                        "li",
+                                        {
+                                          staticClass: "page-item",
+                                          class: [
+                                            {
+                                              disabled: !_vm.pagination
+                                                .prev_page_url
+                                            }
+                                          ]
+                                        },
+                                        [
+                                          _c(
+                                            "a",
+                                            {
+                                              staticClass: "page-link",
+                                              attrs: { href: "#" },
+                                              on: {
+                                                click: function($event) {
+                                                  return _vm.getTasks(
+                                                    _vm.pagination.prev_page_url
+                                                  )
+                                                }
+                                              }
+                                            },
+                                            [_vm._v("Previous")]
+                                          )
+                                        ]
+                                      ),
+                                      _vm._v(" "),
+                                      _c(
+                                        "li",
+                                        { staticClass: "page-item disabled" },
+                                        [
+                                          _c(
+                                            "a",
+                                            {
+                                              staticClass: "page-link",
+                                              attrs: { href: "#" }
+                                            },
+                                            [
+                                              _vm._v(
+                                                _vm._s(
+                                                  _vm.pagination.current_page
+                                                ) +
+                                                  " of " +
+                                                  _vm._s(
+                                                    _vm.pagination.last_page
+                                                  )
+                                              )
+                                            ]
+                                          )
+                                        ]
+                                      ),
+                                      _vm._v(" "),
+                                      _c(
+                                        "li",
+                                        {
+                                          staticClass: "page-item",
+                                          class: [
+                                            {
+                                              disabled: !_vm.pagination
+                                                .next_page_url
+                                            }
+                                          ]
+                                        },
+                                        [
+                                          _c(
+                                            "a",
+                                            {
+                                              staticClass: "page-link",
+                                              attrs: { href: "#" },
+                                              on: {
+                                                click: function($event) {
+                                                  return _vm.getTasks(
+                                                    _vm.pagination.next_page_url
+                                                  )
+                                                }
+                                              }
+                                            },
+                                            [_vm._v("Next")]
+                                          )
+                                        ]
+                                      )
+                                    ]
+                                  )
+                                ])
+                              : _vm._e()
+                          ]
+                        )
+                      : _vm._e()
+                  ])
+                ])
+              : _vm._e(),
+            _vm._v(" "),
+            _vm.pagination.total == 0
+              ? _c("div", [_c("span", [_vm._v("No task found.")])])
+              : _vm._e()
+          ])
+        ])
+      ])
+    ]),
+    _vm._v(" "),
+    _vm._m(4)
+  ])
 }
 var staticRenderFns = [
   function() {
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "container" }, [
-      _c("div", { staticClass: "row justify-content-center" }, [
-        _c("div", { staticClass: "col-md-8" }, [
-          _c("div", { staticClass: "card" }, [
-            _c("div", { staticClass: "card-header" }, [
-              _vm._v("Example Component")
-            ]),
-            _vm._v(" "),
-            _c("div", { staticClass: "card-body" }, [
-              _vm._v(
-                "\n                    I'm an example component.\n                "
-              )
-            ])
-          ])
-        ])
-      ])
+    return _c("div", { staticClass: "form-group col-md-4 filter-form" }, [
+      _c("label", { staticClass: "search-label", attrs: { for: "search" } }, [
+        _vm._v("Search :")
+      ]),
+      _vm._v(" "),
+      _c("input", {
+        staticClass: "form-control",
+        attrs: { type: "text", id: "search", placeholder: "Seache here..." }
+      })
     ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "input-group-append" }, [
+      _c(
+        "button",
+        { staticClass: "btn btn-outline-secondary", attrs: { type: "submit" } },
+        [_c("i", { staticClass: "fa fa-plus" }), _vm._v(" Add")]
+      )
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "input-group-prepend" }, [
+      _c(
+        "span",
+        { staticClass: "input-group-text", attrs: { id: "basic-addon1" } },
+        [_vm._v("Start Date")]
+      )
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "input-group-prepend" }, [
+      _c(
+        "span",
+        { staticClass: "input-group-text", attrs: { id: "basic-addon2" } },
+        [_vm._v("End Date")]
+      )
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c(
+      "div",
+      {
+        staticClass: "modal modal--small fade",
+        attrs: {
+          id: "deleteListModal",
+          tabindex: "-1",
+          role: "dialog",
+          "aria-labelledby": "deleteListModalLabel",
+          "aria-hidden": "true"
+        }
+      },
+      [
+        _c(
+          "div",
+          { staticClass: "modal-dialog", attrs: { role: "document" } },
+          [
+            _c("div", { staticClass: "modal-content" }, [
+              _c("div", { staticClass: "modal-header" }, [
+                _c(
+                  "h5",
+                  {
+                    staticClass: "modal-title",
+                    attrs: { id: "deleteListModalLabel" }
+                  },
+                  [_vm._v("Confirm Delete")]
+                ),
+                _vm._v(" "),
+                _c(
+                  "button",
+                  {
+                    staticClass: "close",
+                    attrs: {
+                      type: "button",
+                      "data-dismiss": "modal",
+                      "aria-label": "Close"
+                    }
+                  },
+                  [
+                    _c("span", { attrs: { "aria-hidden": "true" } }, [
+                      _vm._v("×")
+                    ])
+                  ]
+                )
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "modal-body" }, [
+                _vm._v(
+                  "\n              Are you sure to delete this list?\n            "
+                )
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "modal-footer" }, [
+                _c(
+                  "button",
+                  {
+                    staticClass: "btn btn-secondary btn-sm",
+                    attrs: { type: "button", "data-dismiss": "modal" }
+                  },
+                  [_vm._v("Cancel")]
+                ),
+                _vm._v(" "),
+                _c(
+                  "button",
+                  {
+                    staticClass: "btn btn-danger btn-sm",
+                    attrs: { type: "button", id: "confirm-delete" }
+                  },
+                  [_vm._v("Delete")]
+                )
+              ])
+            ])
+          ]
+        )
+      ]
+    )
   }
 ]
 render._withStripped = true
@@ -49743,8 +51298,10 @@ window.Vue = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.common.
  */
 // const files = require.context('./', true, /\.vue$/i)
 // files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default))
+// Vue.component('example-component', require('./components/ExampleComponent.vue').default);
 
-Vue.component('example-component', __webpack_require__(/*! ./components/ExampleComponent.vue */ "./resources/js/components/ExampleComponent.vue")["default"]);
+Vue.component('delete-button', __webpack_require__(/*! ./components/DeleteButton.vue */ "./resources/js/components/DeleteButton.vue")["default"]);
+Vue.component('task-list', __webpack_require__(/*! ./components/TaskList.vue */ "./resources/js/components/TaskList.vue")["default"]);
 /**
  * Next, we will create a fresh Vue application instance and attach it to
  * the page. Then, you may begin adding components to this application
@@ -49756,22 +51313,38 @@ var app = new Vue({
 });
 $(function () {
   $('[data-toggle="tooltip"]').tooltip();
-}); // Task Filter 
+}); // // Task Filter 
+// $("#priority").change(function(){
+//   $value = this.value.toLowerCase();
+//   var url = window.location.href;
+//   $urlBase = url.substring(0, url.lastIndexOf("?"));
+//   //console.log($urlBase);
+//   window.location.replace($urlBase+"?priority="+$value);
+// });
+// $("#status").change(function(){
+//   $value = this.value.toLowerCase();
+//   var url = window.location.href;
+//   $urlBase = url.substring(0, url.lastIndexOf("?"));
+//   //console.log($urlBase);
+//   window.location.replace($urlBase+"?status="+$value);
+// });
 
-$("#priority").change(function () {
-  $value = this.value.toLowerCase();
-  var url = window.location.href;
-  $urlBase = url.substring(0, url.lastIndexOf("?")); //console.log($urlBase);
-
-  window.location.replace($urlBase + "?priority=" + $value);
-});
-$("#status").change(function () {
-  $value = this.value.toLowerCase();
-  var url = window.location.href;
-  $urlBase = url.substring(0, url.lastIndexOf("?")); //console.log($urlBase);
-
-  window.location.replace($urlBase + "?status=" + $value);
-});
+$('.toast').toast(); // var timeoutId = null;
+// $( "#dblclicktest" ).click(function() {
+//         if(!timeoutId)
+//         {
+//             timeoutId = setTimeout(() => {
+//                 // simple click
+//                 alert("simple click");
+//                 clearTimeout(timeoutId);
+//             }, 20);//tolerance in ms
+//         }else{
+//             clearTimeout(timeoutId);
+//             timeoutId = null;
+//             // double click
+//             alert("double click");
+//         }
+// });
 
 /***/ }),
 
@@ -49820,17 +51393,17 @@ window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 
 /***/ }),
 
-/***/ "./resources/js/components/ExampleComponent.vue":
-/*!******************************************************!*\
-  !*** ./resources/js/components/ExampleComponent.vue ***!
-  \******************************************************/
+/***/ "./resources/js/components/DeleteButton.vue":
+/*!**************************************************!*\
+  !*** ./resources/js/components/DeleteButton.vue ***!
+  \**************************************************/
 /*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _ExampleComponent_vue_vue_type_template_id_299e239e___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ExampleComponent.vue?vue&type=template&id=299e239e& */ "./resources/js/components/ExampleComponent.vue?vue&type=template&id=299e239e&");
-/* harmony import */ var _ExampleComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./ExampleComponent.vue?vue&type=script&lang=js& */ "./resources/js/components/ExampleComponent.vue?vue&type=script&lang=js&");
+/* harmony import */ var _DeleteButton_vue_vue_type_template_id_25843a28___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./DeleteButton.vue?vue&type=template&id=25843a28& */ "./resources/js/components/DeleteButton.vue?vue&type=template&id=25843a28&");
+/* harmony import */ var _DeleteButton_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./DeleteButton.vue?vue&type=script&lang=js& */ "./resources/js/components/DeleteButton.vue?vue&type=script&lang=js&");
 /* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
 
 
@@ -49840,9 +51413,9 @@ __webpack_require__.r(__webpack_exports__);
 /* normalize component */
 
 var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
-  _ExampleComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
-  _ExampleComponent_vue_vue_type_template_id_299e239e___WEBPACK_IMPORTED_MODULE_0__["render"],
-  _ExampleComponent_vue_vue_type_template_id_299e239e___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  _DeleteButton_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _DeleteButton_vue_vue_type_template_id_25843a28___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _DeleteButton_vue_vue_type_template_id_25843a28___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
   false,
   null,
   null,
@@ -49852,38 +51425,107 @@ var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_
 
 /* hot reload */
 if (false) { var api; }
-component.options.__file = "resources/js/components/ExampleComponent.vue"
+component.options.__file = "resources/js/components/DeleteButton.vue"
 /* harmony default export */ __webpack_exports__["default"] = (component.exports);
 
 /***/ }),
 
-/***/ "./resources/js/components/ExampleComponent.vue?vue&type=script&lang=js&":
-/*!*******************************************************************************!*\
-  !*** ./resources/js/components/ExampleComponent.vue?vue&type=script&lang=js& ***!
-  \*******************************************************************************/
+/***/ "./resources/js/components/DeleteButton.vue?vue&type=script&lang=js&":
+/*!***************************************************************************!*\
+  !*** ./resources/js/components/DeleteButton.vue?vue&type=script&lang=js& ***!
+  \***************************************************************************/
 /*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_ExampleComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/babel-loader/lib??ref--4-0!../../../node_modules/vue-loader/lib??vue-loader-options!./ExampleComponent.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/ExampleComponent.vue?vue&type=script&lang=js&");
-/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_ExampleComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_DeleteButton_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/babel-loader/lib??ref--4-0!../../../node_modules/vue-loader/lib??vue-loader-options!./DeleteButton.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/DeleteButton.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_DeleteButton_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
 
 /***/ }),
 
-/***/ "./resources/js/components/ExampleComponent.vue?vue&type=template&id=299e239e&":
-/*!*************************************************************************************!*\
-  !*** ./resources/js/components/ExampleComponent.vue?vue&type=template&id=299e239e& ***!
-  \*************************************************************************************/
+/***/ "./resources/js/components/DeleteButton.vue?vue&type=template&id=25843a28&":
+/*!*********************************************************************************!*\
+  !*** ./resources/js/components/DeleteButton.vue?vue&type=template&id=25843a28& ***!
+  \*********************************************************************************/
 /*! exports provided: render, staticRenderFns */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_ExampleComponent_vue_vue_type_template_id_299e239e___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../node_modules/vue-loader/lib??vue-loader-options!./ExampleComponent.vue?vue&type=template&id=299e239e& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/ExampleComponent.vue?vue&type=template&id=299e239e&");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_ExampleComponent_vue_vue_type_template_id_299e239e___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_DeleteButton_vue_vue_type_template_id_25843a28___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../node_modules/vue-loader/lib??vue-loader-options!./DeleteButton.vue?vue&type=template&id=25843a28& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/DeleteButton.vue?vue&type=template&id=25843a28&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_DeleteButton_vue_vue_type_template_id_25843a28___WEBPACK_IMPORTED_MODULE_0__["render"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_ExampleComponent_vue_vue_type_template_id_299e239e___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_DeleteButton_vue_vue_type_template_id_25843a28___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
+
+/***/ }),
+
+/***/ "./resources/js/components/TaskList.vue":
+/*!**********************************************!*\
+  !*** ./resources/js/components/TaskList.vue ***!
+  \**********************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _TaskList_vue_vue_type_template_id_0afd8bae___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./TaskList.vue?vue&type=template&id=0afd8bae& */ "./resources/js/components/TaskList.vue?vue&type=template&id=0afd8bae&");
+/* harmony import */ var _TaskList_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./TaskList.vue?vue&type=script&lang=js& */ "./resources/js/components/TaskList.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _TaskList_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _TaskList_vue_vue_type_template_id_0afd8bae___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _TaskList_vue_vue_type_template_id_0afd8bae___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  null,
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/components/TaskList.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/components/TaskList.vue?vue&type=script&lang=js&":
+/*!***********************************************************************!*\
+  !*** ./resources/js/components/TaskList.vue?vue&type=script&lang=js& ***!
+  \***********************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_TaskList_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/babel-loader/lib??ref--4-0!../../../node_modules/vue-loader/lib??vue-loader-options!./TaskList.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/TaskList.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_TaskList_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/components/TaskList.vue?vue&type=template&id=0afd8bae&":
+/*!*****************************************************************************!*\
+  !*** ./resources/js/components/TaskList.vue?vue&type=template&id=0afd8bae& ***!
+  \*****************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_TaskList_vue_vue_type_template_id_0afd8bae___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../node_modules/vue-loader/lib??vue-loader-options!./TaskList.vue?vue&type=template&id=0afd8bae& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/TaskList.vue?vue&type=template&id=0afd8bae&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_TaskList_vue_vue_type_template_id_0afd8bae___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_TaskList_vue_vue_type_template_id_0afd8bae___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
 
 
 

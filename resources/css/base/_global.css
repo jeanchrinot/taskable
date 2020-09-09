@@ -7,6 +7,12 @@
                 margin: 0;
             }
 
+
+html, body {
+    max-width: 100%;
+    overflow-x: hidden;
+}
+
 .dark-bg{
     background-color: #ccc;
 }
@@ -16,6 +22,14 @@
 .no-padding{
     padding:0!important;
 }
+
+.color-green{
+    color:$tsk-green!important;
+}
+.color-red{
+    color:$tsk-red!important;
+}
+
 *{
     box-sizing: border-box;
 }
@@ -83,4 +97,18 @@ a{
             text-decoration:none;
             color: $tsk-green;
         }
+}
+
+.mr-10{
+    margin-right: 10px!important;
+}
+
+main{
+    min-height: 518px;
+}
+
+.input-group-sm .datetime{
+    font-size: 11px!important;
+    padding: 2px 3px!important;
+    height: calc(1.5em + 1rem + -2px)!important;
 }

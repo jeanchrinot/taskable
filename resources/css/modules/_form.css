@@ -11,3 +11,10 @@
 		top:4px;
 	}
 }
+
+.input-group-sm{
+
+	.input-group-prepend {
+    	height: calc(1.5em + .5rem + -1px);
+	}
+}

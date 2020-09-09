@@ -1,0 +1,15 @@
+.edit-item-icon{
+	float: left;
+    margin-left: 9px;
+    color: #00a15d;
+    opacity: 0;
+    transition: all 0.3s linear;
+    margin-top: 2px;
+    cursor: pointer;
+}
+
+.edit-item-icon-parent:hover{
+	.edit-item-icon{
+		opacity: 1;
+	}
+}

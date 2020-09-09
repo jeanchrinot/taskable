@@ -22,13 +22,9 @@ class DashboardController extends Controller
     
     public function index()
     {
-        if (Auth::user()->can('view-tasks')) {
-            $user = Auth::user();
-            $tasks = $user->tasks->all();
-            return view('dashboard')->with(['user'=>$user,'tasks'=>$tasks]);
-        }
-
-        abort(403, 'Access denied');
+        
+        return view('dashboard');
+        
     }
 
     public function list()

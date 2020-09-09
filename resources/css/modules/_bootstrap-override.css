@@ -8,3 +8,19 @@
 		color:$tsk-green;
 	}
 }
+
+.modal{
+	&--small{
+
+		.modal-content {
+    		width: 80%;
+    	}
+
+		.modal-header {
+		 	padding: 6px 20px;
+		}
+		.modal-footer {
+		    padding: 5px;
+		}
+	}
+}
