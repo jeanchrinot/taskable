@@ -32,6 +32,9 @@ Route::put('task/{id}', 'TaskController@update');
 // Delete a task
 Route::delete('task/{id}', 'TaskController@destroy');
 
+// Search in Tasks
+//Route::post('tasks/search', 'TaskController@search');
+
 // List a task todo list
 Route::get('todos/{id}', 'TodoController@index');
 

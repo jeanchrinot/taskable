@@ -2135,6 +2135,7 @@ __webpack_require__.r(__webpack_exports__);
       current_task: {},
       pagination: {},
       url_request: '',
+      search_url: '',
       todos: [],
       todo: {
         id: '',
@@ -2166,7 +2167,12 @@ __webpack_require__.r(__webpack_exports__);
       result: [],
       delay: 100,
       clicks: 0,
-      timer: null
+      timer: null,
+      filter: {
+        priority: 'all',
+        status: 'all',
+        keyword: ''
+      }
     };
   },
   created: function created() {
@@ -2428,20 +2434,48 @@ __webpack_require__.r(__webpack_exports__);
       });
     },
     filterTask: function filterTask(filterType) {
-      var status = $("#status").val();
-      var priority = $("#priority").val();
-      var api_url = "/api/tasks";
+      var api_url = "/api/tasks?f=true";
+      this.url_request = '';
 
-      if (status != "all" && priority != "all") {
-        api_url = api_url + "?priority=" + priority + "&status=" + status;
-        this.url_request = "&priority=" + priority + "&status=" + status;
-      } else if (status != "all") {
-        api_url = api_url + "?status=" + status;
-        this.url_request = "&status=" + status;
-      } else if (priority != "all") {
-        api_url = api_url + "?priority=" + priority;
-        this.url_request = "&priority=" + priority;
-      }
+      if (this.filter.status != "all") {
+        api_url += "&status=" + this.filter.status;
+        this.url_request += "&status=" + this.filter.status;
+      } // else{
+      //   this.url_request = this.removeParam("status",this.url_request);
+      // }
+
+
+      if (this.filter.priority != "all") {
+        api_url += "&priority=" + this.filter.priority;
+        this.url_request += "&priority=" + this.filter.priority;
+      } // else{
+      //   this.url_request = this.removeParam("priority",this.url_request);
+      // }
+
+
+      if (this.filter.keyword.length) {
+        api_url += "&search=" + this.filter.keyword;
+        this.url_request += "&search=" + this.filter.keyword;
+      } // else{
+      //   this.url_request = this.removeParam("search",this.url_request);
+      // }
+      // alert(api_url);
+      // if (status!="all" && priority!="all") {
+      //   api_url = api_url + "?priority="+priority+"&status="+status;
+      //   this.url_request = this.url_request+"&priority="+priority+"&status="+status;
+      // }
+      // else if (status!="all" && priority=="all") {
+      //   api_url = api_url + "?status="+status;
+      //   this.url_request = this.url_request+"&status="+status;
+      // }
+      // else if (priority!="all" && status=="all") {
+      //   api_url = api_url + "?priority="+priority;
+      //   this.url_request = "&priority="+priority;
+      // }
+      // else if (status=="all" && priority=="all") {
+      //   this.url_request = '';
+      // }
+
 
       this.getTasks(api_url);
     },
@@ -2568,6 +2602,55 @@ __webpack_require__.r(__webpack_exports__);
         this.editTaskName(id);
         this.clicks = 0;
       }
+    },
+    searchTask: function searchTask() {
+      var api_url = '/api/tasks?search=' + this.filter.keyword;
+      this.search_url = '&search=' + this.filter.keyword;
+      this.url_request = this.url_request + this.search_url;
+      this.getTasks(api_url); // let vm = this;
+      // fetch('/api/tasks/search', {
+      //           method: 'post',
+      //           body: JSON.stringify(this.filter.keyword),
+      //           headers: {
+      //               'content-type': 'application/json'
+      //           }
+      //       })
+      //       .then(response => response.json())
+      //       .then(response => {
+      //           this.tasks = response.data;
+      //           this.current_task = this.tasks[0];
+      //           this.todos = response.meta.todos;
+      //           vm.paginator(response.meta, response.links);
+      //       })
+      //       .catch(err => console.log(err));
+      // var checkExist = setInterval(()=> {
+      //    if ($("#status_"+this.current_task.id).length) {
+      //       this.updateTaskStatus(this.current_task.id,this.current_task.status);
+      //       clearInterval(checkExist);
+      //    }
+      // }, 100); // check every 100ms
+    },
+    removeParam: function removeParam(key, sourceURL) {
+      var rtn = "",
+          param,
+          params_arr = [],
+          queryString = sourceURL;
+
+      if (queryString !== "") {
+        params_arr = queryString.split("&");
+
+        for (var i = params_arr.length - 1; i >= 0; i -= 1) {
+          param = params_arr[i].split("=")[0];
+
+          if (param === key) {
+            params_arr.splice(i, 1);
+          }
+        }
+
+        rtn = params_arr.join("&");
+      }
+
+      return rtn;
     }
   }
 });
@@ -38204,12 +38287,37 @@ var render = function() {
                 _c(
                   "select",
                   {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.filter.status,
+                        expression: "filter.status"
+                      }
+                    ],
                     staticClass: "form-control form-control-sm filter",
                     attrs: { name: "status", id: "status" },
                     on: {
-                      change: function($event) {
-                        return _vm.filterTask("status")
-                      }
+                      change: [
+                        function($event) {
+                          var $$selectedVal = Array.prototype.filter
+                            .call($event.target.options, function(o) {
+                              return o.selected
+                            })
+                            .map(function(o) {
+                              var val = "_value" in o ? o._value : o.value
+                              return val
+                            })
+                          _vm.$set(
+                            _vm.filter,
+                            "status",
+                            $event.target.multiple
+                              ? $$selectedVal
+                              : $$selectedVal[0]
+                          )
+                        },
+                        _vm.filterTask
+                      ]
                     }
                   },
                   [
@@ -38238,12 +38346,37 @@ var render = function() {
                 _c(
                   "select",
                   {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.filter.priority,
+                        expression: "filter.priority"
+                      }
+                    ],
                     staticClass: "form-control form-control-sm filter",
                     attrs: { name: "priority", id: "priority" },
                     on: {
-                      change: function($event) {
-                        return _vm.filterTask("priority")
-                      }
+                      change: [
+                        function($event) {
+                          var $$selectedVal = Array.prototype.filter
+                            .call($event.target.options, function(o) {
+                              return o.selected
+                            })
+                            .map(function(o) {
+                              var val = "_value" in o ? o._value : o.value
+                              return val
+                            })
+                          _vm.$set(
+                            _vm.filter,
+                            "priority",
+                            $event.target.multiple
+                              ? $$selectedVal
+                              : $$selectedVal[0]
+                          )
+                        },
+                        _vm.filterTask
+                      ]
                     }
                   },
                   [
@@ -38262,7 +38395,40 @@ var render = function() {
                 )
               ]),
               _vm._v(" "),
-              _vm._m(0)
+              _c("div", { staticClass: "form-group col-md-4 filter-form" }, [
+                _c(
+                  "label",
+                  { staticClass: "search-label", attrs: { for: "search" } },
+                  [_vm._v("Search :")]
+                ),
+                _vm._v(" "),
+                _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.filter.keyword,
+                      expression: "filter.keyword"
+                    }
+                  ],
+                  staticClass: "form-control",
+                  attrs: {
+                    type: "text",
+                    id: "search",
+                    placeholder: "Seache here..."
+                  },
+                  domProps: { value: _vm.filter.keyword },
+                  on: {
+                    change: _vm.filterTask,
+                    input: function($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.$set(_vm.filter, "keyword", $event.target.value)
+                    }
+                  }
+                })
+              ])
             ])
           ]),
           _vm._v(" "),
@@ -38339,7 +38505,7 @@ var render = function() {
                               }
                             }),
                             _vm._v(" "),
-                            _vm._m(1)
+                            _vm._m(0)
                           ])
                         ]
                       ),
@@ -38636,7 +38802,7 @@ var render = function() {
                                       "input-group input-group-sm col-md-6 mb-3"
                                   },
                                   [
-                                    _vm._m(2),
+                                    _vm._m(1),
                                     _vm._v(" "),
                                     _c("input", {
                                       staticClass: "form-control datetime",
@@ -38668,7 +38834,7 @@ var render = function() {
                                       "input-group input-group-sm col-md-6 mb-3"
                                   },
                                   [
-                                    _vm._m(3),
+                                    _vm._m(2),
                                     _vm._v(" "),
                                     _c("input", {
                                       staticClass: "form-control datetime",
@@ -38958,25 +39124,10 @@ var render = function() {
       ])
     ]),
     _vm._v(" "),
-    _vm._m(4)
+    _vm._m(3)
   ])
 }
 var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "form-group col-md-4 filter-form" }, [
-      _c("label", { staticClass: "search-label", attrs: { for: "search" } }, [
-        _vm._v("Search :")
-      ]),
-      _vm._v(" "),
-      _c("input", {
-        staticClass: "form-control",
-        attrs: { type: "text", id: "search", placeholder: "Seache here..." }
-      })
-    ])
-  },
   function() {
     var _vm = this
     var _h = _vm.$createElement

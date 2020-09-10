@@ -7,7 +7,7 @@
                   <div class="row">
                     <div class="form-group col-md-4 filter-form">
                       <label for="status">Filter by status: </label>
-                      <select class="form-control form-control-sm filter" name="status" id="status" @change="filterTask('status')">
+                      <select class="form-control form-control-sm filter" name="status" id="status" @change="filterTask" v-model="filter.status">
                         <option value="all">All</option>
                         <option value="complete">Complete</option>
                         <option value="in_progress">In Progress</option>
@@ -16,7 +16,7 @@
                     </div>
                     <div class="form-group col-md-4 filter-form">
                       <label for="priority">Filter by Priority: </label>
-                      <select class="form-control form-control-sm filter" name="priority" id="priority" @change="filterTask('priority')">
+                      <select class="form-control form-control-sm filter" name="priority" id="priority" @change="filterTask" v-model="filter.priority">
                         <option value="all">All</option>
                         <option value="high">High</option>
                         <option value="medium">Medium</option>
@@ -26,7 +26,7 @@
                     <div class="form-group col-md-4 filter-form">
                       <label for="search" class="search-label">Search :</label>
                       
-                      <input type="text" class="form-control" id="search" placeholder="Seache here...">
+                      <input type="text" class="form-control" id="search" v-model="filter.keyword" placeholder="Seache here..." @change="filterTask">
                     </div>
                   </div>
                 </div>
@@ -172,6 +172,7 @@
                 current_task:{},
                 pagination: {},
                 url_request:'',
+                search_url:'',
                 todos:[],
                 todo: {
                     id: '',
@@ -203,7 +204,12 @@
                 result: [],
                 delay: 100,
                 clicks: 0,
-                timer: null
+                timer: null,
+                filter:{
+                  priority:'all',
+                  status:'all',
+                  keyword:''
+                }
             };
         },
  
@@ -463,21 +469,53 @@
                 });
             },
             filterTask(filterType){
-              var status = $("#status").val();
-              var priority = $("#priority").val();
-              var api_url = "/api/tasks";
-              if (status!="all" && priority!="all") {
-                api_url = api_url + "?priority="+priority+"&status="+status;
-                this.url_request = "&priority="+priority+"&status="+status;
+              
+              var api_url = "/api/tasks?f=true";
+
+              this.url_request = '';
+
+              if (this.filter.status!="all"){
+                api_url += "&status="+this.filter.status;
+                this.url_request += "&status="+this.filter.status;
               }
-              else if (status!="all") {
-                api_url = api_url + "?status="+status;
-                this.url_request = "&status="+status;
+              // else{
+              //   this.url_request = this.removeParam("status",this.url_request);
+              // }
+
+              if (this.filter.priority!="all") {
+                api_url += "&priority="+this.filter.priority;
+                this.url_request += "&priority="+this.filter.priority;
               }
-              else if (priority!="all") {
-                api_url = api_url + "?priority="+priority;
-                this.url_request = "&priority="+priority;
+              // else{
+              //   this.url_request = this.removeParam("priority",this.url_request);
+              // }
+
+              if ((this.filter.keyword).length) {
+                api_url += "&search="+this.filter.keyword;
+                this.url_request += "&search="+this.filter.keyword; 
               }
+              // else{
+              //   this.url_request = this.removeParam("search",this.url_request);
+              // }
+
+              // alert(api_url);
+
+              // if (status!="all" && priority!="all") {
+              //   api_url = api_url + "?priority="+priority+"&status="+status;
+              //   this.url_request = this.url_request+"&priority="+priority+"&status="+status;
+              // }
+              // else if (status!="all" && priority=="all") {
+              //   api_url = api_url + "?status="+status;
+              //   this.url_request = this.url_request+"&status="+status;
+              // }
+              // else if (priority!="all" && status=="all") {
+              //   api_url = api_url + "?priority="+priority;
+              //   this.url_request = "&priority="+priority;
+              // }
+              // else if (status=="all" && priority=="all") {
+              //   this.url_request = '';
+              // }
+
               this.getTasks(api_url);
             },
             addTaskForm(id=null){
@@ -593,6 +631,57 @@
                  this.editTaskName(id);
                  this.clicks = 0;
               }         
+            },
+            searchTask(){
+            
+            let api_url = '/api/tasks?search='+this.filter.keyword;
+            this.search_url = '&search='+this.filter.keyword;
+            this.url_request = this.url_request + this.search_url;
+            this.getTasks(api_url);
+
+              // let vm = this;
+
+              // fetch('/api/tasks/search', {
+              //           method: 'post',
+              //           body: JSON.stringify(this.filter.keyword),
+              //           headers: {
+              //               'content-type': 'application/json'
+              //           }
+              //       })
+              //       .then(response => response.json())
+              //       .then(response => {
+                      
+              //           this.tasks = response.data;
+              //           this.current_task = this.tasks[0];
+              //           this.todos = response.meta.todos;
+              //           vm.paginator(response.meta, response.links);
+                        
+              //       })
+              //       .catch(err => console.log(err));
+
+              // var checkExist = setInterval(()=> {
+              //    if ($("#status_"+this.current_task.id).length) {
+              //       this.updateTaskStatus(this.current_task.id,this.current_task.status);
+              //       clearInterval(checkExist);
+              //    }
+              // }, 100); // check every 100ms
+            },
+            removeParam(key, sourceURL) {
+                var rtn = "",
+                    param,
+                    params_arr = [],
+                    queryString = sourceURL;
+                if (queryString !== "") {
+                    params_arr = queryString.split("&");
+                    for (var i = params_arr.length - 1; i >= 0; i -= 1) {
+                        param = params_arr[i].split("=")[0];
+                        if (param === key) {
+                            params_arr.splice(i, 1);
+                        }
+                    }
+                    rtn = params_arr.join("&");
+                }
+                return rtn;
             } 
         }
     };

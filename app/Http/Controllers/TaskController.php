@@ -31,64 +31,49 @@ class TaskController extends Controller
                 $status = $this->getStatus(request()->status);
 
                 if(is_numeric($priority) && is_numeric($status)){
-                    $tasks = $tasks->where(['priority'=>$priority,'status'=>$status])->orderBy('id','desc')->paginate($pagination);
+                    $tasks = $tasks->where(['priority'=>$priority,'status'=>$status])->orderBy('id','desc');
                 }
                 else{
-                    $tasks = $tasks->orderBy('id','desc')->paginate($pagination);
+                    $tasks = $tasks->orderBy('id','desc');
                 }
 
             }
             elseif(request()->priority){
                 $priority = $this->getPriority(request()->priority);
                 if(is_numeric($priority)){
-                    $tasks = $tasks->where('priority',$priority)->orderBy('id','desc')->paginate($pagination);
+                    $tasks = $tasks->where('priority',$priority)->orderBy('id','desc');
                 }
                 else{
-                    $tasks = $tasks->orderBy('id','desc')->paginate($pagination);
+                    $tasks = $tasks->orderBy('id','desc');
                 }
             }
             elseif (request()->status) {
                 $status = $this->getStatus(request()->status);
 
                 if(is_numeric($status)){
-                    $tasks = $tasks->where('status',$status)->orderBy('id','desc')->paginate($pagination);
+                    $tasks = $tasks->where('status',$status)->orderBy('id','desc');
                 }
                 else{
-                    $tasks = $tasks->orderBy('id','desc')->paginate($pagination);
+                    $tasks = $tasks->orderBy('id','desc');
                 }
             }
             else{
-                $tasks = $tasks->orderBy('id','desc')->paginate(5);
+                $tasks = $tasks->orderBy('id','desc');
             }
 
-        $current_task = $tasks->first();
-        
-        if($current_task){
-            $todos = Todo::where('task_id',$current_task->id)->get();
-        }
-        else{
-            $todos = [];
-        }
-        
-        $transformedTasks = $tasks->getCollection()->map(function($item) {
-                $progress = taskProgress($item->id);
-                $item = $item->toArray();
-                $item['complete'] = $progress[0];
-                $item['count']= $progress[1];
-                return $item;
-        });
-        
-        $tasks->setCollection($transformedTasks);
+            // Search 
+            if(request()->search) {
+                $keyword = request()->search;
+                $tasks = $tasks->where(function ($query) use($keyword) {
+                    $query->where('name', 'like', '%' . $keyword . '%')->orderBy('id','desc');
+                })->paginate($pagination);
+            }
+            else{
+                
+                $tasks = $tasks->paginate($pagination);
+            }
 
-        // return $tasks->toJson();
-
-        // $merged     = $tasks->merge($todos);
-        
-        // Return collection of tasks as a resource
-        return (TaskResource::collection($tasks))->additional(['meta' => [
-                    'todos' => $todos,
-                ]]); 
-
+        return $this->getTaskTodoCollection($tasks);
     }
 
     /**
@@ -222,6 +207,52 @@ class TaskController extends Controller
         }
     }
 
+    public function search(Request $request)
+    {
+        $pagination = 5;
+        $keyword = Request::get('keyword');
+        $tasks = Task::where(function ($query) use($keyword) {
+        $query->where('name', 'like', '%' . $keyword . '%')->orderBy('id','desc');
+      })->paginate($pagination);
+
+    //     whereHas('products', function ($query) use ($searchString){
+    //     $query->where('name', 'like', '%'.$searchString.'%');
+    // })
+
+    return $this->getTaskTodoCollection($tasks);
+
+    }
+
+    private function getTaskTodoCollection($tasks)
+    {
+        $current_task = $tasks->first();
+        
+        if($current_task){
+            $todos = Todo::where('task_id',$current_task->id)->get();
+        }
+        else{
+            $todos = [];
+        }
+        
+        $transformedTasks = $tasks->getCollection()->map(function($item) {
+                $progress = taskProgress($item->id);
+                $item = $item->toArray();
+                $item['complete'] = $progress[0];
+                $item['count']= $progress[1];
+                return $item;
+        });
+        
+        $tasks->setCollection($transformedTasks);
+
+        // return $tasks->toJson();
+
+        // $merged     = $tasks->merge($todos);
+        
+        // Return collection of tasks as a resource
+        return (TaskResource::collection($tasks))->additional(['meta' => [
+                    'todos' => $todos,
+                ]]); 
+    }
 
      private function getPriority($priorityName)
     {
