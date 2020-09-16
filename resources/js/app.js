@@ -8,6 +8,30 @@ require('./bootstrap');
 
 window.Vue = require('vue');
 
+if (localStorage.getItem('userToken')!=null) {
+
+	axios.defaults.headers.common["Authorization"] = 'Bearer ' + localStorage.getItem('userToken');
+}
+
+axios.defaults.headers.post['content-type'] = 'application/json'; // for POST requests
+axios.defaults.headers.post['X-Requested-With'] = 'XMLHttpRequest'; // for POST requests
+
+axios.defaults.headers.put['content-type'] = 'application/json'; // for POST requests
+axios.defaults.headers.put['X-Requested-With'] = 'XMLHttpRequest'; // for POST requests
+
+// window.helpers = {show:'task'}; // Show task by default
+
+// const axiosPost = axios.create({
+//   baseURL: '/api/',
+//   method: 'post',
+//   timeout: 1000,
+//   headers: {
+//   	 'content-type': 'application/json',
+//      'X-Requested-With': 'XMLHttpRequest'
+//     }
+// });
+
+
 /**
  * The following block of code may be used to automatically register your
  * Vue components. It will recursively scan this directory for the Vue
@@ -20,8 +44,21 @@ window.Vue = require('vue');
 // files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default))
 
 // Vue.component('example-component', require('./components/ExampleComponent.vue').default);
+
+Vue.component('auth-navbar', require('./components/AuthNavbar.vue').default);
+Vue.component('sidebar-nav', require('./components/SidebarNav.vue').default);
+Vue.component('login-form', require('./components/LoginForm.vue').default);
+
+Vue.component('stats', require('./components/Stats.vue').default);
 Vue.component('delete-button', require('./components/DeleteButton.vue').default);
 Vue.component('task-list', require('./components/TaskList.vue').default);
+
+Vue.component('user-list-action', require('./components/UserListAction.vue').default);
+Vue.component('delete-modal', require('./components/DeleteModal.vue').default);
+Vue.component('view-user-modal', require('./components/ViewUserModal.vue').default);
+Vue.component('ban-user-modal', require('./components/BanUserModal.vue').default);
+Vue.component('task-modal', require('./components/TaskModal.vue').default);
+Vue.component('users', require('./components/Users.vue').default);
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to

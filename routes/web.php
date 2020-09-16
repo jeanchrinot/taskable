@@ -15,7 +15,17 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Auth::routes();
+//Auth::routes();
+
+Route::get('/auth/login',function ()
+{
+	return view('auth.login');
+})->name('login');
+
+Route::get('/auth/register',function ()
+{
+	return view('auth.register');
+})->name('register');
 
 Route::get('/home', 'HomeController@index')->name('home');
 
@@ -27,7 +37,7 @@ Route::get('/test','TestController@index');
 // 	Route::get('tasks', 'DashboardController@list')->name('user.tasks');
 // });
 
-Route::group(array('prefix' => 'app', 'middleware' => 'role:user,admin'), function()
+Route::group(array('prefix' => 'app'), function()
 {
 	Route::get('dashboard', 'DashboardController@index')->name('app.dashboard');
 	Route::get('tasks', 'DashboardController@list')->name('app.tasks');

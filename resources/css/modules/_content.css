@@ -64,3 +64,7 @@
 		max-width: 80%;
 	}
 }
+.centered{
+	margin-left: auto;
+	margin-right: auto;
+}

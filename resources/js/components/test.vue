@@ -1,6 +1,6 @@
 <template>
   <div>
-      <div v-if="user_role=='user'"  class="row">
+      <div class="row">
           <div class="col-md-12 no-padding">
               <div class="card">
                 <div class="card-header">
@@ -31,7 +31,33 @@
                   </div>
                 </div>
                 <div class="card-body">
-                  <div class="row" v-if="pagination.total || user_task_number==0">
+                  <div class="row" v-if="pagination.total">
+                    <div class="col-md-6 col-sm-12">
+                      <div class="task-name">
+                        <span v-if="current_task"><i class="fa fa-align-left"></i> {{ current_task.name }} </span> <span class="task-date" v-if="current_task"><i class="fa fa-calendar"></i>  {{ formatDate(current_task.start_date) }} - {{ formatDate(current_task.end_date) }}</span>
+                      </div>
+                      <div class="todo-list">
+                        <form @submit.prevent="addTodo">
+                          <div class="input-group mb-3">
+                            <input type="text" class="form-control" placeholder="Add item to list..." aria-label="Add item to list" aria-describedby="basic-addon2" v-model="todo.name">
+                            <div class="input-group-append">
+                              <button class="btn btn-outline-secondary" type="submit"><i class="fa fa-plus"></i> Add</button>
+                            </div>
+                          </div>
+                        </form>
+                        <ul class="todo-list text-left">
+                            <li v-for="todo in nonNullTodos" v-bind:key="todo.id" :id="'todo_'+todo.id" class="edit-item-icon-parent">
+                              <div class="list-item">
+                                <label :for="todo.id" class="list-label" role="button"> <input type="checkbox" v-model="todo.complete" :id="todo.id" @click="toggleComplete(todo.id)"> <span class="todo-list__text" v-bind:class="[{'todo-list__item-checked': todo.complete}]" :id="'todo_name_'+todo.id">{{ todo.name }}</span></label>
+                              </div>
+                              <div class="list-action">
+                                <i class="fa fa-pencil edit-item-icon" @click="editTodo(todo.id)"></i>
+                                <delete-button :item-id="todo.id" :item-type="'todo'"></delete-button>
+                              </div>
+                            </li>
+                        </ul>
+                      </div>
+                    </div>
                     <div class="col-md-6 col-sm-12">
                       <div class="task-title" id="task-title">
                         <div class="pull-left"><span><i class="fa fa-tasks"></i>  {{ task_title }}</span></div>
@@ -90,9 +116,6 @@
                             </li>
                         </ul>
                       </div>
-                      <div v-if="user_task_number==0 && !add_new_task">
-                        <span>You don't have any task yet.</span>
-                      </div>
                       <div v-if="!add_new_task && !update_task" style="width: 100%;float: left;padding: 10px;" id="pagination">
                       <nav v-if="pagination.total">
                           <ul class="pagination justify-content-center">
@@ -109,127 +132,14 @@
                       </nav>
                     </div>
                     </div>
-                    <div class="col-md-6 col-sm-12">
-                      <div class="task-name">
-                        <span v-if="current_task"><i class="fa fa-align-left"></i> {{ current_task.name }} </span> <span class="task-date" v-if="current_task"><i class="fa fa-calendar"></i>  {{ formatDate(current_task.start_date) }} - {{ formatDate(current_task.end_date) }}</span>
-                      </div>
-                      <div class="todo-list">
-                        <form @submit.prevent="addTodo">
-                          <div class="input-group mb-3">
-                            <input type="text" class="form-control" placeholder="Add item to list..." aria-label="Add item to list" aria-describedby="basic-addon2" v-model="todo.name">
-                            <div class="input-group-append">
-                              <button class="btn btn-outline-secondary" type="submit"><i class="fa fa-plus"></i> Add</button>
-                            </div>
-                          </div>
-                        </form>
-                        <ul class="todo-list text-left">
-                            <li v-for="todo in nonNullTodos" v-bind:key="todo.id" :id="'todo_'+todo.id" class="edit-item-icon-parent">
-                              <div class="list-item">
-                                <label :for="todo.id" class="list-label" role="button"> <input type="checkbox" v-model="todo.complete" :id="todo.id" @click="toggleComplete(todo.id)"> <span class="todo-list__text" v-bind:class="[{'todo-list__item-checked': todo.complete}]" :id="'todo_name_'+todo.id">{{ todo.name }}</span></label>
-                              </div>
-                              <div class="list-action">
-                                <i class="fa fa-pencil edit-item-icon" @click="editTodo(todo.id)"></i>
-                                <delete-button :item-id="todo.id" :item-type="'todo'"></delete-button>
-                              </div>
-                            </li>
-                        </ul>
-                      </div>
-                    </div>
                   </div>
-                  <div v-if="pagination.total == 0 && user_task_number>0">
+                  <div v-if="pagination.total == 0">
                     <span>No task found.</span>
                   </div>
                 </div>
               </div>
           </div>
       </div>
-      <div v-else-if="user_role=='admin'" class="row">
-                  <div class="col-md-12 no-padding">
-                      <div class="card">
-                        <div class="card-header">
-                          <div class="row">
-                            <div class="form-group col-md-4 filter-form">
-                              <label for="status">Status: </label>
-                              <select class="form-control form-control-sm filter" name="status" id="userTaskStatus" @change="filterTask" v-model="filter.status">
-                                <option value="all">All</option>
-                                <option value="complete">Complete</option>
-                                <option value="in_progress">In Progress</option>
-                                <option value="not_started">Not Started</option>
-                              </select>
-                            </div>
-                            <div class="form-group col-md-4 filter-form">
-                              <label for="priority">Priority: </label>
-                              <select class="form-control form-control-sm filter" name="priority" id="userTaskPriority" @change="filterTask" v-model="filter.priority">
-                                <option value="all">All</option>
-                                <option value="high">High</option>
-                                <option value="medium">Medium</option>
-                                <option value="low">Low</option>
-                              </select>
-                            </div>
-                            <div class="form-group col-md-4 filter-form">
-                              <label for="search" class="search-label">Search :</label>
-                              
-                              <input type="text" class="form-control" id="userTaskSearch" v-model="filter.keyword" placeholder="Seache here..." @change="filterTask">
-                            </div>
-                          </div>
-                        </div>
-                        <div class="card-body">
-                          <div class="row" v-if="pagination.total">
-                            <div class="col-md-6 col-sm-12">
-                              <div class="task-title" id="task-title">
-                                <div class="pull-left"><span><i class="fa fa-tasks"></i>  All tasks</span></div>
-                              </div>
-                              <div class="task-list" id="task-list">
-                                <ul class="todo-list text-left">
-                                    <li v-for="task in nonNullTasks" v-bind:id="'task_'+task.id" v-bind:key="task.id" v-bind:class="[{current:isCurrent(task.id)}]" class="edit-item-icon-parent">
-                                      <div class="list-item" role="button" @click="getTodos(task.id)">
-                                      <span class="list-style" v-bind:class="'list-style--'+taskPriority(task.priority,2)"></span> <span class="todo-list__text" v-bind:id="'task_name_'+task.id">{{ task.name }}</span>
-                                      <span class="badge" v-bind:class="'badge-'+taskStatus(task.status,2)" style="float: right;margin-right: 8px;margin-top: 3px;" v-bind:id="'status_'+task.id">{{ taskStatus(task.status,1) }} {{ task.complete+'/'+task.count}}</span>
-                                      </div>
-                                    </li>
-                                </ul>
-                              </div>
-                              <!-- <div v-if="pagination.total==0">
-                                <span>This user doesn't have any task.</span>
-                              </div>
- -->                              <div style="width: 100%;float: left;padding: 10px;" id="pagination">
-                              <nav v-if="pagination.total">
-                                  <ul class="pagination justify-content-center">
-                                      <li v-bind:class="[{disabled: !pagination.prev_page_url}]" class="page-item">
-                                          <a class="page-link" href="#" @click="getTasks(pagination.prev_page_url)">Previous</a>
-                                      </li>
-                                      <li class="page-item disabled">
-                                          <a class="page-link" href="#">{{ pagination.current_page }} of {{ pagination.last_page }}</a>
-                                      </li>
-                                      <li v-bind:class="[{disabled: !pagination.next_page_url}]" class="page-item">
-                                          <a class="page-link" href="#" @click="getTasks(pagination.next_page_url)">Next</a>
-                                      </li>
-                                  </ul>
-                              </nav>
-                            </div>
-                            </div>
-                             <div class="col-md-6 col-sm-12">
-                              <div class="task-name">
-                                <span v-if="current_task"><i class="fa fa-align-left"></i> {{ current_task.name }} </span> <span class="task-date" v-if="current_task"><i class="fa fa-calendar"></i>  {{ formatDate(current_task.start_date) }} - {{ formatDate(current_task.end_date) }}</span>
-                              </div>
-                              <div class="todo-list">
-                                <ul class="todo-list text-left">
-                                    <li v-for="todo in nonNullTodos" v-bind:key="todo.id" :id="'todo_'+todo.id" class="edit-item-icon-parent">
-                                      <div class="list-item">
-                                        <label :for="todo.id" class="list-label" role="button"> <input type="checkbox" v-model="todo.complete" :id="todo.id" onclick="return false;"> <span class="todo-list__text" v-bind:class="[{'todo-list__item-checked': todo.complete}]" :id="'todo_name_'+todo.id">{{ todo.name }}</span></label>
-                                      </div>
-                                    </li>
-                                </ul>
-                              </div>
-                            </div>
-                          </div>
-                          <div v-if="pagination.total == 0">
-                            <span>No task found.</span>
-                          </div>
-                        </div>
-                      </div>
-                  </div>
-              </div>
       <!-- Modal -->
         <div class="modal modal--small fade" id="deleteListModal" tabindex="-1" role="dialog" aria-labelledby="deleteListModalLabel" aria-hidden="true">
           <div class="modal-dialog" role="document">
@@ -254,13 +164,9 @@
 </template>
 
 <script>
-
-    import { EventBus } from '../bus.js';
-
     export default {
         data() {
             return {
-                show:'task',
                 add_new_task:false,
                 tasks: [],
                 current_task:{},
@@ -303,10 +209,7 @@
                   priority:'all',
                   status:'all',
                   keyword:''
-                },
-                userToken:localStorage.getItem('userToken') ? localStorage.getItem('userToken') : null,
-                user_task_number:localStorage.getItem('user_task_number'),
-                user_role:localStorage.getItem('user_role')
+                }
             };
         },
  
@@ -330,14 +233,10 @@
         methods: {
             getTasks(api_url) {
                 let vm = this;
-
-                //console.log(vm);
-
                 api_url = api_url || '/api/tasks';
-                axios.get(api_url)
-                .then((response) => {
-                  response = response.data;
-                  //console.log(this.task_title);
+                fetch(api_url)
+                    .then(response => response.json())
+                    .then(response => {
                         this.tasks = response.data;
                         this.current_task = this.tasks[0];
                         this.todos = response.meta.todos;
@@ -347,9 +246,9 @@
             },
              getTask(id) {
                 let api_url = '/api/task/'+id;
-                axios.get(api_url)
+                fetch(api_url)
+                    .then(response => response.json())
                     .then(response => {
-                        response = response.data;
                         this.task = response.data;
                     })
                     .catch(err => console.log(err));
@@ -364,23 +263,21 @@
                 };
             },
             addTodo() {
-
-              // console.log(JSON.stringify(this.todo));
                 if (this.update_todo === false) {
-                  let data = this.todo;
-                    axios.post('/api/todo/'+this.current_task.id, {
-                        body:this.todo
+                    fetch('/api/todo/'+this.current_task.id, {
+                        method: 'post',
+                        body: JSON.stringify(this.todo),
+                        headers: {
+                            'content-type': 'application/json'
+                        }
                     })
-                        
+                        .then(response => response.json())
                         .then(response => {
-                          response = response.data;
-                          // console.log(response);
                           if(response.data){
                             this.clearTodoForm();
                             this.todos = response.data;
                             this.current_task = response.meta.current_task;
                             this.updateTaskStatus(this.current_task.id,this.current_task.status);
-                            this.emitGlobalEvent('task-updated','Todo added');
                           }
                           else{
                             const errors = Object.values(response)
@@ -394,10 +291,14 @@
                         })
                         .catch(err => console.log(err));
                 } else {
-                    axios.put('/api/todo', {
-                        body: this.task
+                    fetch('/api/todo', {
+                        method: 'put',
+                        body: JSON.stringify(this.task),
+                        headers: {
+                            'content-type': 'application/json'
+                        }
                     })
-                        
+                        .then(response => response.json())
                         .then(data => {
                             this.clearTodoForm();
                             this.getTasks();
@@ -407,9 +308,9 @@
             },
              getTodos(id=null) {
                id = (id==null) ? this.current_task.id : id;
-                axios.get('/api/todos/' + id)
+                fetch('/api/todos/' + id)
+                  .then(response => response.json())
                     .then(response => {
-                        response = response.data;
                         this.todos = response.data;
                         this.current_task = response.meta.current_task;
                     })
@@ -429,14 +330,14 @@
                 this.todo.name = '';
             },
             toggleComplete(id){
-              axios.post('/api/todo/toggle/' + id)
-                    
+              fetch('/api/todo/toggle/' + id, {
+                    method: 'post'
+                })
+                    .then(response => response.json())
                     .then(response => {
-                      response = response.data;
                        // this.getTasks('/api/tasks?page='+this.pagination.current_page);
                        this.current_task = response.data; 
                        this.updateTaskStatus(this.current_task.id,this.current_task.status);
-                       this.emitGlobalEvent('task-updated','Todo complete status changed');
                     })
                     .catch(err => console.log(err));
             },
@@ -495,12 +396,15 @@
                   this.task_new_name.id = id;
                   this.task_new_name.name = name;
 
-                  axios.put('/api/task/'+id, {
-                        body: this.task_new_name
+                  fetch('/api/task/'+id, {
+                        method: 'put',
+                        body: JSON.stringify(this.task_new_name),
+                        headers: {
+                            'content-type': 'application/json'
+                        }
                     })
-                    
+                    .then(response => response.json())
                     .then(response => {
-                      response = response.data;
                       if(response.data){
                         $('#task_name_'+id).text(name);
                         this.current_task.name = name;
@@ -539,12 +443,15 @@
                   this.todo_new_name.id = id;
                   this.todo_new_name.name = name;
 
-                  axios.put('/api/todo/'+id, {
-                        body: this.todo_new_name
+                  fetch('/api/todo/'+id, {
+                        method: 'put',
+                        body: JSON.stringify(this.todo_new_name),
+                        headers: {
+                            'content-type': 'application/json'
+                        }
                     })
-                    
+                    .then(response => response.json())
                     .then(response => {
-                      response = response.data;
                       if(response.data){
                         $('#todo_name_'+id).text(name);
                       }
@@ -630,20 +537,22 @@
               var method = 'post';
               if (this.update_task==true && id!=null) {
                 api_url = api_url + '/'+id;
-                
-                axios.put(api_url, {
-                    body: this.task
+                method = 'put';
+              }
+                fetch(api_url, {
+                    method: method,
+                    body: JSON.stringify(this.task),
+                    headers: {
+                        'content-type': 'application/json'
+                    }
                 })
-                
+                .then(response => response.json())
                 .then(response => {
-                  response = response.data;
                   if(response.data){
                     this.clearTaskForm();
                     this.getTasks();
                     this.add_new_task = false;
                     this.update_task = false;
-                    this.user_task_number = this.user_task_number + this.user_task_number;
-                    this.emitGlobalEvent('task-updated','Updated a task');
                     //this.current_task = response.data;
                     // this.current_task = response.meta.current_task;
                     // this.updateTaskStatus(this.current_task.id,this.current_task.status);
@@ -659,38 +568,6 @@
                     
                 })
                 .catch(err => console.log(err));
-
-              }
-              else{
-                axios.post(api_url, {
-                    body: this.task
-                })
-                
-                .then(response => {
-                  response = response.data;
-                  if(response.data){
-                    this.clearTaskForm();
-                    this.getTasks();
-                    this.add_new_task = false;
-                    this.update_task = false;
-                    this.emitGlobalEvent('task-updated','Added a task');
-                    //this.current_task = response.data;
-                    // this.current_task = response.meta.current_task;
-                    // this.updateTaskStatus(this.current_task.id,this.current_task.status);
-                  }
-                  else{
-                    const errors = Object.values(response)
-                    for (var i = errors.length - 1; i >= 0; i--) {
-                      // console.log(errors[i][0]);
-                      $('#error-toast').find('.toast-body').html(errors[i][0]);
-                      $('#error-toast').toast('show');
-                    }
-                  }
-                    
-                })
-                .catch(err => console.log(err));
-              }
-                
             },
             cancelNewTask(){
               this.add_new_task = false;
@@ -755,6 +632,40 @@
                  this.clicks = 0;
               }         
             },
+            searchTask(){
+            
+            let api_url = '/api/tasks?search='+this.filter.keyword;
+            this.search_url = '&search='+this.filter.keyword;
+            this.url_request = this.url_request + this.search_url;
+            this.getTasks(api_url);
+
+              // let vm = this;
+
+              // fetch('/api/tasks/search', {
+              //           method: 'post',
+              //           body: JSON.stringify(this.filter.keyword),
+              //           headers: {
+              //               'content-type': 'application/json'
+              //           }
+              //       })
+              //       .then(response => response.json())
+              //       .then(response => {
+                      
+              //           this.tasks = response.data;
+              //           this.current_task = this.tasks[0];
+              //           this.todos = response.meta.todos;
+              //           vm.paginator(response.meta, response.links);
+                        
+              //       })
+              //       .catch(err => console.log(err));
+
+              // var checkExist = setInterval(()=> {
+              //    if ($("#status_"+this.current_task.id).length) {
+              //       this.updateTaskStatus(this.current_task.id,this.current_task.status);
+              //       clearInterval(checkExist);
+              //    }
+              // }, 100); // check every 100ms
+            },
             removeParam(key, sourceURL) {
                 var rtn = "",
                     param,
@@ -771,9 +682,6 @@
                     rtn = params_arr.join("&");
                 }
                 return rtn;
-            },
-            emitGlobalEvent(eventType,data) {
-              EventBus.$emit(eventType,data);
             } 
         }
     };

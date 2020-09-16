@@ -2,10 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use App\Task;
+use App\Todo;
+use App\Http\Resources\Task as TaskResource;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\MessageBag;
+use App\User;
 
 class DashboardController extends Controller
 {
@@ -14,10 +19,10 @@ class DashboardController extends Controller
      *
      * @return void
      */
-    public function __construct()
-    {
-        $this->middleware('auth');
-    }
+    // public function __construct()
+    // {
+    //     $this->middleware('auth:api');
+    // }
 
     
     public function index()
@@ -27,12 +32,17 @@ class DashboardController extends Controller
         
     }
 
+    public function users()
+    {
+        return view('users');
+    }
+
     public function list()
     {
         $pagination = 10;
 
-        if (Auth::user()->can('view-tasks')) {
-            $user = Auth::user();
+        // if (Auth::user()->can('view-tasks')) {
+            $user = User::findOrFail(1);
             if($user->hasRole('admin')){
 
                 $tasks = DB::table('tasks');
@@ -74,7 +84,7 @@ class DashboardController extends Controller
             }
 
             return view('tasks')->with(['tasks'=>$tasks]);
-        }
-        abort(403, 'Access denied');
+        // }
+        // abort(403, 'Access denied');
     }
 }

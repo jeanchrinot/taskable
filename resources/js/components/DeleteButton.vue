@@ -10,7 +10,7 @@
             props:['itemType','itemId'],
             
             mounted() {
-                console.log('Delete Component mounted.')
+                // console.log('Delete Component mounted.')
             },
         
             methods:{
@@ -27,10 +27,7 @@
                         
                        //alert('type='+this.itemType+', id='+this.itemId);
 
-                        fetch('/api/'+this.itemType+'/' + this.itemId, {
-                            method: 'delete'
-                        })
-                        .then(response => response.json())
+                        axios.delete('/api/'+this.itemType+'/' + this.itemId)
                         .then(data => {
 
                             $("#deleteListModal").modal('hide');

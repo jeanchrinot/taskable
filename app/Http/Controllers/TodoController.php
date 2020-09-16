@@ -11,6 +11,12 @@ use Illuminate\Support\MessageBag;
 
 class TodoController extends Controller
 {
+
+    function __construct()
+    {
+        $this->middleware('auth:api');
+    }
+    
     /**
      * Display a listing of the resource.
      *
@@ -52,7 +58,11 @@ class TodoController extends Controller
     public function store(Request $request,$id)
     {
 
-        $validation = Validator::make(Request::all(),[ 
+        $data = Request::all();
+
+        $data = $data['body'];
+
+        $validation = Validator::make($data,[ 
         'name' => 'required|string'
         ]);
 
@@ -63,7 +73,7 @@ class TodoController extends Controller
 
         } else{
                 $newTodo = Todo::create([
-                    'name' => Request::get('name'),
+                    'name' => $data['name'],
                     'complete'=>0
                 ]);
 
@@ -122,7 +132,12 @@ class TodoController extends Controller
      */
     public function update(Request $request, $id)
     {
-         $validation = Validator::make(Request::all(),[ 
+
+        $data = Request::all();
+
+        $data = $data['body'];
+
+         $validation = Validator::make($data,[ 
         'name' => 'required|string'
         ]);
 
@@ -134,7 +149,7 @@ class TodoController extends Controller
         } else{
                 $todo = Todo::where('id',$id)->firstOrFail();
                 $todo->update([
-                    'name' => Request::get('name')
+                    'name' => $data['name']
                 ]);
 
                 return new TaskResource($todo);

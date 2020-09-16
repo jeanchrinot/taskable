@@ -23,12 +23,36 @@ html, body {
     padding:0!important;
 }
 
+/***** COLORS ******/
 .color-green{
     color:$tsk-green!important;
 }
 .color-red{
     color:$tsk-red!important;
 }
+.color-yellow{
+    color:$tsk-yellow!important;
+}
+.color-blue{
+    color:$tsk-blue!important;
+}
+
+/***** BACKGROUNDS *****/
+
+.bg-green{
+    background-color:$tsk-green!important;
+}
+.bg-red{
+    background-color:$tsk-red!important;
+}
+.bg-yellow{
+    background-color:$tsk-yellow!important;
+}
+.bg-blue{
+    background-color:$tsk-blue!important;
+}
+
+/******* ********/
 
 *{
     box-sizing: border-box;

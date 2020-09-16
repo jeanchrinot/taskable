@@ -4076,6 +4076,9 @@ html, body {
 }
 
 
+/***** COLORS ******/
+
+
 .color-green{
     color:#00a15d!important;
 }
@@ -4084,6 +4087,42 @@ html, body {
 .color-red{
     color:#dc3545!important;
 }
+
+
+.color-yellow{
+    color:#ffd34b!important;
+}
+
+
+.color-blue{
+    color:#005cbf!important;
+}
+
+
+/***** BACKGROUNDS *****/
+
+
+.bg-green{
+    background-color:#00a15d!important;
+}
+
+
+.bg-red{
+    background-color:#dc3545!important;
+}
+
+
+.bg-yellow{
+    background-color:#ffd34b!important;
+}
+
+
+.bg-blue{
+    background-color:#005cbf!important;
+}
+
+
+/******* ********/
 
 
 *{
@@ -4286,6 +4325,11 @@ main{
 .links--horizontal li{
 		float: left;
 		margin-right: 20px;
+	}
+
+
+.nav-link--icon{
+		font-size: 18px;
 	}
 
 
@@ -4510,6 +4554,12 @@ main{
 	}
 
 
+.centered{
+	margin-left: auto;
+	margin-right: auto;
+}
+
+
 .todo-list{
 	list-style: none;
 	padding:0;
@@ -4709,6 +4759,31 @@ main{
 .modal--small .modal-footer {
 		    padding: 5px;
 		}
+
+
+.modal-lg{
+		max-width: 80%;
+	}
+
+
+.modal-body{
+		padding: 10px 1rem;
+	}
+
+
+.modal-header{
+		padding: 10px 1rem;
+	}
+
+
+.modal-footer{
+		padding: 4px 10px;
+	}
+
+
+.modal .table{
+		margin-bottom: 0;
+	}
 
 
 .toast.show{

@@ -5,6 +5,9 @@
         if (!(localStorage.getItem('userToken'))) {
             window.location.replace('/auth/login');
         }
+        if (localStorage.getItem('user_role')!='admin') {
+            window.location.replace('/app/dashboard');
+        }
     </script>
 @endsection
 @section('content')
@@ -12,12 +15,11 @@
         
         <section class="content">
             <div class="content__header">
-                <h1 class="content__title">Dashboard</h1>
+                <h1 class="content__title">Users</h1>
             </div>
             <div class="content__main">
-                <stats></stats>
                 <div>
-                    <task-list></task-list>
+                    <users></users>
                 </div>
             </div>
             @include('includes.flash')

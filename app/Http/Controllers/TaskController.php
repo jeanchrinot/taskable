@@ -9,21 +9,41 @@ use App\Http\Resources\Task as TaskResource;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\MessageBag;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Carbon;
 
 class TaskController extends Controller
 {
+    function __construct()
+    {
+        $this->middleware('auth:api');
+    }
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
 
+    private $pagination = 10;
+
     public function index()
     {
-        
-            $tasks = Task::where('user_id',1);
+            $user = Auth::user();
 
-            $pagination = 5;
+            if ($user->hasRole('admin')) {
+                
+                if (request()->id) {
+                    $tasks = Task::where('user_id',request()->id);
+                }
+                else{
+                    $tasks = Task::query();
+                }
+            }
+            else{
+
+                $tasks = Task::where('user_id',$user->id);
+            }
+            
+            
 
             if (request()->priority && request()->status) {
                 // Filter by priority and status
@@ -66,11 +86,11 @@ class TaskController extends Controller
                 $keyword = request()->search;
                 $tasks = $tasks->where(function ($query) use($keyword) {
                     $query->where('name', 'like', '%' . $keyword . '%')->orderBy('id','desc');
-                })->paginate($pagination);
+                })->paginate($this->pagination);
             }
             else{
-                
-                $tasks = $tasks->paginate($pagination);
+
+                $tasks = $tasks->paginate($this->pagination);
             }
 
         return $this->getTaskTodoCollection($tasks);
@@ -93,8 +113,10 @@ class TaskController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
-    {
-        $validation = Validator::make(Request::all(),[ 
+    {   
+        $data = Request::all();
+        $data = $data['body'];
+        $validation = Validator::make($data,[ 
         'name' => 'required|string',
         'priority'=>'required|numeric|max:3|min:1',
         'start_date'=>'required|date',
@@ -107,14 +129,15 @@ class TaskController extends Controller
             return $errors->toJson();
 
         } else{
+                $user = Auth::user();
                 $newTask = Task::create([
-                    'name' => Request::get('name'),
-                    'priority'=>Request::get('priority'),
-                    'start_date'=>Request::get('start_date'),
-                    'end_date'=> Request::get('end_date')
+                    'name' => $data['name'],
+                    'priority'=>$data['priority'],
+                    'start_date'=>$data['start_date'],
+                    'end_date'=> $data['end_date']
                 ]);
 
-                $newTask->user()->associate(1)->save();
+                $newTask->user()->associate($user->id)->save();
 
                 return new TaskResource($newTask);
         }
@@ -129,7 +152,8 @@ class TaskController extends Controller
     public function show($id)
     {
         // Get the todos
-        $task = Task::where('id',$id)->firstOrFail();
+        $user = Auth::user();
+        $task = Task::where(['id'=>$id,'user_id'=>$user->id])->firstOrFail();
         $progress = taskProgress($task->id);
         $task = $task->toArray();
         $task['complete'] = $progress[0];
@@ -159,7 +183,10 @@ class TaskController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $validation = Validator::make(Request::all(),[ 
+        $data = Request::all();
+        $data = $data['body'];
+
+        $validation = Validator::make($data,[ 
             'name' => 'required|string',
             'priority'=>'nullable|numeric|max:3|min:1',
             'start_date'=>'nullable|date',
@@ -174,10 +201,10 @@ class TaskController extends Controller
         } else{
                 $task = Task::findOrFail($id);
                 $task->update([
-                    'name' => Request::get('name'),
-                    'priority'=>Request::get('priority') ?? $task->priority,
-                    'start_date'=>Request::get('start_date') ?? $task->start_date,
-                    'end_date'=> Request::get('end_date') ?? $task->end_date
+                    'name' => $data['name'],
+                    'priority'=>$data['priority'] ?? $task->priority,
+                    'start_date'=>$data['start_date'] ?? $task->start_date,
+                    'end_date'=> $data['end_date'] ?? $task->end_date
                 ]);
 
                 // $messages = new MessageBag;
@@ -207,20 +234,38 @@ class TaskController extends Controller
         }
     }
 
-    public function search(Request $request)
+
+    public function stats()
     {
-        $pagination = 5;
-        $keyword = Request::get('keyword');
-        $tasks = Task::where(function ($query) use($keyword) {
-        $query->where('name', 'like', '%' . $keyword . '%')->orderBy('id','desc');
-      })->paginate($pagination);
+        if(Auth::check()){
+            $user = Auth::user();
+            if ($user->hasRole('admin')) {
+                if(request()->id){
+                    $tasks = Task::where('user_id',request()->id);
+                }
+                else{
+                    $tasks = Task::all();
+                }
+            }
+            else{
+                $tasks = $user->tasks;
+            }
+            
+            $count = $tasks->count();
+            $complete = $tasks->where('status',2)->count();
+            $inprogress = $tasks->where('status',1)->count();
+            $expired = $tasks->where('status','<',2)->where('end_date', '<', Carbon::now())->count();
 
-    //     whereHas('products', function ($query) use ($searchString){
-    //     $query->where('name', 'like', '%'.$searchString.'%');
-    // })
+            $stats = [
+                'count'=>['name'=>'All tasks','value'=>$count],
+                'complete'=>['name'=>'Complete tasks','value'=>$complete],
+                'inprogress'=>['name'=>'Tasks in progress','value'=>$inprogress],
+                'expired'=>['name'=>'Expired tasks','value'=>$expired]
+              ];
 
-    return $this->getTaskTodoCollection($tasks);
+              return TaskResource::collection($stats);
 
+        }
     }
 
     private function getTaskTodoCollection($tasks)
