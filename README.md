@@ -76,5 +76,5 @@ If you discover a security vulnerability within Laravel, please send an e-mail t
 ## License
 
 The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
-# A simple to-do list app
+# A simple task management and to-do list app made with Laravel and VueJS
 # taskable
