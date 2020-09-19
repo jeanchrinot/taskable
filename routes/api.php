@@ -64,7 +64,12 @@ Route::group([
 			Route::put('todo/{id}', 'TodoController@update');
 			Route::delete('todo/{id}', 'TodoController@destroy');
 
-			Route::get('users','AdminController@users');
-			Route::get('user/{id}','AdminController@user');
-			Route::put('user/ban/{id}','AdminController@ban');
+			Route::get('admin/users','AdminController@users');
+			Route::get('admin/user/{id}','AdminController@user');
+			Route::put('admin/user/ban/{id}','AdminController@ban');
+
+			Route::get('user/profile/show','ProfileController@showProfile');
+			Route::put('user/profile/update','ProfileController@updateProfile');
+			Route::get('user/info/show','ProfileController@showInfo');
+			Route::put('user/info/update','ProfileController@updateInfo');
     });

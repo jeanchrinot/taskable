@@ -5,12 +5,10 @@
         if (!(localStorage.getItem('userToken'))) {
             window.location.replace('/auth/login');
         }
-        if (localStorage.getItem('user_role')!='admin') {
-            window.location.replace('/app/dashboard');
-        }
     </script>
 @endsection
 @section('content')
+
         <section class="content">
             <div class="content__header">
                 <div class="sidebar__nav__head">
@@ -22,7 +20,7 @@
                     </div>
                 </div>
                 <div class="content__title">
-                    <h1 class="content__title__text">Users</h1>
+                    <h1 class="content__title__text">Profile</h1>
                 </div>
             </div>
             <div class="content__main">
@@ -30,8 +28,13 @@
                     @include('includes.sidebar')
                 </div>
                 <div class="content__main__right">
-                    <div>
-                        <users></users>
+                    <div class="row">
+                        <div class="col-md-6 pd-0">
+                            <user-profile></user-profile>
+                        </div>
+                        <div class="col-md-6 pd-0">
+                            <user-info></user-info>
+                        </div>
                     </div>
                 </div>
             </div>

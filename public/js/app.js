@@ -2041,7 +2041,7 @@ __webpack_require__.r(__webpack_exports__);
     banUser: function banUser(id) {
       var _this2 = this;
 
-      axios.put('/api/user/ban/' + id).then(function (response) {
+      axios.put('/api/admin/user/ban/' + id).then(function (response) {
         response = response.data;
 
         if (response.success == true) {
@@ -2334,11 +2334,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
-//
-//
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: ['routes'],
   data: function data() {
@@ -2365,8 +2360,6 @@ __webpack_require__.r(__webpack_exports__);
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _bus_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../bus.js */ "./resources/js/bus.js");
-//
-//
 //
 //
 //
@@ -3510,6 +3503,170 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/UserInfo.vue?vue&type=script&lang=js&":
+/*!*******************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/UserInfo.vue?vue&type=script&lang=js& ***!
+  \*******************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _bus_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../bus.js */ "./resources/js/bus.js");
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+  data: function data() {
+    return {
+      user: {},
+      edit_info: false,
+      info: {
+        name: '',
+        email: ''
+      }
+    };
+  },
+  created: function created() {
+    this.getUser();
+  },
+  methods: {
+    getUser: function getUser() {
+      var _this = this;
+
+      axios.get('/api/user/info/show').then(function (response) {
+        response = response.data;
+        _this.user = response.data;
+        _this.info.name = _this.user.name;
+        _this.info.email = _this.user.email;
+
+        _this.updateUserStatus();
+      })["catch"](function (err) {
+        return console.log(err);
+      });
+    },
+    userStatus: function userStatus(status, index) {
+      var statusArr = [['0', 'Not activated', 'warning'], ['1', 'Active', 'info']];
+      return statusArr[status][index];
+    },
+    updateUserStatus: function updateUserStatus() {
+      $("#user_status").attr('class', 'badge badge-' + this.userStatus(this.user.status, 2));
+      $("#user_status").html(this.userStatus(this.user.status, 1));
+    },
+    formatDate: function formatDate(date) {
+      //let options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+      var theDate = new Date(date);
+      return theDate.toLocaleDateString("en-US");
+    },
+    addInfoForm: function addInfoForm() {
+      this.edit_info = true;
+    },
+    editInfo: function editInfo() {
+      var _this2 = this;
+
+      axios.put('/api/user/info/update', {
+        body: this.info
+      }).then(function (response) {
+        response = response.data; // console.log(response);
+
+        if (response.data) {
+          // this.clearForm();
+          _this2.user = response.data;
+          _this2.edit_info = false;
+          var checkExist = setInterval(function () {
+            if ($('#user_status').length) {
+              _this2.updateUserStatus();
+
+              clearInterval(checkExist);
+            }
+          }, 100); // check every 100ms
+        } else {
+          var errors = Object.values(response);
+
+          for (var i = errors.length - 1; i >= 0; i--) {
+            // console.log(errors[i][0]);
+            $('#error-toast').find('.toast-body').html(errors[i][0]);
+            $('#error-toast').toast('show');
+          }
+        }
+      })["catch"](function (err) {
+        return console.log(err);
+      });
+    },
+    cancelEditInfo: function cancelEditInfo() {
+      var _this3 = this;
+
+      this.edit_info = false;
+      var checkExist = setInterval(function () {
+        if ($('#user_status').length) {
+          _this3.updateUserStatus();
+
+          clearInterval(checkExist);
+        }
+      }, 100); // check every 100ms
+    }
+  }
+});
+
+/***/ }),
+
 /***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/UserListAction.vue?vue&type=script&lang=js&":
 /*!*************************************************************************************************************************************************************************!*\
   !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/UserListAction.vue?vue&type=script&lang=js& ***!
@@ -3557,6 +3714,141 @@ __webpack_require__.r(__webpack_exports__);
     },
     emitGlobalEvent: function emitGlobalEvent(eventType, data) {
       _bus_js__WEBPACK_IMPORTED_MODULE_0__["EventBus"].$emit(eventType, data);
+    }
+  }
+});
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/UserProfile.vue?vue&type=script&lang=js&":
+/*!**********************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/UserProfile.vue?vue&type=script&lang=js& ***!
+  \**********************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _bus_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../bus.js */ "./resources/js/bus.js");
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+  data: function data() {
+    return {
+      edit_profile: false,
+      profile: {},
+      image: null,
+      current_image: '',
+      test: {
+        image: 'fdghdfg'
+      }
+    };
+  },
+  created: function created() {
+    this.getProfile();
+  },
+  methods: {
+    getProfile: function getProfile() {
+      var _this = this;
+
+      axios.get('/api/user/profile/show').then(function (response) {
+        response = response.data;
+        _this.profile = response.data;
+        _this.current_image = _this.profile.image;
+      })["catch"](function (err) {
+        return console.log(err);
+      });
+    },
+    addForm: function addForm() {
+      this.edit_profile = true;
+    },
+    cancelEdit: function cancelEdit() {
+      this.edit_profile = false;
+      this.removeImage();
+      $('#profile_image').attr('src', this.current_image);
+    },
+    updateProfile: function updateProfile() {
+      // console.log(this.image);
+      var data = new FormData();
+      data.append('image', this.image);
+      console.log(data);
+      axios.put('/api/user/profile/update', data, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+          'X-Requested-With': 'XMLHttpRequest'
+        }
+      }).then(function (response) {
+        console.log(response); // if (response.data) {
+        //     response = response.data;
+        //     if (response.success==true) {
+        //         alert('OK');
+        //     }
+        //     else{
+        //       console.log('Error');
+        //     }
+        // }
+        // else{
+        //   const errors = Object.values(response)
+        //   for (var i = errors.length - 1; i >= 0; i--) {
+        //     // console.log(errors[i][0]);
+        //     $('#error-toast').find('.toast-body').html(errors[i][0]);
+        //     $('#error-toast').toast('show');
+        //   }
+        // }
+      })["catch"](function (err) {
+        console.log(err);
+      });
+    },
+    onFileChange: function onFileChange(e) {
+      this.image = e.target.files[0];
+      var files = e.target.files || e.dataTransfer.files;
+      if (!files.length) return;
+      this.createImage(files[0]);
+    },
+    createImage: function createImage(file) {
+      var image = new Image();
+      var reader = new FileReader();
+      var vm = this;
+
+      reader.onload = function (e) {
+        // vm.image = e.target.result;
+        $('#profile_image').attr('src', e.target.result);
+      };
+
+      reader.readAsDataURL(file);
+    },
+    removeImage: function removeImage(e) {
+      this.image = '';
     }
   }
 });
@@ -3712,7 +4004,7 @@ __webpack_require__.r(__webpack_exports__);
 
       var vm = this; //console.log(vm);
 
-      api_url = api_url || '/api/users';
+      api_url = api_url || '/api/admin/users';
       axios.get(api_url).then(function (response) {
         response = response.data; //console.log(this.task_title);
 
@@ -3720,17 +4012,6 @@ __webpack_require__.r(__webpack_exports__);
         // this.todos = response.meta.todos;
 
         vm.paginator(response.meta, response.links);
-      })["catch"](function (err) {
-        return console.log(err);
-      });
-    },
-    getUser: function getUser(id) {
-      var _this3 = this;
-
-      var api_url = '/api/task/' + id;
-      axios.get(api_url).then(function (response) {
-        response = response.data;
-        _this3.user = response.data;
       })["catch"](function (err) {
         return console.log(err);
       });
@@ -3745,7 +4026,7 @@ __webpack_require__.r(__webpack_exports__);
       };
     },
     filterUsers: function filterUsers(filterType) {
-      var api_url = "/api/users?f=true";
+      var api_url = "/api/admin/users?f=true";
       this.url_request = '';
 
       if (this.filter.status != "all") {
@@ -3908,9 +4189,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
@@ -3929,7 +4207,7 @@ __webpack_require__.r(__webpack_exports__);
     getUser: function getUser(id) {
       var _this2 = this;
 
-      axios.get('/api/user/' + id).then(function (response) {
+      axios.get('/api/admin/user/' + id).then(function (response) {
         response = response.data;
         _this2.user = response.data;
         $("#user_status").attr('class', 'badge badge-' + _this2.userStatus(_this2.user.status, 2));
@@ -40198,46 +40476,37 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", [
-    _c("nav", { staticClass: "sidebar__nav" }, [
-      _c("ul", { staticClass: "sidebar__menu" }, [
-        _c("li", { staticClass: "title--small" }, [
-          _vm._v("\n                MAIN NAVIGATION\n            ")
-        ]),
-        _vm._v(" "),
-        _c("li", { staticClass: "active" }, [
-          _c(
-            "a",
-            {
-              staticClass: "menu-toggle",
-              attrs: { href: _vm.links.dashboard }
-            },
-            [
-              _c("i", { staticClass: "fa fa-bar-chart" }),
-              _vm._v(" "),
-              _c("span", { staticClass: "nav-label" }, [_vm._v("Dashboard")])
-            ]
-          )
-        ]),
-        _vm._v(" "),
-        _c("li", [
-          _c("a", { attrs: { href: _vm.links.profile } }, [
-            _c("i", { staticClass: "fa fa-user" }),
+  return _c("nav", { staticClass: "sidebar__nav sidebar__nav--expanded" }, [
+    _c("ul", { staticClass: "sidebar__menu sidebar__menu--visible" }, [
+      _c("li", { staticClass: "active" }, [
+        _c(
+          "a",
+          { staticClass: "menu-toggle", attrs: { href: _vm.links.dashboard } },
+          [
+            _c("i", { staticClass: "fa fa-bar-chart" }),
             _vm._v(" "),
-            _c("span", { staticClass: "nav-label" }, [_vm._v("Profile")])
-          ])
-        ]),
-        _vm._v(" "),
-        _vm.user_role == "admin"
-          ? _c("li", [
-              _c("a", { attrs: { href: _vm.links.users } }, [
-                _c("i", { staticClass: "fa fa-users" }),
-                _vm._v(" "),
-                _c("span", { staticClass: "nav-label" }, [_vm._v("Users")])
-              ])
+            _c("span", { staticClass: "nav-label" }, [_vm._v("Dashboard")])
+          ]
+        )
+      ]),
+      _vm._v(" "),
+      _c("li", [
+        _c("a", { attrs: { href: _vm.links.profile } }, [
+          _c("i", { staticClass: "fa fa-user" }),
+          _vm._v(" "),
+          _c("span", { staticClass: "nav-label" }, [_vm._v("Profile")])
+        ])
+      ]),
+      _vm._v(" "),
+      _vm.user_role == "admin"
+        ? _c("li", [
+            _c("a", { attrs: { href: _vm.links.users } }, [
+              _c("i", { staticClass: "fa fa-users" }),
+              _vm._v(" "),
+              _c("span", { staticClass: "nav-label" }, [_vm._v("Users")])
             ])
-          : _vm._e()
-      ])
+          ])
+        : _vm._e()
     ])
   ])
 }
@@ -40263,61 +40532,59 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", [
-    _c("div", { staticClass: "numbers flex" }, [
-      _c("div", { staticClass: "numbers__item" }, [
-        _vm._m(0),
-        _vm._v(" "),
-        _c("div", { staticClass: "numbers__item__value" }, [
-          _c("span", { staticClass: "item__number" }, [
-            _vm._v(_vm._s(_vm.stats.count.value))
-          ]),
-          _c("br"),
-          _c("span", { staticClass: "item__label" }, [
-            _vm._v(_vm._s(_vm.stats.count.name))
-          ])
-        ])
-      ]),
+  return _c("div", { staticClass: "numbers flex" }, [
+    _c("div", { staticClass: "numbers__item" }, [
+      _vm._m(0),
       _vm._v(" "),
-      _c("div", { staticClass: "numbers__item" }, [
-        _vm._m(1),
-        _vm._v(" "),
-        _c("div", { staticClass: "numbers__item__value" }, [
-          _c("span", { staticClass: "item__number" }, [
-            _vm._v(_vm._s(_vm.stats.complete.value))
-          ]),
-          _c("br"),
-          _c("span", { staticClass: "item__label" }, [
-            _vm._v(_vm._s(_vm.stats.complete.name))
-          ])
+      _c("div", { staticClass: "numbers__item__value" }, [
+        _c("span", { staticClass: "item__number" }, [
+          _vm._v(_vm._s(_vm.stats.count.value))
+        ]),
+        _c("br"),
+        _c("span", { staticClass: "item__label" }, [
+          _vm._v(_vm._s(_vm.stats.count.name))
         ])
-      ]),
+      ])
+    ]),
+    _vm._v(" "),
+    _c("div", { staticClass: "numbers__item" }, [
+      _vm._m(1),
       _vm._v(" "),
-      _c("div", { staticClass: "numbers__item" }, [
-        _vm._m(2),
-        _vm._v(" "),
-        _c("div", { staticClass: "numbers__item__value" }, [
-          _c("span", { staticClass: "item__number" }, [
-            _vm._v(_vm._s(_vm.stats.inprogress.value))
-          ]),
-          _c("br"),
-          _c("span", { staticClass: "item__label" }, [
-            _vm._v(_vm._s(_vm.stats.inprogress.name))
-          ])
+      _c("div", { staticClass: "numbers__item__value" }, [
+        _c("span", { staticClass: "item__number" }, [
+          _vm._v(_vm._s(_vm.stats.complete.value))
+        ]),
+        _c("br"),
+        _c("span", { staticClass: "item__label" }, [
+          _vm._v(_vm._s(_vm.stats.complete.name))
         ])
-      ]),
+      ])
+    ]),
+    _vm._v(" "),
+    _c("div", { staticClass: "numbers__item" }, [
+      _vm._m(2),
       _vm._v(" "),
-      _c("div", { staticClass: "numbers__item" }, [
-        _vm._m(3),
-        _vm._v(" "),
-        _c("div", { staticClass: "numbers__item__value" }, [
-          _c("span", { staticClass: "item__number" }, [
-            _vm._v(_vm._s(_vm.stats.expired.value))
-          ]),
-          _c("br"),
-          _c("span", { staticClass: "item__label" }, [
-            _vm._v(_vm._s(_vm.stats.expired.name))
-          ])
+      _c("div", { staticClass: "numbers__item__value" }, [
+        _c("span", { staticClass: "item__number" }, [
+          _vm._v(_vm._s(_vm.stats.inprogress.value))
+        ]),
+        _c("br"),
+        _c("span", { staticClass: "item__label" }, [
+          _vm._v(_vm._s(_vm.stats.inprogress.name))
+        ])
+      ])
+    ]),
+    _vm._v(" "),
+    _c("div", { staticClass: "numbers__item" }, [
+      _vm._m(3),
+      _vm._v(" "),
+      _c("div", { staticClass: "numbers__item__value" }, [
+        _c("span", { staticClass: "item__number" }, [
+          _vm._v(_vm._s(_vm.stats.expired.value))
+        ]),
+        _c("br"),
+        _c("span", { staticClass: "item__label" }, [
+          _vm._v(_vm._s(_vm.stats.expired.name))
         ])
       ])
     ])
@@ -40387,10 +40654,13 @@ var render = function() {
                 _c("div", { staticClass: "row" }, [
                   _c(
                     "div",
-                    { staticClass: "form-group col-md-4 filter-form" },
+                    {
+                      staticClass:
+                        "form-group col-sm-4 col-md-4 filter-form filter-form--select"
+                    },
                     [
                       _c("label", { attrs: { for: "status" } }, [
-                        _vm._v("Filter by status: ")
+                        _vm._v("Status: ")
                       ]),
                       _vm._v(" "),
                       _c(
@@ -40452,10 +40722,13 @@ var render = function() {
                   _vm._v(" "),
                   _c(
                     "div",
-                    { staticClass: "form-group col-md-4 filter-form" },
+                    {
+                      staticClass:
+                        "form-group  col-sm-4 col-md-4 filter-form filter-form--select"
+                    },
                     [
                       _c("label", { attrs: { for: "priority" } }, [
-                        _vm._v("Filter by Priority: ")
+                        _vm._v("Priority: ")
                       ]),
                       _vm._v(" "),
                       _c(
@@ -40517,7 +40790,10 @@ var render = function() {
                   _vm._v(" "),
                   _c(
                     "div",
-                    { staticClass: "form-group col-md-4 filter-form" },
+                    {
+                      staticClass:
+                        "form-group col-sm-4 col-md-4 filter-form filter-form--search"
+                    },
                     [
                       _c(
                         "label",
@@ -40525,7 +40801,7 @@ var render = function() {
                           staticClass: "search-label",
                           attrs: { for: "search" }
                         },
-                        [_vm._v("Search :")]
+                        [_vm._v("Search:")]
                       ),
                       _vm._v(" "),
                       _c("input", {
@@ -40562,485 +40838,376 @@ var render = function() {
               _c("div", { staticClass: "card-body" }, [
                 _vm.pagination.total || _vm.user_task_number == 0
                   ? _c("div", { staticClass: "row" }, [
-                      _c("div", { staticClass: "col-md-6 col-sm-12" }, [
-                        _c(
-                          "div",
-                          {
-                            staticClass: "task-title",
-                            attrs: { id: "task-title" }
-                          },
-                          [
-                            _c("div", { staticClass: "pull-left" }, [
-                              _c("span", [
-                                _c("i", { staticClass: "fa fa-tasks" }),
-                                _vm._v("  " + _vm._s(_vm.task_title))
-                              ])
-                            ]),
-                            _vm._v(" "),
-                            _c("div", { staticClass: "pull-right" }, [
-                              !_vm.add_new_task
-                                ? _c(
-                                    "button",
-                                    {
-                                      staticClass:
-                                        "btn btn-primary btn-sm add-task-btn",
-                                      attrs: { type: "button" },
-                                      on: {
-                                        click: function($event) {
-                                          return _vm.addTaskForm()
-                                        }
-                                      }
-                                    },
-                                    [
-                                      _c("i", { staticClass: "fa fa-plus" }),
-                                      _vm._v(" Add new task")
-                                    ]
-                                  )
-                                : _vm._e()
-                            ])
-                          ]
-                        ),
-                        _vm._v(" "),
-                        _vm.add_new_task || _vm.update_task
-                          ? _c("div", { staticClass: "task-list" }, [
-                              _c(
-                                "form",
-                                {
-                                  on: {
-                                    submit: function($event) {
-                                      $event.preventDefault()
-                                      return _vm.addTask(_vm.task.id)
-                                    }
-                                  }
-                                },
-                                [
-                                  _c("div", { staticClass: "row" }, [
-                                    _c(
-                                      "div",
-                                      { staticClass: "form-group col-md-8" },
-                                      [
-                                        _c("input", {
-                                          directives: [
-                                            {
-                                              name: "model",
-                                              rawName: "v-model",
-                                              value: _vm.task.name,
-                                              expression: "task.name"
-                                            }
-                                          ],
-                                          staticClass:
-                                            "form-control form-control-sm",
-                                          attrs: {
-                                            type: "text",
-                                            placeholder:
-                                              "Type task list name...",
-                                            name: "name",
-                                            id: "new_task_name"
-                                          },
-                                          domProps: { value: _vm.task.name },
-                                          on: {
-                                            input: function($event) {
-                                              if ($event.target.composing) {
-                                                return
-                                              }
-                                              _vm.$set(
-                                                _vm.task,
-                                                "name",
-                                                $event.target.value
-                                              )
-                                            }
+                      _c(
+                        "div",
+                        {
+                          staticClass:
+                            "col-sm-12 col-md-12 col-lg-6 pd-0 pd-20-sm"
+                        },
+                        [
+                          _c(
+                            "div",
+                            {
+                              staticClass: "task-title",
+                              attrs: { id: "task-title" }
+                            },
+                            [
+                              _c("div", { staticClass: "pull-left" }, [
+                                _c("span", [
+                                  _c("i", { staticClass: "fa fa-tasks" }),
+                                  _vm._v("  " + _vm._s(_vm.task_title))
+                                ])
+                              ]),
+                              _vm._v(" "),
+                              _c("div", { staticClass: "pull-right" }, [
+                                !_vm.add_new_task
+                                  ? _c(
+                                      "button",
+                                      {
+                                        staticClass:
+                                          "btn btn-primary btn-sm add-task-btn",
+                                        attrs: { type: "button" },
+                                        on: {
+                                          click: function($event) {
+                                            return _vm.addTaskForm()
                                           }
-                                        })
-                                      ]
-                                    ),
-                                    _vm._v(" "),
-                                    _c(
-                                      "div",
-                                      { staticClass: "form-group col-md-4" },
+                                        }
+                                      },
                                       [
-                                        _c(
-                                          "select",
-                                          {
+                                        _c("i", { staticClass: "fa fa-plus" }),
+                                        _vm._v(" Add new task")
+                                      ]
+                                    )
+                                  : _vm._e()
+                              ])
+                            ]
+                          ),
+                          _vm._v(" "),
+                          _vm.add_new_task || _vm.update_task
+                            ? _c("div", { staticClass: "task-list" }, [
+                                _c(
+                                  "form",
+                                  {
+                                    on: {
+                                      submit: function($event) {
+                                        $event.preventDefault()
+                                        return _vm.addTask(_vm.task.id)
+                                      }
+                                    }
+                                  },
+                                  [
+                                    _c("div", { staticClass: "row" }, [
+                                      _c(
+                                        "div",
+                                        { staticClass: "form-group col-md-8" },
+                                        [
+                                          _c("input", {
                                             directives: [
                                               {
                                                 name: "model",
                                                 rawName: "v-model",
-                                                value: _vm.task.priority,
-                                                expression: "task.priority"
+                                                value: _vm.task.name,
+                                                expression: "task.name"
                                               }
                                             ],
                                             staticClass:
                                               "form-control form-control-sm",
                                             attrs: {
-                                              name: "priority",
-                                              id: "new_task_priority"
+                                              type: "text",
+                                              placeholder:
+                                                "Type task list name...",
+                                              name: "name",
+                                              id: "new_task_name"
                                             },
+                                            domProps: { value: _vm.task.name },
                                             on: {
-                                              change: function($event) {
-                                                var $$selectedVal = Array.prototype.filter
-                                                  .call(
-                                                    $event.target.options,
-                                                    function(o) {
-                                                      return o.selected
-                                                    }
-                                                  )
-                                                  .map(function(o) {
-                                                    var val =
-                                                      "_value" in o
-                                                        ? o._value
-                                                        : o.value
-                                                    return val
-                                                  })
+                                              input: function($event) {
+                                                if ($event.target.composing) {
+                                                  return
+                                                }
                                                 _vm.$set(
                                                   _vm.task,
-                                                  "priority",
-                                                  $event.target.multiple
-                                                    ? $$selectedVal
-                                                    : $$selectedVal[0]
+                                                  "name",
+                                                  $event.target.value
                                                 )
                                               }
                                             }
-                                          },
-                                          [
-                                            _c(
-                                              "option",
-                                              { attrs: { value: "" } },
-                                              [_vm._v("Priority")]
-                                            ),
-                                            _vm._v(" "),
-                                            _c(
-                                              "option",
-                                              { attrs: { value: "1" } },
-                                              [_vm._v("Low")]
-                                            ),
-                                            _vm._v(" "),
-                                            _c(
-                                              "option",
-                                              { attrs: { value: "2" } },
-                                              [_vm._v("Medium")]
-                                            ),
-                                            _vm._v(" "),
-                                            _c(
-                                              "option",
-                                              { attrs: { value: "3" } },
-                                              [_vm._v("High")]
-                                            )
-                                          ]
-                                        )
-                                      ]
-                                    )
-                                  ]),
-                                  _vm._v(" "),
-                                  _c("div", { staticClass: "row" }, [
-                                    _c(
-                                      "div",
-                                      {
-                                        staticClass:
-                                          "input-group input-group-sm col-md-6 mb-3"
-                                      },
-                                      [
-                                        _vm._m(0),
-                                        _vm._v(" "),
-                                        _c("input", {
-                                          staticClass: "form-control datetime",
-                                          attrs: {
-                                            type: "datetime-local",
-                                            placeholder: "Start Date",
-                                            "aria-label": "Start Date",
-                                            "aria-describedby": "basic-addon1",
-                                            id: "new_task_start_date"
-                                          },
-                                          domProps: {
-                                            value: _vm.formatDateTimeLocal(
-                                              _vm.task.start_date
-                                            )
-                                          },
-                                          on: {
-                                            change: function($event) {
-                                              return _vm.bindTaskDate(
-                                                "start_date"
-                                              )
-                                            }
-                                          }
-                                        })
-                                      ]
-                                    ),
-                                    _vm._v(" "),
-                                    _c(
-                                      "div",
-                                      {
-                                        staticClass:
-                                          "input-group input-group-sm col-md-6 mb-3"
-                                      },
-                                      [
-                                        _vm._m(1),
-                                        _vm._v(" "),
-                                        _c("input", {
-                                          staticClass: "form-control datetime",
-                                          attrs: {
-                                            type: "datetime-local",
-                                            placeholder: "End Date",
-                                            "aria-label": "End Date",
-                                            "aria-describedby": "basic-addon2",
-                                            id: "new_task_end_date"
-                                          },
-                                          domProps: {
-                                            value: _vm.formatDateTimeLocal(
-                                              _vm.task.end_date
-                                            )
-                                          },
-                                          on: {
-                                            change: function($event) {
-                                              return _vm.bindTaskDate(
-                                                "end_date"
-                                              )
-                                            }
-                                          }
-                                        })
-                                      ]
-                                    )
-                                  ]),
-                                  _vm._v(" "),
-                                  _c("div", { staticClass: "row" }, [
-                                    _c("div", { staticClass: "col-12" }, [
-                                      _c(
-                                        "button",
-                                        {
-                                          staticClass: "btn btn-primary btn-sm",
-                                          staticStyle: {
-                                            "margin-right": "20px"
-                                          },
-                                          attrs: { type: "submit" }
-                                        },
-                                        [_vm._v("Save")]
+                                          })
+                                        ]
                                       ),
                                       _vm._v(" "),
                                       _c(
-                                        "button",
+                                        "div",
+                                        { staticClass: "form-group col-md-4" },
+                                        [
+                                          _c(
+                                            "select",
+                                            {
+                                              directives: [
+                                                {
+                                                  name: "model",
+                                                  rawName: "v-model",
+                                                  value: _vm.task.priority,
+                                                  expression: "task.priority"
+                                                }
+                                              ],
+                                              staticClass:
+                                                "form-control form-control-sm",
+                                              attrs: {
+                                                name: "priority",
+                                                id: "new_task_priority"
+                                              },
+                                              on: {
+                                                change: function($event) {
+                                                  var $$selectedVal = Array.prototype.filter
+                                                    .call(
+                                                      $event.target.options,
+                                                      function(o) {
+                                                        return o.selected
+                                                      }
+                                                    )
+                                                    .map(function(o) {
+                                                      var val =
+                                                        "_value" in o
+                                                          ? o._value
+                                                          : o.value
+                                                      return val
+                                                    })
+                                                  _vm.$set(
+                                                    _vm.task,
+                                                    "priority",
+                                                    $event.target.multiple
+                                                      ? $$selectedVal
+                                                      : $$selectedVal[0]
+                                                  )
+                                                }
+                                              }
+                                            },
+                                            [
+                                              _c(
+                                                "option",
+                                                { attrs: { value: "" } },
+                                                [_vm._v("Priority")]
+                                              ),
+                                              _vm._v(" "),
+                                              _c(
+                                                "option",
+                                                { attrs: { value: "1" } },
+                                                [_vm._v("Low")]
+                                              ),
+                                              _vm._v(" "),
+                                              _c(
+                                                "option",
+                                                { attrs: { value: "2" } },
+                                                [_vm._v("Medium")]
+                                              ),
+                                              _vm._v(" "),
+                                              _c(
+                                                "option",
+                                                { attrs: { value: "3" } },
+                                                [_vm._v("High")]
+                                              )
+                                            ]
+                                          )
+                                        ]
+                                      )
+                                    ]),
+                                    _vm._v(" "),
+                                    _c("div", { staticClass: "row" }, [
+                                      _c(
+                                        "div",
                                         {
                                           staticClass:
-                                            "btn btn-secondary btn-sm",
-                                          attrs: { type: "button" },
-                                          on: { click: _vm.cancelNewTask }
+                                            "input-group input-group-sm col-md-6 mb-3"
                                         },
-                                        [_vm._v("Cancel")]
-                                      )
-                                    ])
-                                  ])
-                                ]
-                              )
-                            ])
-                          : _c(
-                              "div",
-                              {
-                                staticClass: "task-list",
-                                attrs: { id: "task-list" }
-                              },
-                              [
-                                _c(
-                                  "ul",
-                                  { staticClass: "todo-list text-left" },
-                                  _vm._l(_vm.nonNullTasks, function(task) {
-                                    return _c(
-                                      "li",
-                                      {
-                                        key: task.id,
-                                        staticClass: "edit-item-icon-parent",
-                                        class: [
-                                          { current: _vm.isCurrent(task.id) }
-                                        ],
-                                        attrs: { id: "task_" + task.id }
-                                      },
-                                      [
-                                        _c(
-                                          "div",
-                                          {
-                                            staticClass: "list-item",
-                                            attrs: { role: "button" },
+                                        [
+                                          _vm._m(0),
+                                          _vm._v(" "),
+                                          _c("input", {
+                                            staticClass:
+                                              "form-control datetime",
+                                            attrs: {
+                                              type: "datetime-local",
+                                              placeholder: "Start Date",
+                                              "aria-label": "Start Date",
+                                              "aria-describedby":
+                                                "basic-addon1",
+                                              id: "new_task_start_date"
+                                            },
+                                            domProps: {
+                                              value: _vm.formatDateTimeLocal(
+                                                _vm.task.start_date
+                                              )
+                                            },
                                             on: {
-                                              click: function($event) {
-                                                return _vm.oneClick(
-                                                  $event,
-                                                  task.id
+                                              change: function($event) {
+                                                return _vm.bindTaskDate(
+                                                  "start_date"
                                                 )
                                               }
                                             }
+                                          })
+                                        ]
+                                      ),
+                                      _vm._v(" "),
+                                      _c(
+                                        "div",
+                                        {
+                                          staticClass:
+                                            "input-group input-group-sm col-md-6 mb-3"
+                                        },
+                                        [
+                                          _vm._m(1),
+                                          _vm._v(" "),
+                                          _c("input", {
+                                            staticClass:
+                                              "form-control datetime",
+                                            attrs: {
+                                              type: "datetime-local",
+                                              placeholder: "End Date",
+                                              "aria-label": "End Date",
+                                              "aria-describedby":
+                                                "basic-addon2",
+                                              id: "new_task_end_date"
+                                            },
+                                            domProps: {
+                                              value: _vm.formatDateTimeLocal(
+                                                _vm.task.end_date
+                                              )
+                                            },
+                                            on: {
+                                              change: function($event) {
+                                                return _vm.bindTaskDate(
+                                                  "end_date"
+                                                )
+                                              }
+                                            }
+                                          })
+                                        ]
+                                      )
+                                    ]),
+                                    _vm._v(" "),
+                                    _c("div", { staticClass: "row" }, [
+                                      _c("div", { staticClass: "col-12" }, [
+                                        _c(
+                                          "button",
+                                          {
+                                            staticClass:
+                                              "btn btn-primary btn-sm",
+                                            staticStyle: {
+                                              "margin-right": "20px"
+                                            },
+                                            attrs: { type: "submit" }
                                           },
-                                          [
-                                            _c("span", {
-                                              staticClass: "list-style",
-                                              class:
-                                                "list-style--" +
-                                                _vm.taskPriority(
-                                                  task.priority,
-                                                  2
-                                                )
-                                            }),
-                                            _vm._v(" "),
-                                            _c(
-                                              "span",
-                                              {
-                                                staticClass: "todo-list__text",
-                                                attrs: {
-                                                  id: "task_name_" + task.id
-                                                }
-                                              },
-                                              [_vm._v(_vm._s(task.name))]
-                                            ),
-                                            _vm._v(" "),
-                                            _c(
-                                              "span",
-                                              {
-                                                staticClass: "badge",
-                                                class:
-                                                  "badge-" +
-                                                  _vm.taskStatus(
-                                                    task.status,
-                                                    2
-                                                  ),
-                                                staticStyle: {
-                                                  float: "right",
-                                                  "margin-right": "8px",
-                                                  "margin-top": "3px"
-                                                },
-                                                attrs: {
-                                                  id: "status_" + task.id
-                                                }
-                                              },
-                                              [
-                                                _vm._v(
-                                                  _vm._s(
-                                                    _vm.taskStatus(
-                                                      task.status,
-                                                      1
-                                                    )
-                                                  ) +
-                                                    " " +
-                                                    _vm._s(
-                                                      task.complete +
-                                                        "/" +
-                                                        task.count
-                                                    )
-                                                )
-                                              ]
-                                            )
-                                          ]
+                                          [_vm._v("Save")]
                                         ),
                                         _vm._v(" "),
                                         _c(
-                                          "div",
-                                          { staticClass: "list-action" },
-                                          [
-                                            _c("i", {
-                                              staticClass:
-                                                "fa fa-pencil edit-item-icon color-green",
+                                          "button",
+                                          {
+                                            staticClass:
+                                              "btn btn-secondary btn-sm",
+                                            attrs: { type: "button" },
+                                            on: { click: _vm.cancelNewTask }
+                                          },
+                                          [_vm._v("Cancel")]
+                                        )
+                                      ])
+                                    ])
+                                  ]
+                                )
+                              ])
+                            : _c(
+                                "div",
+                                {
+                                  staticClass: "task-list",
+                                  attrs: { id: "task-list" }
+                                },
+                                [
+                                  _c(
+                                    "ul",
+                                    { staticClass: "todo-list text-left" },
+                                    _vm._l(_vm.nonNullTasks, function(task) {
+                                      return _c(
+                                        "li",
+                                        {
+                                          key: task.id,
+                                          staticClass: "edit-item-icon-parent",
+                                          class: [
+                                            { current: _vm.isCurrent(task.id) }
+                                          ],
+                                          attrs: { id: "task_" + task.id }
+                                        },
+                                        [
+                                          _c(
+                                            "div",
+                                            {
+                                              staticClass: "list-item",
+                                              attrs: { role: "button" },
                                               on: {
                                                 click: function($event) {
-                                                  return _vm.addTaskForm(
+                                                  return _vm.oneClick(
+                                                    $event,
                                                     task.id
                                                   )
                                                 }
                                               }
-                                            }),
-                                            _vm._v(" "),
-                                            _c("delete-button", {
-                                              attrs: {
-                                                "item-id": task.id,
-                                                "item-type": "task"
-                                              }
-                                            })
-                                          ],
-                                          1
-                                        )
-                                      ]
-                                    )
-                                  }),
-                                  0
-                                )
-                              ]
-                            ),
-                        _vm._v(" "),
-                        _vm.user_task_number == 0 && !_vm.add_new_task
-                          ? _c("div", [
-                              _c("span", [
-                                _vm._v("You don't have any task yet.")
-                              ])
-                            ])
-                          : _vm._e(),
-                        _vm._v(" "),
-                        !_vm.add_new_task && !_vm.update_task
-                          ? _c(
-                              "div",
-                              {
-                                staticStyle: {
-                                  width: "100%",
-                                  float: "left",
-                                  padding: "10px"
-                                },
-                                attrs: { id: "pagination" }
-                              },
-                              [
-                                _vm.pagination.total
-                                  ? _c("nav", [
-                                      _c(
-                                        "ul",
-                                        {
-                                          staticClass:
-                                            "pagination justify-content-center"
-                                        },
-                                        [
-                                          _c(
-                                            "li",
-                                            {
-                                              staticClass: "page-item",
-                                              class: [
-                                                {
-                                                  disabled: !_vm.pagination
-                                                    .prev_page_url
-                                                }
-                                              ]
                                             },
                                             [
+                                              _c("span", {
+                                                staticClass: "list-style",
+                                                class:
+                                                  "list-style--" +
+                                                  _vm.taskPriority(
+                                                    task.priority,
+                                                    2
+                                                  )
+                                              }),
+                                              _vm._v(" "),
                                               _c(
-                                                "a",
+                                                "span",
                                                 {
-                                                  staticClass: "page-link",
-                                                  attrs: { href: "#" },
-                                                  on: {
-                                                    click: function($event) {
-                                                      return _vm.getTasks(
-                                                        _vm.pagination
-                                                          .prev_page_url
-                                                      )
-                                                    }
+                                                  staticClass:
+                                                    "todo-list__text",
+                                                  attrs: {
+                                                    id: "task_name_" + task.id
                                                   }
                                                 },
-                                                [_vm._v("Previous")]
-                                              )
-                                            ]
-                                          ),
-                                          _vm._v(" "),
-                                          _c(
-                                            "li",
-                                            {
-                                              staticClass: "page-item disabled"
-                                            },
-                                            [
+                                                [_vm._v(_vm._s(task.name))]
+                                              ),
+                                              _vm._v(" "),
                                               _c(
-                                                "a",
+                                                "span",
                                                 {
-                                                  staticClass: "page-link",
-                                                  attrs: { href: "#" }
+                                                  staticClass: "badge",
+                                                  class:
+                                                    "badge-" +
+                                                    _vm.taskStatus(
+                                                      task.status,
+                                                      2
+                                                    ),
+                                                  staticStyle: {
+                                                    float: "right",
+                                                    "margin-right": "8px",
+                                                    "margin-top": "3px"
+                                                  },
+                                                  attrs: {
+                                                    id: "status_" + task.id
+                                                  }
                                                 },
                                                 [
                                                   _vm._v(
                                                     _vm._s(
-                                                      _vm.pagination
-                                                        .current_page
+                                                      _vm.taskStatus(
+                                                        task.status,
+                                                        1
+                                                      )
                                                     ) +
-                                                      " of " +
+                                                      " " +
                                                       _vm._s(
-                                                        _vm.pagination.last_page
+                                                        task.complete +
+                                                          "/" +
+                                                          task.count
                                                       )
                                                   )
                                                 ]
@@ -41049,252 +41216,395 @@ var render = function() {
                                           ),
                                           _vm._v(" "),
                                           _c(
-                                            "li",
-                                            {
-                                              staticClass: "page-item",
-                                              class: [
-                                                {
-                                                  disabled: !_vm.pagination
-                                                    .next_page_url
-                                                }
-                                              ]
-                                            },
+                                            "div",
+                                            { staticClass: "list-action" },
                                             [
-                                              _c(
-                                                "a",
-                                                {
-                                                  staticClass: "page-link",
-                                                  attrs: { href: "#" },
-                                                  on: {
-                                                    click: function($event) {
-                                                      return _vm.getTasks(
-                                                        _vm.pagination
-                                                          .next_page_url
-                                                      )
-                                                    }
+                                              _c("i", {
+                                                staticClass:
+                                                  "fa fa-pencil edit-item-icon color-green",
+                                                on: {
+                                                  click: function($event) {
+                                                    return _vm.addTaskForm(
+                                                      task.id
+                                                    )
                                                   }
-                                                },
-                                                [_vm._v("Next")]
-                                              )
-                                            ]
+                                                }
+                                              }),
+                                              _vm._v(" "),
+                                              _c("delete-button", {
+                                                attrs: {
+                                                  "item-id": task.id,
+                                                  "item-type": "task"
+                                                }
+                                              })
+                                            ],
+                                            1
                                           )
                                         ]
                                       )
-                                    ])
-                                  : _vm._e()
-                              ]
-                            )
-                          : _vm._e()
-                      ]),
-                      _vm._v(" "),
-                      _c("div", { staticClass: "col-md-6 col-sm-12" }, [
-                        _c("div", { staticClass: "task-name" }, [
-                          _vm.current_task
-                            ? _c("span", [
-                                _c("i", { staticClass: "fa fa-align-left" }),
-                                _vm._v(
-                                  " " + _vm._s(_vm.current_task.name) + " "
-                                )
+                                    }),
+                                    0
+                                  )
+                                ]
+                              ),
+                          _vm._v(" "),
+                          _vm.user_task_number == 0 && !_vm.add_new_task
+                            ? _c("div", [
+                                _c("span", [
+                                  _vm._v("You don't have any task yet.")
+                                ])
                               ])
                             : _vm._e(),
                           _vm._v(" "),
-                          _vm.current_task
-                            ? _c("span", { staticClass: "task-date" }, [
-                                _c("i", { staticClass: "fa fa-calendar" }),
-                                _vm._v(
-                                  "  " +
-                                    _vm._s(
-                                      _vm.formatDate(
-                                        _vm.current_task.start_date
-                                      )
-                                    ) +
-                                    " - " +
-                                    _vm._s(
-                                      _vm.formatDate(_vm.current_task.end_date)
-                                    )
-                                )
-                              ])
-                            : _vm._e()
-                        ]),
-                        _vm._v(" "),
-                        _c("div", { staticClass: "todo-list" }, [
-                          _c(
-                            "form",
-                            {
-                              on: {
-                                submit: function($event) {
-                                  $event.preventDefault()
-                                  return _vm.addTodo($event)
-                                }
-                              }
-                            },
-                            [
-                              _c("div", { staticClass: "input-group mb-3" }, [
-                                _c("input", {
-                                  directives: [
-                                    {
-                                      name: "model",
-                                      rawName: "v-model",
-                                      value: _vm.todo.name,
-                                      expression: "todo.name"
-                                    }
-                                  ],
-                                  staticClass: "form-control",
-                                  attrs: {
-                                    type: "text",
-                                    placeholder: "Add item to list...",
-                                    "aria-label": "Add item to list",
-                                    "aria-describedby": "basic-addon2"
-                                  },
-                                  domProps: { value: _vm.todo.name },
-                                  on: {
-                                    input: function($event) {
-                                      if ($event.target.composing) {
-                                        return
-                                      }
-                                      _vm.$set(
-                                        _vm.todo,
-                                        "name",
-                                        $event.target.value
-                                      )
-                                    }
-                                  }
-                                }),
-                                _vm._v(" "),
-                                _vm._m(2)
-                              ])
-                            ]
-                          ),
-                          _vm._v(" "),
-                          _c(
-                            "ul",
-                            { staticClass: "todo-list text-left" },
-                            _vm._l(_vm.nonNullTodos, function(todo) {
-                              return _c(
-                                "li",
+                          !_vm.add_new_task && !_vm.update_task
+                            ? _c(
+                                "div",
                                 {
-                                  key: todo.id,
-                                  staticClass: "edit-item-icon-parent",
-                                  attrs: { id: "todo_" + todo.id }
+                                  staticStyle: {
+                                    width: "100%",
+                                    float: "left",
+                                    padding: "10px"
+                                  },
+                                  attrs: { id: "pagination" }
                                 },
                                 [
-                                  _c("div", { staticClass: "list-item" }, [
-                                    _c(
-                                      "label",
-                                      {
-                                        staticClass: "list-label",
-                                        attrs: { for: todo.id, role: "button" }
-                                      },
-                                      [
-                                        _c("input", {
-                                          directives: [
-                                            {
-                                              name: "model",
-                                              rawName: "v-model",
-                                              value: todo.complete,
-                                              expression: "todo.complete"
-                                            }
-                                          ],
-                                          attrs: {
-                                            type: "checkbox",
-                                            id: todo.id
+                                  _vm.pagination.total
+                                    ? _c("nav", [
+                                        _c(
+                                          "ul",
+                                          {
+                                            staticClass:
+                                              "pagination justify-content-center"
                                           },
-                                          domProps: {
-                                            checked: Array.isArray(
-                                              todo.complete
-                                            )
-                                              ? _vm._i(todo.complete, null) > -1
-                                              : todo.complete
-                                          },
-                                          on: {
-                                            click: function($event) {
-                                              return _vm.toggleComplete(todo.id)
-                                            },
-                                            change: function($event) {
-                                              var $$a = todo.complete,
-                                                $$el = $event.target,
-                                                $$c = $$el.checked
-                                                  ? true
-                                                  : false
-                                              if (Array.isArray($$a)) {
-                                                var $$v = null,
-                                                  $$i = _vm._i($$a, $$v)
-                                                if ($$el.checked) {
-                                                  $$i < 0 &&
-                                                    _vm.$set(
-                                                      todo,
-                                                      "complete",
-                                                      $$a.concat([$$v])
-                                                    )
-                                                } else {
-                                                  $$i > -1 &&
-                                                    _vm.$set(
-                                                      todo,
-                                                      "complete",
-                                                      $$a
-                                                        .slice(0, $$i)
-                                                        .concat(
-                                                          $$a.slice($$i + 1)
+                                          [
+                                            _c(
+                                              "li",
+                                              {
+                                                staticClass: "page-item",
+                                                class: [
+                                                  {
+                                                    disabled: !_vm.pagination
+                                                      .prev_page_url
+                                                  }
+                                                ]
+                                              },
+                                              [
+                                                _c(
+                                                  "a",
+                                                  {
+                                                    staticClass: "page-link",
+                                                    attrs: { href: "#" },
+                                                    on: {
+                                                      click: function($event) {
+                                                        return _vm.getTasks(
+                                                          _vm.pagination
+                                                            .prev_page_url
+                                                        )
+                                                      }
+                                                    }
+                                                  },
+                                                  [_vm._v("Previous")]
+                                                )
+                                              ]
+                                            ),
+                                            _vm._v(" "),
+                                            _c(
+                                              "li",
+                                              {
+                                                staticClass:
+                                                  "page-item disabled"
+                                              },
+                                              [
+                                                _c(
+                                                  "a",
+                                                  {
+                                                    staticClass: "page-link",
+                                                    attrs: { href: "#" }
+                                                  },
+                                                  [
+                                                    _vm._v(
+                                                      _vm._s(
+                                                        _vm.pagination
+                                                          .current_page
+                                                      ) +
+                                                        " of " +
+                                                        _vm._s(
+                                                          _vm.pagination
+                                                            .last_page
                                                         )
                                                     )
-                                                }
-                                              } else {
-                                                _vm.$set(todo, "complete", $$c)
+                                                  ]
+                                                )
+                                              ]
+                                            ),
+                                            _vm._v(" "),
+                                            _c(
+                                              "li",
+                                              {
+                                                staticClass: "page-item",
+                                                class: [
+                                                  {
+                                                    disabled: !_vm.pagination
+                                                      .next_page_url
+                                                  }
+                                                ]
+                                              },
+                                              [
+                                                _c(
+                                                  "a",
+                                                  {
+                                                    staticClass: "page-link",
+                                                    attrs: { href: "#" },
+                                                    on: {
+                                                      click: function($event) {
+                                                        return _vm.getTasks(
+                                                          _vm.pagination
+                                                            .next_page_url
+                                                        )
+                                                      }
+                                                    }
+                                                  },
+                                                  [_vm._v("Next")]
+                                                )
+                                              ]
+                                            )
+                                          ]
+                                        )
+                                      ])
+                                    : _vm._e()
+                                ]
+                              )
+                            : _vm._e()
+                        ]
+                      ),
+                      _vm._v(" "),
+                      _c(
+                        "div",
+                        {
+                          staticClass:
+                            "col-sm-12 col-md-12 col-lg-6 pd-0 pd-20-sm"
+                        },
+                        [
+                          _c("div", { staticClass: "task-name" }, [
+                            _vm.current_task
+                              ? _c("span", [
+                                  _c("i", { staticClass: "fa fa-align-left" }),
+                                  _vm._v(
+                                    " " + _vm._s(_vm.current_task.name) + " "
+                                  )
+                                ])
+                              : _vm._e(),
+                            _vm._v(" "),
+                            _vm.current_task
+                              ? _c("span", { staticClass: "task-date" }, [
+                                  _c("i", { staticClass: "fa fa-calendar" }),
+                                  _vm._v(
+                                    "  " +
+                                      _vm._s(
+                                        _vm.formatDate(
+                                          _vm.current_task.start_date
+                                        )
+                                      ) +
+                                      " - " +
+                                      _vm._s(
+                                        _vm.formatDate(
+                                          _vm.current_task.end_date
+                                        )
+                                      )
+                                  )
+                                ])
+                              : _vm._e()
+                          ]),
+                          _vm._v(" "),
+                          _c("div", { staticClass: "todo-list" }, [
+                            _c(
+                              "form",
+                              {
+                                on: {
+                                  submit: function($event) {
+                                    $event.preventDefault()
+                                    return _vm.addTodo($event)
+                                  }
+                                }
+                              },
+                              [
+                                _c("div", { staticClass: "input-group mb-3" }, [
+                                  _c("input", {
+                                    directives: [
+                                      {
+                                        name: "model",
+                                        rawName: "v-model",
+                                        value: _vm.todo.name,
+                                        expression: "todo.name"
+                                      }
+                                    ],
+                                    staticClass: "form-control",
+                                    attrs: {
+                                      type: "text",
+                                      placeholder: "Add item to list...",
+                                      "aria-label": "Add item to list",
+                                      "aria-describedby": "basic-addon2"
+                                    },
+                                    domProps: { value: _vm.todo.name },
+                                    on: {
+                                      input: function($event) {
+                                        if ($event.target.composing) {
+                                          return
+                                        }
+                                        _vm.$set(
+                                          _vm.todo,
+                                          "name",
+                                          $event.target.value
+                                        )
+                                      }
+                                    }
+                                  }),
+                                  _vm._v(" "),
+                                  _vm._m(2)
+                                ])
+                              ]
+                            ),
+                            _vm._v(" "),
+                            _c(
+                              "ul",
+                              { staticClass: "todo-list text-left" },
+                              _vm._l(_vm.nonNullTodos, function(todo) {
+                                return _c(
+                                  "li",
+                                  {
+                                    key: todo.id,
+                                    staticClass: "edit-item-icon-parent",
+                                    attrs: { id: "todo_" + todo.id }
+                                  },
+                                  [
+                                    _c("div", { staticClass: "list-item" }, [
+                                      _c(
+                                        "label",
+                                        {
+                                          staticClass: "list-label",
+                                          attrs: {
+                                            for: todo.id,
+                                            role: "button"
+                                          }
+                                        },
+                                        [
+                                          _c("input", {
+                                            directives: [
+                                              {
+                                                name: "model",
+                                                rawName: "v-model",
+                                                value: todo.complete,
+                                                expression: "todo.complete"
                                               }
+                                            ],
+                                            attrs: {
+                                              type: "checkbox",
+                                              id: todo.id
+                                            },
+                                            domProps: {
+                                              checked: Array.isArray(
+                                                todo.complete
+                                              )
+                                                ? _vm._i(todo.complete, null) >
+                                                  -1
+                                                : todo.complete
+                                            },
+                                            on: {
+                                              click: function($event) {
+                                                return _vm.toggleComplete(
+                                                  todo.id
+                                                )
+                                              },
+                                              change: function($event) {
+                                                var $$a = todo.complete,
+                                                  $$el = $event.target,
+                                                  $$c = $$el.checked
+                                                    ? true
+                                                    : false
+                                                if (Array.isArray($$a)) {
+                                                  var $$v = null,
+                                                    $$i = _vm._i($$a, $$v)
+                                                  if ($$el.checked) {
+                                                    $$i < 0 &&
+                                                      _vm.$set(
+                                                        todo,
+                                                        "complete",
+                                                        $$a.concat([$$v])
+                                                      )
+                                                  } else {
+                                                    $$i > -1 &&
+                                                      _vm.$set(
+                                                        todo,
+                                                        "complete",
+                                                        $$a
+                                                          .slice(0, $$i)
+                                                          .concat(
+                                                            $$a.slice($$i + 1)
+                                                          )
+                                                      )
+                                                  }
+                                                } else {
+                                                  _vm.$set(
+                                                    todo,
+                                                    "complete",
+                                                    $$c
+                                                  )
+                                                }
+                                              }
+                                            }
+                                          }),
+                                          _vm._v(" "),
+                                          _c(
+                                            "span",
+                                            {
+                                              staticClass: "todo-list__text",
+                                              class: [
+                                                {
+                                                  "todo-list__item-checked":
+                                                    todo.complete
+                                                }
+                                              ],
+                                              attrs: {
+                                                id: "todo_name_" + todo.id
+                                              }
+                                            },
+                                            [_vm._v(_vm._s(todo.name))]
+                                          )
+                                        ]
+                                      )
+                                    ]),
+                                    _vm._v(" "),
+                                    _c(
+                                      "div",
+                                      { staticClass: "list-action" },
+                                      [
+                                        _c("i", {
+                                          staticClass:
+                                            "fa fa-pencil edit-item-icon",
+                                          on: {
+                                            click: function($event) {
+                                              return _vm.editTodo(todo.id)
                                             }
                                           }
                                         }),
                                         _vm._v(" "),
-                                        _c(
-                                          "span",
-                                          {
-                                            staticClass: "todo-list__text",
-                                            class: [
-                                              {
-                                                "todo-list__item-checked":
-                                                  todo.complete
-                                              }
-                                            ],
-                                            attrs: {
-                                              id: "todo_name_" + todo.id
-                                            }
-                                          },
-                                          [_vm._v(_vm._s(todo.name))]
-                                        )
-                                      ]
-                                    )
-                                  ]),
-                                  _vm._v(" "),
-                                  _c(
-                                    "div",
-                                    { staticClass: "list-action" },
-                                    [
-                                      _c("i", {
-                                        staticClass:
-                                          "fa fa-pencil edit-item-icon",
-                                        on: {
-                                          click: function($event) {
-                                            return _vm.editTodo(todo.id)
+                                        _c("delete-button", {
+                                          attrs: {
+                                            "item-id": todo.id,
+                                            "item-type": "todo"
                                           }
-                                        }
-                                      }),
-                                      _vm._v(" "),
-                                      _c("delete-button", {
-                                        attrs: {
-                                          "item-id": todo.id,
-                                          "item-type": "todo"
-                                        }
-                                      })
-                                    ],
-                                    1
-                                  )
-                                ]
-                              )
-                            }),
-                            0
-                          )
-                        ])
-                      ])
+                                        })
+                                      ],
+                                      1
+                                    )
+                                  ]
+                                )
+                              }),
+                              0
+                            )
+                          ])
+                        ]
+                      )
                     ])
                   : _vm._e(),
                 _vm._v(" "),
@@ -41313,7 +41623,10 @@ var render = function() {
                 _c("div", { staticClass: "row" }, [
                   _c(
                     "div",
-                    { staticClass: "form-group col-md-4 filter-form" },
+                    {
+                      staticClass:
+                        "form-group col-sm-4 col-md-4 filter-form filter-form--select"
+                    },
                     [
                       _c("label", { attrs: { for: "status" } }, [
                         _vm._v("Status: ")
@@ -41378,7 +41691,10 @@ var render = function() {
                   _vm._v(" "),
                   _c(
                     "div",
-                    { staticClass: "form-group col-md-4 filter-form" },
+                    {
+                      staticClass:
+                        "form-group col-sm-4 col-md-4 filter-form filter-form--select"
+                    },
                     [
                       _c("label", { attrs: { for: "priority" } }, [
                         _vm._v("Priority: ")
@@ -41443,7 +41759,10 @@ var render = function() {
                   _vm._v(" "),
                   _c(
                     "div",
-                    { staticClass: "form-group col-md-4 filter-form" },
+                    {
+                      staticClass:
+                        "form-group col-sm-4 col-md-4 filter-form filter-form--search"
+                    },
                     [
                       _c(
                         "label",
@@ -41451,7 +41770,7 @@ var render = function() {
                           staticClass: "search-label",
                           attrs: { for: "search" }
                         },
-                        [_vm._v("Search :")]
+                        [_vm._v("Search:")]
                       ),
                       _vm._v(" "),
                       _c("input", {
@@ -41488,345 +41807,371 @@ var render = function() {
               _c("div", { staticClass: "card-body" }, [
                 _vm.pagination.total
                   ? _c("div", { staticClass: "row" }, [
-                      _c("div", { staticClass: "col-md-6 col-sm-12" }, [
-                        _vm._m(3),
-                        _vm._v(" "),
-                        _c(
-                          "div",
-                          {
-                            staticClass: "task-list",
-                            attrs: { id: "task-list" }
-                          },
-                          [
-                            _c(
-                              "ul",
-                              { staticClass: "todo-list text-left" },
-                              _vm._l(_vm.nonNullTasks, function(task) {
-                                return _c(
-                                  "li",
-                                  {
-                                    key: task.id,
-                                    staticClass: "edit-item-icon-parent",
-                                    class: [
-                                      { current: _vm.isCurrent(task.id) }
-                                    ],
-                                    attrs: { id: "task_" + task.id }
-                                  },
-                                  [
-                                    _c(
-                                      "div",
-                                      {
-                                        staticClass: "list-item",
-                                        attrs: { role: "button" },
-                                        on: {
-                                          click: function($event) {
-                                            return _vm.getTodos(task.id)
-                                          }
-                                        }
-                                      },
-                                      [
-                                        _c("span", {
-                                          staticClass: "list-style",
-                                          class:
-                                            "list-style--" +
-                                            _vm.taskPriority(task.priority, 2)
-                                        }),
-                                        _vm._v(" "),
-                                        _c(
-                                          "span",
-                                          {
-                                            staticClass: "todo-list__text",
-                                            attrs: {
-                                              id: "task_name_" + task.id
-                                            }
-                                          },
-                                          [_vm._v(_vm._s(task.name))]
-                                        ),
-                                        _vm._v(" "),
-                                        _c(
-                                          "span",
-                                          {
-                                            staticClass: "badge",
-                                            class:
-                                              "badge-" +
-                                              _vm.taskStatus(task.status, 2),
-                                            staticStyle: {
-                                              float: "right",
-                                              "margin-right": "8px",
-                                              "margin-top": "3px"
-                                            },
-                                            attrs: { id: "status_" + task.id }
-                                          },
-                                          [
-                                            _vm._v(
-                                              _vm._s(
-                                                _vm.taskStatus(task.status, 1)
-                                              ) +
-                                                " " +
-                                                _vm._s(
-                                                  task.complete +
-                                                    "/" +
-                                                    task.count
-                                                )
-                                            )
-                                          ]
-                                        )
-                                      ]
-                                    )
-                                  ]
-                                )
-                              }),
-                              0
-                            )
-                          ]
-                        ),
-                        _vm._v(" "),
-                        _c(
-                          "div",
-                          {
-                            staticStyle: {
-                              width: "100%",
-                              float: "left",
-                              padding: "10px"
+                      _c(
+                        "div",
+                        {
+                          staticClass:
+                            "col-sm-12 col-md-12 col-lg-6 pd-0 pd-20-sm"
+                        },
+                        [
+                          _vm._m(3),
+                          _vm._v(" "),
+                          _c(
+                            "div",
+                            {
+                              staticClass: "task-list",
+                              attrs: { id: "task-list" }
                             },
-                            attrs: { id: "pagination" }
-                          },
-                          [
-                            _vm.pagination.total
-                              ? _c("nav", [
-                                  _c(
-                                    "ul",
+                            [
+                              _c(
+                                "ul",
+                                { staticClass: "todo-list text-left" },
+                                _vm._l(_vm.nonNullTasks, function(task) {
+                                  return _c(
+                                    "li",
                                     {
-                                      staticClass:
-                                        "pagination justify-content-center"
+                                      key: task.id,
+                                      staticClass: "edit-item-icon-parent",
+                                      class: [
+                                        { current: _vm.isCurrent(task.id) }
+                                      ],
+                                      attrs: { id: "task_" + task.id }
                                     },
                                     [
                                       _c(
-                                        "li",
+                                        "div",
                                         {
-                                          staticClass: "page-item",
-                                          class: [
-                                            {
-                                              disabled: !_vm.pagination
-                                                .prev_page_url
+                                          staticClass: "list-item",
+                                          attrs: { role: "button" },
+                                          on: {
+                                            click: function($event) {
+                                              return _vm.getTodos(task.id)
                                             }
-                                          ]
+                                          }
                                         },
                                         [
+                                          _c("span", {
+                                            staticClass: "list-style",
+                                            class:
+                                              "list-style--" +
+                                              _vm.taskPriority(task.priority, 2)
+                                          }),
+                                          _vm._v(" "),
                                           _c(
-                                            "a",
+                                            "span",
                                             {
-                                              staticClass: "page-link",
-                                              attrs: { href: "#" },
-                                              on: {
-                                                click: function($event) {
-                                                  return _vm.getTasks(
-                                                    _vm.pagination.prev_page_url
-                                                  )
-                                                }
+                                              staticClass: "todo-list__text",
+                                              attrs: {
+                                                id: "task_name_" + task.id
                                               }
                                             },
-                                            [_vm._v("Previous")]
-                                          )
-                                        ]
-                                      ),
-                                      _vm._v(" "),
-                                      _c(
-                                        "li",
-                                        { staticClass: "page-item disabled" },
-                                        [
+                                            [_vm._v(_vm._s(task.name))]
+                                          ),
+                                          _vm._v(" "),
                                           _c(
-                                            "a",
+                                            "span",
                                             {
-                                              staticClass: "page-link",
-                                              attrs: { href: "#" }
+                                              staticClass: "badge",
+                                              class:
+                                                "badge-" +
+                                                _vm.taskStatus(task.status, 2),
+                                              staticStyle: {
+                                                float: "right",
+                                                "margin-right": "8px",
+                                                "margin-top": "3px"
+                                              },
+                                              attrs: { id: "status_" + task.id }
                                             },
                                             [
                                               _vm._v(
                                                 _vm._s(
-                                                  _vm.pagination.current_page
+                                                  _vm.taskStatus(task.status, 1)
                                                 ) +
-                                                  " of " +
+                                                  " " +
                                                   _vm._s(
-                                                    _vm.pagination.last_page
+                                                    task.complete +
+                                                      "/" +
+                                                      task.count
                                                   )
                                               )
                                             ]
                                           )
                                         ]
-                                      ),
-                                      _vm._v(" "),
-                                      _c(
-                                        "li",
-                                        {
-                                          staticClass: "page-item",
-                                          class: [
-                                            {
-                                              disabled: !_vm.pagination
-                                                .next_page_url
-                                            }
-                                          ]
-                                        },
-                                        [
-                                          _c(
-                                            "a",
-                                            {
-                                              staticClass: "page-link",
-                                              attrs: { href: "#" },
-                                              on: {
-                                                click: function($event) {
-                                                  return _vm.getTasks(
-                                                    _vm.pagination.next_page_url
-                                                  )
-                                                }
-                                              }
-                                            },
-                                            [_vm._v("Next")]
-                                          )
-                                        ]
                                       )
                                     ]
                                   )
-                                ])
-                              : _vm._e()
-                          ]
-                        )
-                      ]),
-                      _vm._v(" "),
-                      _c("div", { staticClass: "col-md-6 col-sm-12" }, [
-                        _c("div", { staticClass: "task-name" }, [
-                          _vm.current_task
-                            ? _c("span", [
-                                _c("i", { staticClass: "fa fa-align-left" }),
-                                _vm._v(
-                                  " " + _vm._s(_vm.current_task.name) + " "
-                                )
-                              ])
-                            : _vm._e(),
+                                }),
+                                0
+                              )
+                            ]
+                          ),
                           _vm._v(" "),
-                          _vm.current_task
-                            ? _c("span", { staticClass: "task-date" }, [
-                                _c("i", { staticClass: "fa fa-calendar" }),
-                                _vm._v(
-                                  "  " +
-                                    _vm._s(
-                                      _vm.formatDate(
-                                        _vm.current_task.start_date
-                                      )
-                                    ) +
-                                    " - " +
-                                    _vm._s(
-                                      _vm.formatDate(_vm.current_task.end_date)
-                                    )
-                                )
-                              ])
-                            : _vm._e()
-                        ]),
-                        _vm._v(" "),
-                        _c("div", { staticClass: "todo-list" }, [
                           _c(
-                            "ul",
-                            { staticClass: "todo-list text-left" },
-                            _vm._l(_vm.nonNullTodos, function(todo) {
-                              return _c(
-                                "li",
-                                {
-                                  key: todo.id,
-                                  staticClass: "edit-item-icon-parent",
-                                  attrs: { id: "todo_" + todo.id }
-                                },
-                                [
-                                  _c("div", { staticClass: "list-item" }, [
+                            "div",
+                            {
+                              staticStyle: {
+                                width: "100%",
+                                float: "left",
+                                padding: "10px"
+                              },
+                              attrs: { id: "pagination" }
+                            },
+                            [
+                              _vm.pagination.total
+                                ? _c("nav", [
                                     _c(
-                                      "label",
+                                      "ul",
                                       {
-                                        staticClass: "list-label",
-                                        attrs: { for: todo.id, role: "button" }
+                                        staticClass:
+                                          "pagination justify-content-center"
                                       },
                                       [
-                                        _c("input", {
-                                          directives: [
-                                            {
-                                              name: "model",
-                                              rawName: "v-model",
-                                              value: todo.complete,
-                                              expression: "todo.complete"
-                                            }
-                                          ],
-                                          attrs: {
-                                            type: "checkbox",
-                                            id: todo.id,
-                                            onclick: "return false;"
-                                          },
-                                          domProps: {
-                                            checked: Array.isArray(
-                                              todo.complete
-                                            )
-                                              ? _vm._i(todo.complete, null) > -1
-                                              : todo.complete
-                                          },
-                                          on: {
-                                            change: function($event) {
-                                              var $$a = todo.complete,
-                                                $$el = $event.target,
-                                                $$c = $$el.checked
-                                                  ? true
-                                                  : false
-                                              if (Array.isArray($$a)) {
-                                                var $$v = null,
-                                                  $$i = _vm._i($$a, $$v)
-                                                if ($$el.checked) {
-                                                  $$i < 0 &&
-                                                    _vm.$set(
-                                                      todo,
-                                                      "complete",
-                                                      $$a.concat([$$v])
-                                                    )
-                                                } else {
-                                                  $$i > -1 &&
-                                                    _vm.$set(
-                                                      todo,
-                                                      "complete",
-                                                      $$a
-                                                        .slice(0, $$i)
-                                                        .concat(
-                                                          $$a.slice($$i + 1)
-                                                        )
-                                                    )
-                                                }
-                                              } else {
-                                                _vm.$set(todo, "complete", $$c)
-                                              }
-                                            }
-                                          }
-                                        }),
-                                        _vm._v(" "),
                                         _c(
-                                          "span",
+                                          "li",
                                           {
-                                            staticClass: "todo-list__text",
+                                            staticClass: "page-item",
                                             class: [
                                               {
-                                                "todo-list__item-checked":
-                                                  todo.complete
+                                                disabled: !_vm.pagination
+                                                  .prev_page_url
                                               }
-                                            ],
-                                            attrs: {
-                                              id: "todo_name_" + todo.id
-                                            }
+                                            ]
                                           },
-                                          [_vm._v(_vm._s(todo.name))]
+                                          [
+                                            _c(
+                                              "a",
+                                              {
+                                                staticClass: "page-link",
+                                                attrs: { href: "#" },
+                                                on: {
+                                                  click: function($event) {
+                                                    return _vm.getTasks(
+                                                      _vm.pagination
+                                                        .prev_page_url
+                                                    )
+                                                  }
+                                                }
+                                              },
+                                              [_vm._v("Previous")]
+                                            )
+                                          ]
+                                        ),
+                                        _vm._v(" "),
+                                        _c(
+                                          "li",
+                                          { staticClass: "page-item disabled" },
+                                          [
+                                            _c(
+                                              "a",
+                                              {
+                                                staticClass: "page-link",
+                                                attrs: { href: "#" }
+                                              },
+                                              [
+                                                _vm._v(
+                                                  _vm._s(
+                                                    _vm.pagination.current_page
+                                                  ) +
+                                                    " of " +
+                                                    _vm._s(
+                                                      _vm.pagination.last_page
+                                                    )
+                                                )
+                                              ]
+                                            )
+                                          ]
+                                        ),
+                                        _vm._v(" "),
+                                        _c(
+                                          "li",
+                                          {
+                                            staticClass: "page-item",
+                                            class: [
+                                              {
+                                                disabled: !_vm.pagination
+                                                  .next_page_url
+                                              }
+                                            ]
+                                          },
+                                          [
+                                            _c(
+                                              "a",
+                                              {
+                                                staticClass: "page-link",
+                                                attrs: { href: "#" },
+                                                on: {
+                                                  click: function($event) {
+                                                    return _vm.getTasks(
+                                                      _vm.pagination
+                                                        .next_page_url
+                                                    )
+                                                  }
+                                                }
+                                              },
+                                              [_vm._v("Next")]
+                                            )
+                                          ]
                                         )
                                       ]
                                     )
                                   ])
-                                ]
-                              )
-                            }),
-                            0
+                                : _vm._e()
+                            ]
                           )
-                        ])
-                      ])
+                        ]
+                      ),
+                      _vm._v(" "),
+                      _c(
+                        "div",
+                        {
+                          staticClass:
+                            "col-sm-12 col-md-12 col-lg-6 pd-0 pd-20-sm"
+                        },
+                        [
+                          _c("div", { staticClass: "task-name" }, [
+                            _vm.current_task
+                              ? _c("span", [
+                                  _c("i", { staticClass: "fa fa-align-left" }),
+                                  _vm._v(
+                                    " " + _vm._s(_vm.current_task.name) + " "
+                                  )
+                                ])
+                              : _vm._e(),
+                            _vm._v(" "),
+                            _vm.current_task
+                              ? _c("span", { staticClass: "task-date" }, [
+                                  _c("i", { staticClass: "fa fa-calendar" }),
+                                  _vm._v(
+                                    "  " +
+                                      _vm._s(
+                                        _vm.formatDate(
+                                          _vm.current_task.start_date
+                                        )
+                                      ) +
+                                      " - " +
+                                      _vm._s(
+                                        _vm.formatDate(
+                                          _vm.current_task.end_date
+                                        )
+                                      )
+                                  )
+                                ])
+                              : _vm._e()
+                          ]),
+                          _vm._v(" "),
+                          _c("div", { staticClass: "todo-list" }, [
+                            _c(
+                              "ul",
+                              { staticClass: "todo-list text-left" },
+                              _vm._l(_vm.nonNullTodos, function(todo) {
+                                return _c(
+                                  "li",
+                                  {
+                                    key: todo.id,
+                                    staticClass: "edit-item-icon-parent",
+                                    attrs: { id: "todo_" + todo.id }
+                                  },
+                                  [
+                                    _c("div", { staticClass: "list-item" }, [
+                                      _c(
+                                        "label",
+                                        {
+                                          staticClass: "list-label",
+                                          attrs: {
+                                            for: todo.id,
+                                            role: "button"
+                                          }
+                                        },
+                                        [
+                                          _c("input", {
+                                            directives: [
+                                              {
+                                                name: "model",
+                                                rawName: "v-model",
+                                                value: todo.complete,
+                                                expression: "todo.complete"
+                                              }
+                                            ],
+                                            attrs: {
+                                              type: "checkbox",
+                                              id: todo.id,
+                                              onclick: "return false;"
+                                            },
+                                            domProps: {
+                                              checked: Array.isArray(
+                                                todo.complete
+                                              )
+                                                ? _vm._i(todo.complete, null) >
+                                                  -1
+                                                : todo.complete
+                                            },
+                                            on: {
+                                              change: function($event) {
+                                                var $$a = todo.complete,
+                                                  $$el = $event.target,
+                                                  $$c = $$el.checked
+                                                    ? true
+                                                    : false
+                                                if (Array.isArray($$a)) {
+                                                  var $$v = null,
+                                                    $$i = _vm._i($$a, $$v)
+                                                  if ($$el.checked) {
+                                                    $$i < 0 &&
+                                                      _vm.$set(
+                                                        todo,
+                                                        "complete",
+                                                        $$a.concat([$$v])
+                                                      )
+                                                  } else {
+                                                    $$i > -1 &&
+                                                      _vm.$set(
+                                                        todo,
+                                                        "complete",
+                                                        $$a
+                                                          .slice(0, $$i)
+                                                          .concat(
+                                                            $$a.slice($$i + 1)
+                                                          )
+                                                      )
+                                                  }
+                                                } else {
+                                                  _vm.$set(
+                                                    todo,
+                                                    "complete",
+                                                    $$c
+                                                  )
+                                                }
+                                              }
+                                            }
+                                          }),
+                                          _vm._v(" "),
+                                          _c(
+                                            "span",
+                                            {
+                                              staticClass: "todo-list__text",
+                                              class: [
+                                                {
+                                                  "todo-list__item-checked":
+                                                    todo.complete
+                                                }
+                                              ],
+                                              attrs: {
+                                                id: "todo_name_" + todo.id
+                                              }
+                                            },
+                                            [_vm._v(_vm._s(todo.name))]
+                                          )
+                                        ]
+                                      )
+                                    ])
+                                  ]
+                                )
+                              }),
+                              0
+                            )
+                          ])
+                        ]
+                      )
                     ])
                   : _vm._e(),
                 _vm._v(" "),
@@ -42035,10 +42380,13 @@ var render = function() {
                       _c("div", { staticClass: "row" }, [
                         _c(
                           "div",
-                          { staticClass: "form-group col-md-4 filter-form" },
+                          {
+                            staticClass:
+                              "form-group col-sm-4 col-md-4 filter-form filter-form--select"
+                          },
                           [
                             _c("label", { attrs: { for: "status" } }, [
-                              _vm._v("Filter by status: ")
+                              _vm._v("Status: ")
                             ]),
                             _vm._v(" "),
                             _c(
@@ -42108,10 +42456,13 @@ var render = function() {
                         _vm._v(" "),
                         _c(
                           "div",
-                          { staticClass: "form-group col-md-4 filter-form" },
+                          {
+                            staticClass:
+                              "form-group col-sm-4 col-md-4 filter-form filter-form--select"
+                          },
                           [
                             _c("label", { attrs: { for: "priority" } }, [
-                              _vm._v("Filter by Priority: ")
+                              _vm._v("Priority: ")
                             ]),
                             _vm._v(" "),
                             _c(
@@ -42180,7 +42531,10 @@ var render = function() {
                         _vm._v(" "),
                         _c(
                           "div",
-                          { staticClass: "form-group col-md-4 filter-form" },
+                          {
+                            staticClass:
+                              "form-group col-sm-4 col-md-4 filter-form filter-form--search"
+                          },
                           [
                             _c(
                               "label",
@@ -42188,7 +42542,7 @@ var render = function() {
                                 staticClass: "search-label",
                                 attrs: { for: "search" }
                               },
-                              [_vm._v("Search :")]
+                              [_vm._v("Search:")]
                             ),
                             _vm._v(" "),
                             _c("input", {
@@ -42229,112 +42583,414 @@ var render = function() {
                     _c("div", { staticClass: "card-body" }, [
                       _vm.pagination.total
                         ? _c("div", { staticClass: "row" }, [
-                            _c("div", { staticClass: "col-md-6 col-sm-12" }, [
-                              _c(
-                                "div",
-                                {
-                                  staticClass: "task-title",
-                                  attrs: { id: "task-title" }
-                                },
-                                [
-                                  _c("div", { staticClass: "pull-left" }, [
-                                    _c("span", [
-                                      _c("i", { staticClass: "fa fa-tasks" }),
-                                      _vm._v("  " + _vm._s(_vm.task_title))
+                            _c(
+                              "div",
+                              { staticClass: "col-md-6 col-sm-12 pd-0" },
+                              [
+                                _c(
+                                  "div",
+                                  {
+                                    staticClass: "task-title",
+                                    attrs: { id: "task-title" }
+                                  },
+                                  [
+                                    _c("div", { staticClass: "pull-left" }, [
+                                      _c("span", [
+                                        _c("i", { staticClass: "fa fa-tasks" }),
+                                        _vm._v("  " + _vm._s(_vm.task_title))
+                                      ])
                                     ])
-                                  ])
-                                ]
-                              ),
-                              _vm._v(" "),
-                              _c(
-                                "div",
-                                {
-                                  staticClass: "task-list",
-                                  attrs: { id: "task-list" }
-                                },
-                                [
+                                  ]
+                                ),
+                                _vm._v(" "),
+                                _c(
+                                  "div",
+                                  {
+                                    staticClass: "task-list",
+                                    attrs: { id: "task-list" }
+                                  },
+                                  [
+                                    _c(
+                                      "ul",
+                                      { staticClass: "todo-list text-left" },
+                                      _vm._l(_vm.nonNullTasks, function(task) {
+                                        return _c(
+                                          "li",
+                                          {
+                                            key: task.id,
+                                            staticClass:
+                                              "edit-item-icon-parent",
+                                            class: [
+                                              {
+                                                current: _vm.isCurrent(task.id)
+                                              }
+                                            ],
+                                            attrs: { id: "task_" + task.id }
+                                          },
+                                          [
+                                            _c(
+                                              "div",
+                                              {
+                                                staticClass: "list-item",
+                                                attrs: { role: "button" },
+                                                on: {
+                                                  click: function($event) {
+                                                    return _vm.getTodos(task.id)
+                                                  }
+                                                }
+                                              },
+                                              [
+                                                _c("span", {
+                                                  staticClass: "list-style",
+                                                  class:
+                                                    "list-style--" +
+                                                    _vm.taskPriority(
+                                                      task.priority,
+                                                      2
+                                                    )
+                                                }),
+                                                _vm._v(" "),
+                                                _c(
+                                                  "span",
+                                                  {
+                                                    staticClass:
+                                                      "todo-list__text",
+                                                    attrs: {
+                                                      id: "task_name_" + task.id
+                                                    }
+                                                  },
+                                                  [_vm._v(_vm._s(task.name))]
+                                                ),
+                                                _vm._v(" "),
+                                                _c(
+                                                  "span",
+                                                  {
+                                                    staticClass: "badge",
+                                                    class:
+                                                      "badge-" +
+                                                      _vm.taskStatus(
+                                                        task.status,
+                                                        2
+                                                      ),
+                                                    staticStyle: {
+                                                      float: "right",
+                                                      "margin-right": "8px",
+                                                      "margin-top": "3px"
+                                                    },
+                                                    attrs: {
+                                                      id: "status_" + task.id
+                                                    }
+                                                  },
+                                                  [
+                                                    _vm._v(
+                                                      _vm._s(
+                                                        _vm.taskStatus(
+                                                          task.status,
+                                                          1
+                                                        )
+                                                      ) +
+                                                        " " +
+                                                        _vm._s(
+                                                          task.complete +
+                                                            "/" +
+                                                            task.count
+                                                        )
+                                                    )
+                                                  ]
+                                                )
+                                              ]
+                                            )
+                                          ]
+                                        )
+                                      }),
+                                      0
+                                    )
+                                  ]
+                                ),
+                                _vm._v(" "),
+                                _c(
+                                  "div",
+                                  {
+                                    staticStyle: {
+                                      width: "100%",
+                                      float: "left",
+                                      padding: "10px"
+                                    },
+                                    attrs: { id: "pagination" }
+                                  },
+                                  [
+                                    _vm.pagination.total
+                                      ? _c("nav", [
+                                          _c(
+                                            "ul",
+                                            {
+                                              staticClass:
+                                                "pagination justify-content-center"
+                                            },
+                                            [
+                                              _c(
+                                                "li",
+                                                {
+                                                  staticClass: "page-item",
+                                                  class: [
+                                                    {
+                                                      disabled: !_vm.pagination
+                                                        .prev_page_url
+                                                    }
+                                                  ]
+                                                },
+                                                [
+                                                  _c(
+                                                    "a",
+                                                    {
+                                                      staticClass: "page-link",
+                                                      attrs: { href: "#" },
+                                                      on: {
+                                                        click: function(
+                                                          $event
+                                                        ) {
+                                                          return _vm.getTasks(
+                                                            _vm.pagination
+                                                              .prev_page_url
+                                                          )
+                                                        }
+                                                      }
+                                                    },
+                                                    [_vm._v("Previous")]
+                                                  )
+                                                ]
+                                              ),
+                                              _vm._v(" "),
+                                              _c(
+                                                "li",
+                                                {
+                                                  staticClass:
+                                                    "page-item disabled"
+                                                },
+                                                [
+                                                  _c(
+                                                    "a",
+                                                    {
+                                                      staticClass: "page-link",
+                                                      attrs: { href: "#" }
+                                                    },
+                                                    [
+                                                      _vm._v(
+                                                        _vm._s(
+                                                          _vm.pagination
+                                                            .current_page
+                                                        ) +
+                                                          " of " +
+                                                          _vm._s(
+                                                            _vm.pagination
+                                                              .last_page
+                                                          )
+                                                      )
+                                                    ]
+                                                  )
+                                                ]
+                                              ),
+                                              _vm._v(" "),
+                                              _c(
+                                                "li",
+                                                {
+                                                  staticClass: "page-item",
+                                                  class: [
+                                                    {
+                                                      disabled: !_vm.pagination
+                                                        .next_page_url
+                                                    }
+                                                  ]
+                                                },
+                                                [
+                                                  _c(
+                                                    "a",
+                                                    {
+                                                      staticClass: "page-link",
+                                                      attrs: { href: "#" },
+                                                      on: {
+                                                        click: function(
+                                                          $event
+                                                        ) {
+                                                          return _vm.getTasks(
+                                                            _vm.pagination
+                                                              .next_page_url
+                                                          )
+                                                        }
+                                                      }
+                                                    },
+                                                    [_vm._v("Next")]
+                                                  )
+                                                ]
+                                              )
+                                            ]
+                                          )
+                                        ])
+                                      : _vm._e()
+                                  ]
+                                )
+                              ]
+                            ),
+                            _vm._v(" "),
+                            _c(
+                              "div",
+                              { staticClass: "col-md-6 col-sm-12 pd-0" },
+                              [
+                                _c("div", { staticClass: "task-name" }, [
+                                  _vm.current_task
+                                    ? _c("span", [
+                                        _c("i", {
+                                          staticClass: "fa fa-align-left"
+                                        }),
+                                        _vm._v(
+                                          " " +
+                                            _vm._s(_vm.current_task.name) +
+                                            " "
+                                        )
+                                      ])
+                                    : _vm._e(),
+                                  _vm._v(" "),
+                                  _vm.current_task
+                                    ? _c("span", { staticClass: "task-date" }, [
+                                        _c("i", {
+                                          staticClass: "fa fa-calendar"
+                                        }),
+                                        _vm._v(
+                                          "  " +
+                                            _vm._s(
+                                              _vm.formatDate(
+                                                _vm.current_task.start_date
+                                              )
+                                            ) +
+                                            " - " +
+                                            _vm._s(
+                                              _vm.formatDate(
+                                                _vm.current_task.end_date
+                                              )
+                                            )
+                                        )
+                                      ])
+                                    : _vm._e()
+                                ]),
+                                _vm._v(" "),
+                                _c("div", { staticClass: "todo-list" }, [
                                   _c(
                                     "ul",
                                     { staticClass: "todo-list text-left" },
-                                    _vm._l(_vm.nonNullTasks, function(task) {
+                                    _vm._l(_vm.nonNullTodos, function(todo) {
                                       return _c(
                                         "li",
                                         {
-                                          key: task.id,
+                                          key: todo.id,
                                           staticClass: "edit-item-icon-parent",
-                                          class: [
-                                            { current: _vm.isCurrent(task.id) }
-                                          ],
-                                          attrs: { id: "task_" + task.id }
+                                          attrs: { id: "todo_" + todo.id }
                                         },
                                         [
                                           _c(
                                             "div",
-                                            {
-                                              staticClass: "list-item",
-                                              attrs: { role: "button" },
-                                              on: {
-                                                click: function($event) {
-                                                  return _vm.getTodos(task.id)
-                                                }
-                                              }
-                                            },
+                                            { staticClass: "list-item" },
                                             [
-                                              _c("span", {
-                                                staticClass: "list-style",
-                                                class:
-                                                  "list-style--" +
-                                                  _vm.taskPriority(
-                                                    task.priority,
-                                                    2
-                                                  )
-                                              }),
-                                              _vm._v(" "),
                                               _c(
-                                                "span",
+                                                "label",
                                                 {
-                                                  staticClass:
-                                                    "todo-list__text",
+                                                  staticClass: "list-label",
                                                   attrs: {
-                                                    id: "task_name_" + task.id
-                                                  }
-                                                },
-                                                [_vm._v(_vm._s(task.name))]
-                                              ),
-                                              _vm._v(" "),
-                                              _c(
-                                                "span",
-                                                {
-                                                  staticClass: "badge",
-                                                  class:
-                                                    "badge-" +
-                                                    _vm.taskStatus(
-                                                      task.status,
-                                                      2
-                                                    ),
-                                                  staticStyle: {
-                                                    float: "right",
-                                                    "margin-right": "8px",
-                                                    "margin-top": "3px"
-                                                  },
-                                                  attrs: {
-                                                    id: "status_" + task.id
+                                                    for: todo.id,
+                                                    role: "button"
                                                   }
                                                 },
                                                 [
-                                                  _vm._v(
-                                                    _vm._s(
-                                                      _vm.taskStatus(
-                                                        task.status,
-                                                        1
+                                                  _c("input", {
+                                                    directives: [
+                                                      {
+                                                        name: "model",
+                                                        rawName: "v-model",
+                                                        value: todo.complete,
+                                                        expression:
+                                                          "todo.complete"
+                                                      }
+                                                    ],
+                                                    attrs: {
+                                                      type: "checkbox",
+                                                      id: todo.id,
+                                                      onclick: "return false;"
+                                                    },
+                                                    domProps: {
+                                                      checked: Array.isArray(
+                                                        todo.complete
                                                       )
-                                                    ) +
-                                                      " " +
-                                                      _vm._s(
-                                                        task.complete +
-                                                          "/" +
-                                                          task.count
-                                                      )
+                                                        ? _vm._i(
+                                                            todo.complete,
+                                                            null
+                                                          ) > -1
+                                                        : todo.complete
+                                                    },
+                                                    on: {
+                                                      change: function($event) {
+                                                        var $$a = todo.complete,
+                                                          $$el = $event.target,
+                                                          $$c = $$el.checked
+                                                            ? true
+                                                            : false
+                                                        if (
+                                                          Array.isArray($$a)
+                                                        ) {
+                                                          var $$v = null,
+                                                            $$i = _vm._i(
+                                                              $$a,
+                                                              $$v
+                                                            )
+                                                          if ($$el.checked) {
+                                                            $$i < 0 &&
+                                                              _vm.$set(
+                                                                todo,
+                                                                "complete",
+                                                                $$a.concat([
+                                                                  $$v
+                                                                ])
+                                                              )
+                                                          } else {
+                                                            $$i > -1 &&
+                                                              _vm.$set(
+                                                                todo,
+                                                                "complete",
+                                                                $$a
+                                                                  .slice(0, $$i)
+                                                                  .concat(
+                                                                    $$a.slice(
+                                                                      $$i + 1
+                                                                    )
+                                                                  )
+                                                              )
+                                                          }
+                                                        } else {
+                                                          _vm.$set(
+                                                            todo,
+                                                            "complete",
+                                                            $$c
+                                                          )
+                                                        }
+                                                      }
+                                                    }
+                                                  }),
+                                                  _vm._v(" "),
+                                                  _c(
+                                                    "span",
+                                                    {
+                                                      staticClass:
+                                                        "todo-list__text",
+                                                      class: [
+                                                        {
+                                                          "todo-list__item-checked":
+                                                            todo.complete
+                                                        }
+                                                      ],
+                                                      attrs: {
+                                                        id:
+                                                          "todo_name_" + todo.id
+                                                      }
+                                                    },
+                                                    [_vm._v(_vm._s(todo.name))]
                                                   )
                                                 ]
                                               )
@@ -42345,288 +43001,9 @@ var render = function() {
                                     }),
                                     0
                                   )
-                                ]
-                              ),
-                              _vm._v(" "),
-                              _c(
-                                "div",
-                                {
-                                  staticStyle: {
-                                    width: "100%",
-                                    float: "left",
-                                    padding: "10px"
-                                  },
-                                  attrs: { id: "pagination" }
-                                },
-                                [
-                                  _vm.pagination.total
-                                    ? _c("nav", [
-                                        _c(
-                                          "ul",
-                                          {
-                                            staticClass:
-                                              "pagination justify-content-center"
-                                          },
-                                          [
-                                            _c(
-                                              "li",
-                                              {
-                                                staticClass: "page-item",
-                                                class: [
-                                                  {
-                                                    disabled: !_vm.pagination
-                                                      .prev_page_url
-                                                  }
-                                                ]
-                                              },
-                                              [
-                                                _c(
-                                                  "a",
-                                                  {
-                                                    staticClass: "page-link",
-                                                    attrs: { href: "#" },
-                                                    on: {
-                                                      click: function($event) {
-                                                        return _vm.getTasks(
-                                                          _vm.pagination
-                                                            .prev_page_url
-                                                        )
-                                                      }
-                                                    }
-                                                  },
-                                                  [_vm._v("Previous")]
-                                                )
-                                              ]
-                                            ),
-                                            _vm._v(" "),
-                                            _c(
-                                              "li",
-                                              {
-                                                staticClass:
-                                                  "page-item disabled"
-                                              },
-                                              [
-                                                _c(
-                                                  "a",
-                                                  {
-                                                    staticClass: "page-link",
-                                                    attrs: { href: "#" }
-                                                  },
-                                                  [
-                                                    _vm._v(
-                                                      _vm._s(
-                                                        _vm.pagination
-                                                          .current_page
-                                                      ) +
-                                                        " of " +
-                                                        _vm._s(
-                                                          _vm.pagination
-                                                            .last_page
-                                                        )
-                                                    )
-                                                  ]
-                                                )
-                                              ]
-                                            ),
-                                            _vm._v(" "),
-                                            _c(
-                                              "li",
-                                              {
-                                                staticClass: "page-item",
-                                                class: [
-                                                  {
-                                                    disabled: !_vm.pagination
-                                                      .next_page_url
-                                                  }
-                                                ]
-                                              },
-                                              [
-                                                _c(
-                                                  "a",
-                                                  {
-                                                    staticClass: "page-link",
-                                                    attrs: { href: "#" },
-                                                    on: {
-                                                      click: function($event) {
-                                                        return _vm.getTasks(
-                                                          _vm.pagination
-                                                            .next_page_url
-                                                        )
-                                                      }
-                                                    }
-                                                  },
-                                                  [_vm._v("Next")]
-                                                )
-                                              ]
-                                            )
-                                          ]
-                                        )
-                                      ])
-                                    : _vm._e()
-                                ]
-                              )
-                            ]),
-                            _vm._v(" "),
-                            _c("div", { staticClass: "col-md-6 col-sm-12" }, [
-                              _c("div", { staticClass: "task-name" }, [
-                                _vm.current_task
-                                  ? _c("span", [
-                                      _c("i", {
-                                        staticClass: "fa fa-align-left"
-                                      }),
-                                      _vm._v(
-                                        " " +
-                                          _vm._s(_vm.current_task.name) +
-                                          " "
-                                      )
-                                    ])
-                                  : _vm._e(),
-                                _vm._v(" "),
-                                _vm.current_task
-                                  ? _c("span", { staticClass: "task-date" }, [
-                                      _c("i", {
-                                        staticClass: "fa fa-calendar"
-                                      }),
-                                      _vm._v(
-                                        "  " +
-                                          _vm._s(
-                                            _vm.formatDate(
-                                              _vm.current_task.start_date
-                                            )
-                                          ) +
-                                          " - " +
-                                          _vm._s(
-                                            _vm.formatDate(
-                                              _vm.current_task.end_date
-                                            )
-                                          )
-                                      )
-                                    ])
-                                  : _vm._e()
-                              ]),
-                              _vm._v(" "),
-                              _c("div", { staticClass: "todo-list" }, [
-                                _c(
-                                  "ul",
-                                  { staticClass: "todo-list text-left" },
-                                  _vm._l(_vm.nonNullTodos, function(todo) {
-                                    return _c(
-                                      "li",
-                                      {
-                                        key: todo.id,
-                                        staticClass: "edit-item-icon-parent",
-                                        attrs: { id: "todo_" + todo.id }
-                                      },
-                                      [
-                                        _c(
-                                          "div",
-                                          { staticClass: "list-item" },
-                                          [
-                                            _c(
-                                              "label",
-                                              {
-                                                staticClass: "list-label",
-                                                attrs: {
-                                                  for: todo.id,
-                                                  role: "button"
-                                                }
-                                              },
-                                              [
-                                                _c("input", {
-                                                  directives: [
-                                                    {
-                                                      name: "model",
-                                                      rawName: "v-model",
-                                                      value: todo.complete,
-                                                      expression:
-                                                        "todo.complete"
-                                                    }
-                                                  ],
-                                                  attrs: {
-                                                    type: "checkbox",
-                                                    id: todo.id,
-                                                    onclick: "return false;"
-                                                  },
-                                                  domProps: {
-                                                    checked: Array.isArray(
-                                                      todo.complete
-                                                    )
-                                                      ? _vm._i(
-                                                          todo.complete,
-                                                          null
-                                                        ) > -1
-                                                      : todo.complete
-                                                  },
-                                                  on: {
-                                                    change: function($event) {
-                                                      var $$a = todo.complete,
-                                                        $$el = $event.target,
-                                                        $$c = $$el.checked
-                                                          ? true
-                                                          : false
-                                                      if (Array.isArray($$a)) {
-                                                        var $$v = null,
-                                                          $$i = _vm._i($$a, $$v)
-                                                        if ($$el.checked) {
-                                                          $$i < 0 &&
-                                                            _vm.$set(
-                                                              todo,
-                                                              "complete",
-                                                              $$a.concat([$$v])
-                                                            )
-                                                        } else {
-                                                          $$i > -1 &&
-                                                            _vm.$set(
-                                                              todo,
-                                                              "complete",
-                                                              $$a
-                                                                .slice(0, $$i)
-                                                                .concat(
-                                                                  $$a.slice(
-                                                                    $$i + 1
-                                                                  )
-                                                                )
-                                                            )
-                                                        }
-                                                      } else {
-                                                        _vm.$set(
-                                                          todo,
-                                                          "complete",
-                                                          $$c
-                                                        )
-                                                      }
-                                                    }
-                                                  }
-                                                }),
-                                                _vm._v(" "),
-                                                _c(
-                                                  "span",
-                                                  {
-                                                    staticClass:
-                                                      "todo-list__text",
-                                                    class: [
-                                                      {
-                                                        "todo-list__item-checked":
-                                                          todo.complete
-                                                      }
-                                                    ],
-                                                    attrs: {
-                                                      id: "todo_name_" + todo.id
-                                                    }
-                                                  },
-                                                  [_vm._v(_vm._s(todo.name))]
-                                                )
-                                              ]
-                                            )
-                                          ]
-                                        )
-                                      ]
-                                    )
-                                  }),
-                                  0
-                                )
-                              ])
-                            ])
+                                ])
+                              ]
+                            )
                           ])
                         : _vm._e(),
                       _vm._v(" "),
@@ -42677,6 +43054,205 @@ var staticRenderFns = [
         },
         [_vm._v("Close")]
       )
+    ])
+  }
+]
+render._withStripped = true
+
+
+
+/***/ }),
+
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/UserInfo.vue?vue&type=template&id=11f66ff8&":
+/*!***********************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/UserInfo.vue?vue&type=template&id=11f66ff8& ***!
+  \***********************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", [
+    _c("div", { staticClass: "card card--sh" }, [
+      _c("div", { staticClass: "card-header sm-pd" }, [
+        _vm._m(0),
+        _vm._v(" "),
+        _c("div", { staticClass: "pull-right" }, [
+          !_vm.edit_info
+            ? _c(
+                "button",
+                {
+                  staticClass: "btn btn-primary btn-sm",
+                  attrs: { type: "button" },
+                  on: {
+                    click: function($event) {
+                      return _vm.addInfoForm()
+                    }
+                  }
+                },
+                [_c("i", { staticClass: "fa fa-pencil" }), _vm._v(" Edit Info")]
+              )
+            : _vm._e()
+        ])
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "card-body" }, [
+        !_vm.edit_info
+          ? _c("table", { staticClass: "table table-sm table-striped" }, [
+              _c("tbody", [
+                _c("tr", [
+                  _c("td", [_vm._v("Name")]),
+                  _vm._v(" "),
+                  _c("td", [_vm._v(_vm._s(_vm.user.name))])
+                ]),
+                _vm._v(" "),
+                _c("tr", [
+                  _c("td", [_vm._v("Email")]),
+                  _vm._v(" "),
+                  _c("td", [_vm._v(_vm._s(_vm.user.email))])
+                ]),
+                _vm._v(" "),
+                _c("tr", [
+                  _c("td", [_vm._v("Status")]),
+                  _vm._v(" "),
+                  _c("td", [
+                    _c("span", {
+                      staticClass: "badge ",
+                      attrs: { id: "user_status" }
+                    })
+                  ])
+                ]),
+                _vm._v(" "),
+                _c("tr", [
+                  _c("td", [_vm._v("Joined on")]),
+                  _vm._v(" "),
+                  _c("td", [
+                    _vm._v(_vm._s(_vm.formatDate(_vm.user.created_at)))
+                  ])
+                ])
+              ])
+            ])
+          : _vm._e(),
+        _vm._v(" "),
+        _vm.edit_info
+          ? _c("div", [
+              _c(
+                "form",
+                {
+                  on: {
+                    submit: function($event) {
+                      $event.preventDefault()
+                      return _vm.editInfo($event)
+                    }
+                  }
+                },
+                [
+                  _c("div", { staticClass: "row" }, [
+                    _c("div", { staticClass: "form-group col-md-12" }, [
+                      _c("input", {
+                        directives: [
+                          {
+                            name: "model",
+                            rawName: "v-model",
+                            value: _vm.info.name,
+                            expression: "info.name"
+                          }
+                        ],
+                        staticClass: "form-control form-control-sm",
+                        attrs: {
+                          type: "text",
+                          placeholder: "Type your full name",
+                          name: "name",
+                          id: "info_name"
+                        },
+                        domProps: { value: _vm.info.name },
+                        on: {
+                          input: function($event) {
+                            if ($event.target.composing) {
+                              return
+                            }
+                            _vm.$set(_vm.info, "name", $event.target.value)
+                          }
+                        }
+                      })
+                    ]),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "form-group col-md-12" }, [
+                      _c("input", {
+                        directives: [
+                          {
+                            name: "model",
+                            rawName: "v-model",
+                            value: _vm.info.email,
+                            expression: "info.email"
+                          }
+                        ],
+                        staticClass: "form-control form-control-sm",
+                        attrs: {
+                          type: "text",
+                          placeholder: "Type your email address",
+                          name: "email",
+                          id: "info_name"
+                        },
+                        domProps: { value: _vm.info.email },
+                        on: {
+                          input: function($event) {
+                            if ($event.target.composing) {
+                              return
+                            }
+                            _vm.$set(_vm.info, "email", $event.target.value)
+                          }
+                        }
+                      })
+                    ])
+                  ]),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "row" }, [
+                    _c("div", { staticClass: "col-12" }, [
+                      _c(
+                        "button",
+                        {
+                          staticClass: "btn btn-primary btn-sm",
+                          staticStyle: { "margin-right": "20px" },
+                          attrs: { type: "submit" }
+                        },
+                        [_vm._v("Save")]
+                      ),
+                      _vm._v(" "),
+                      _c(
+                        "button",
+                        {
+                          staticClass: "btn btn-secondary btn-sm",
+                          attrs: { type: "button" },
+                          on: { click: _vm.cancelEditInfo }
+                        },
+                        [_vm._v("Cancel")]
+                      )
+                    ])
+                  ])
+                ]
+              )
+            ])
+          : _vm._e()
+      ])
+    ])
+  ])
+}
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "pull-left" }, [
+      _c("h2", { staticClass: "card-header__title" }, [
+        _vm._v("My Information")
+      ])
     ])
   }
 ]
@@ -42737,6 +43313,125 @@ render._withStripped = true
 
 /***/ }),
 
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/UserProfile.vue?vue&type=template&id=67528743&":
+/*!**************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/UserProfile.vue?vue&type=template&id=67528743& ***!
+  \**************************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", [
+    _c("div", { staticClass: "card card--sh" }, [
+      _c("div", { staticClass: "card-header sm-pd" }, [
+        _vm._m(0),
+        _vm._v(" "),
+        _c("div", { staticClass: "pull-right" }, [
+          !_vm.edit_profile
+            ? _c(
+                "button",
+                {
+                  staticClass: "btn btn-primary btn-sm",
+                  attrs: { type: "button" },
+                  on: {
+                    click: function($event) {
+                      return _vm.addForm()
+                    }
+                  }
+                },
+                [
+                  _c("i", { staticClass: "fa fa-pencil" }),
+                  _vm._v(" Edit Profile")
+                ]
+              )
+            : _vm._e()
+        ])
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "card-body" }, [
+        _c("img", {
+          staticStyle: { width: "50%", margin: "auto" },
+          attrs: { src: _vm.profile.image, id: "profile_image" }
+        })
+      ]),
+      _vm._v(" "),
+      _vm.edit_profile
+        ? _c("div", [
+            _c(
+              "form",
+              {
+                attrs: { enctype: "multipart/form-data" },
+                on: {
+                  submit: function($event) {
+                    $event.preventDefault()
+                    return _vm.updateProfile($event)
+                  }
+                }
+              },
+              [
+                _c("div", { staticClass: "row" }, [
+                  _c("div", { staticClass: "form-group col-md-12" }, [
+                    _c("input", {
+                      staticClass: "form-control form-control-sm",
+                      attrs: { type: "file", name: "image", id: "image_file" },
+                      on: { change: _vm.onFileChange }
+                    })
+                  ])
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "row" }, [
+                  _c("div", { staticClass: "col-12" }, [
+                    _c(
+                      "button",
+                      {
+                        staticClass: "btn btn-primary btn-sm",
+                        staticStyle: { "margin-right": "20px" },
+                        attrs: { type: "submit" }
+                      },
+                      [_vm._v("Save")]
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "button",
+                      {
+                        staticClass: "btn btn-secondary btn-sm",
+                        attrs: { type: "button" },
+                        on: { click: _vm.cancelEdit }
+                      },
+                      [_vm._v("Cancel")]
+                    )
+                  ])
+                ])
+              ]
+            )
+          ])
+        : _vm._e()
+    ])
+  ])
+}
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "pull-left" }, [
+      _c("h2", { staticClass: "card-header__title" }, [_vm._v("My Profile")])
+    ])
+  }
+]
+render._withStripped = true
+
+
+
+/***/ }),
+
 /***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/Users.vue?vue&type=template&id=30c27aa6&":
 /*!********************************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/Users.vue?vue&type=template&id=30c27aa6& ***!
@@ -42757,7 +43452,7 @@ var render = function() {
         "div",
         [
           _c("div", { staticClass: "row" }, [
-            _c("div", { staticClass: "col-12" }, [
+            _c("div", { staticClass: "col-12 pd-0" }, [
               _c("div", { staticClass: "card" }, [
                 _vm._m(0),
                 _vm._v(" "),
@@ -43009,70 +43704,93 @@ var staticRenderFns = [
     var _c = _vm._self._c || _h
     return _c("div", { staticClass: "card-header" }, [
       _c("div", { staticClass: "row" }, [
-        _c("div", { staticClass: "form-group col-md-4 filter-form" }, [
-          _c("label", { attrs: { for: "status" } }, [
-            _vm._v("Filter by status: ")
-          ]),
-          _vm._v(" "),
-          _c(
-            "select",
-            {
-              staticClass: "form-control form-control-sm filter",
-              attrs: { name: "status", id: "status" }
-            },
-            [
-              _c("option", { attrs: { value: "all" } }, [_vm._v("All")]),
-              _vm._v(" "),
-              _c("option", { attrs: { value: "complete" } }, [
-                _vm._v("Complete")
-              ]),
-              _vm._v(" "),
-              _c("option", { attrs: { value: "in_progress" } }, [
-                _vm._v("In Progress")
-              ]),
-              _vm._v(" "),
-              _c("option", { attrs: { value: "not_started" } }, [
-                _vm._v("Not Started")
-              ])
-            ]
-          )
-        ]),
+        _c(
+          "div",
+          {
+            staticClass:
+              "form-group col-sm-4 col-md-4 filter-form filter-form--select"
+          },
+          [
+            _c("label", { attrs: { for: "status" } }, [_vm._v("Status: ")]),
+            _vm._v(" "),
+            _c(
+              "select",
+              {
+                staticClass: "form-control form-control-sm filter",
+                attrs: { name: "status", id: "status" }
+              },
+              [
+                _c("option", { attrs: { value: "all" } }, [_vm._v("All")]),
+                _vm._v(" "),
+                _c("option", { attrs: { value: "complete" } }, [
+                  _vm._v("Complete")
+                ]),
+                _vm._v(" "),
+                _c("option", { attrs: { value: "in_progress" } }, [
+                  _vm._v("In Progress")
+                ]),
+                _vm._v(" "),
+                _c("option", { attrs: { value: "not_started" } }, [
+                  _vm._v("Not Started")
+                ])
+              ]
+            )
+          ]
+        ),
         _vm._v(" "),
-        _c("div", { staticClass: "form-group col-md-4 filter-form" }, [
-          _c("label", { attrs: { for: "priority" } }, [
-            _vm._v("Filter by Priority: ")
-          ]),
-          _vm._v(" "),
-          _c(
-            "select",
-            {
-              staticClass: "form-control form-control-sm filter",
-              attrs: { name: "priority", id: "priority" }
-            },
-            [
-              _c("option", { attrs: { value: "all" } }, [_vm._v("All")]),
-              _vm._v(" "),
-              _c("option", { attrs: { value: "high" } }, [_vm._v("High")]),
-              _vm._v(" "),
-              _c("option", { attrs: { value: "medium" } }, [_vm._v("Medium")]),
-              _vm._v(" "),
-              _c("option", { attrs: { value: "low" } }, [_vm._v("Low")])
-            ]
-          )
-        ]),
+        _c(
+          "div",
+          {
+            staticClass:
+              "form-group col-sm-4 col-md-4 filter-form filter-form--select"
+          },
+          [
+            _c("label", { attrs: { for: "priority" } }, [_vm._v("Priority: ")]),
+            _vm._v(" "),
+            _c(
+              "select",
+              {
+                staticClass: "form-control form-control-sm filter",
+                attrs: { name: "priority", id: "priority" }
+              },
+              [
+                _c("option", { attrs: { value: "all" } }, [_vm._v("All")]),
+                _vm._v(" "),
+                _c("option", { attrs: { value: "high" } }, [_vm._v("High")]),
+                _vm._v(" "),
+                _c("option", { attrs: { value: "medium" } }, [
+                  _vm._v("Medium")
+                ]),
+                _vm._v(" "),
+                _c("option", { attrs: { value: "low" } }, [_vm._v("Low")])
+              ]
+            )
+          ]
+        ),
         _vm._v(" "),
-        _c("div", { staticClass: "form-group col-md-4 filter-form" }, [
-          _c(
-            "label",
-            { staticClass: "search-label", attrs: { for: "search" } },
-            [_vm._v("Search :")]
-          ),
-          _vm._v(" "),
-          _c("input", {
-            staticClass: "form-control",
-            attrs: { type: "text", id: "search", placeholder: "Seache here..." }
-          })
-        ])
+        _c(
+          "div",
+          {
+            staticClass:
+              "form-group col-sm-4 col-md-4 filter-form filter-form--search"
+          },
+          [
+            _c(
+              "label",
+              { staticClass: "search-label", attrs: { for: "search" } },
+              [_vm._v("Search:")]
+            ),
+            _vm._v(" "),
+            _c("input", {
+              staticClass: "form-control",
+              attrs: {
+                type: "text",
+                id: "search",
+                placeholder: "Seache here..."
+              }
+            })
+          ]
+        )
       ])
     ])
   },
@@ -43144,9 +43862,7 @@ var render = function() {
               _c("div", { staticClass: "col-md-12" }, [
                 _c("div", { staticClass: "card" }, [
                   _c("div", { staticClass: "card-header" }, [
-                    _vm._v(
-                      "\n                        User Details\n                      "
-                    )
+                    _vm._v("\n                  User Details\n                ")
                   ]),
                   _vm._v(" "),
                   _c("div", { staticClass: "card-body" }, [
@@ -55449,14 +56165,19 @@ module.exports = function(module) {
 /*!*****************************!*\
   !*** ./resources/js/app.js ***!
   \*****************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
+/*! no exports provided */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
 
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _modules_SideNavMenu__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./modules/SideNavMenu */ "./resources/js/modules/SideNavMenu.js");
 /**
  * First we will load all of this project's JavaScript dependencies which
  * includes Vue and other libraries. It is a great starting point when
  * building robust, powerful web applications using Vue and Laravel.
  */
+
+
 __webpack_require__(/*! ./bootstrap */ "./resources/js/bootstrap.js");
 
 window.Vue = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.common.js");
@@ -55469,7 +56190,7 @@ axios.defaults.headers.post['content-type'] = 'application/json'; // for POST re
 
 axios.defaults.headers.post['X-Requested-With'] = 'XMLHttpRequest'; // for POST requests
 
-axios.defaults.headers.put['content-type'] = 'application/json'; // for POST requests
+axios.defaults.headers.put['content-type'] = 'multipart/form-data'; // for POST requests
 
 axios.defaults.headers.put['X-Requested-With'] = 'XMLHttpRequest'; // for POST requests
 // window.helpers = {show:'task'}; // Show task by default
@@ -55506,6 +56227,8 @@ Vue.component('view-user-modal', __webpack_require__(/*! ./components/ViewUserMo
 Vue.component('ban-user-modal', __webpack_require__(/*! ./components/BanUserModal.vue */ "./resources/js/components/BanUserModal.vue")["default"]);
 Vue.component('task-modal', __webpack_require__(/*! ./components/TaskModal.vue */ "./resources/js/components/TaskModal.vue")["default"]);
 Vue.component('users', __webpack_require__(/*! ./components/Users.vue */ "./resources/js/components/Users.vue")["default"]);
+Vue.component('user-info', __webpack_require__(/*! ./components/UserInfo */ "./resources/js/components/UserInfo.vue")["default"]);
+Vue.component('user-profile', __webpack_require__(/*! ./components/UserProfile */ "./resources/js/components/UserProfile.vue")["default"]);
 /**
  * Next, we will create a fresh Vue application instance and attach it to
  * the page. Then, you may begin adding components to this application
@@ -55517,7 +56240,8 @@ var app = new Vue({
 });
 $(function () {
   $('[data-toggle="tooltip"]').tooltip();
-}); // // Task Filter 
+});
+var sideNavMenu = new _modules_SideNavMenu__WEBPACK_IMPORTED_MODULE_0__["default"](); // // Task Filter 
 // $("#priority").change(function(){
 //   $value = this.value.toLowerCase();
 //   var url = window.location.href;
@@ -55549,6 +56273,53 @@ $('.toast').toast(); // var timeoutId = null;
 //             alert("double click");
 //         }
 // });
+
+window.wd = $(window).width();
+$(function () {
+  $(window).bind("resize", function () {
+    console.log($(this).width());
+
+    if ($(this).width() < 1010) {
+      if (window.wd != $(this).width()) {
+        $('.content__main__left').removeClass('content__main__left--expanded');
+        $('.content__main__right').addClass('content__main__right--expanded');
+        $('.sidebar__menu').removeClass('sidebar__menu--visible');
+        $('.sidebar__nav').removeClass('sidebar__nav--expanded');
+        $('.sidebar__menu__icon').removeClass('sidebar__menu__icon--close-x');
+      }
+    } // else{
+    // $('div').removeClass('red').addClass('yellow')
+    // }
+
+  });
+});
+
+var changeClass = function () {
+  var executed = false;
+  return function () {
+    if (!executed) {
+      executed = true;
+
+      if ($(window).width() < 1010) {
+        $('.content__main__left').removeClass('content__main__left--expanded');
+        $('.content__main__right').addClass('content__main__right--expanded');
+        $('.sidebar__menu').removeClass('sidebar__menu--visible');
+        $('.sidebar__nav').removeClass('sidebar__nav--expanded');
+        $('.sidebar__menu__icon').removeClass('sidebar__menu__icon--close-x');
+      }
+    }
+  };
+}();
+
+changeClass(); // $(function(){
+// if($(window).width() <800){
+//     $('.content__main__left').removeClass('content__main__left--expanded');
+//     $('.content__main__right').addClass('content__main__right--expanded');
+//     }
+//     // else{
+//     // $('div').removeClass('red').addClass('yellow')
+//     // }
+// })
 
 /***/ }),
 
@@ -55687,15 +56458,14 @@ __webpack_require__.r(__webpack_exports__);
 /*!**************************************************!*\
   !*** ./resources/js/components/BanUserModal.vue ***!
   \**************************************************/
-/*! no static exports found */
+/*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _BanUserModal_vue_vue_type_template_id_04169cbe___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./BanUserModal.vue?vue&type=template&id=04169cbe& */ "./resources/js/components/BanUserModal.vue?vue&type=template&id=04169cbe&");
 /* harmony import */ var _BanUserModal_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./BanUserModal.vue?vue&type=script&lang=js& */ "./resources/js/components/BanUserModal.vue?vue&type=script&lang=js&");
-/* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _BanUserModal_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__) if(["default"].indexOf(__WEBPACK_IMPORT_KEY__) < 0) (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return _BanUserModal_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__[key]; }) }(__WEBPACK_IMPORT_KEY__));
-/* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
 
 
 
@@ -55725,7 +56495,7 @@ component.options.__file = "resources/js/components/BanUserModal.vue"
 /*!***************************************************************************!*\
   !*** ./resources/js/components/BanUserModal.vue?vue&type=script&lang=js& ***!
   \***************************************************************************/
-/*! no static exports found */
+/*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -56236,6 +57006,75 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./resources/js/components/UserInfo.vue":
+/*!**********************************************!*\
+  !*** ./resources/js/components/UserInfo.vue ***!
+  \**********************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _UserInfo_vue_vue_type_template_id_11f66ff8___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./UserInfo.vue?vue&type=template&id=11f66ff8& */ "./resources/js/components/UserInfo.vue?vue&type=template&id=11f66ff8&");
+/* harmony import */ var _UserInfo_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./UserInfo.vue?vue&type=script&lang=js& */ "./resources/js/components/UserInfo.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _UserInfo_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _UserInfo_vue_vue_type_template_id_11f66ff8___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _UserInfo_vue_vue_type_template_id_11f66ff8___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  null,
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/components/UserInfo.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/components/UserInfo.vue?vue&type=script&lang=js&":
+/*!***********************************************************************!*\
+  !*** ./resources/js/components/UserInfo.vue?vue&type=script&lang=js& ***!
+  \***********************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_UserInfo_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/babel-loader/lib??ref--4-0!../../../node_modules/vue-loader/lib??vue-loader-options!./UserInfo.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/UserInfo.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_UserInfo_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/components/UserInfo.vue?vue&type=template&id=11f66ff8&":
+/*!*****************************************************************************!*\
+  !*** ./resources/js/components/UserInfo.vue?vue&type=template&id=11f66ff8& ***!
+  \*****************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_UserInfo_vue_vue_type_template_id_11f66ff8___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../node_modules/vue-loader/lib??vue-loader-options!./UserInfo.vue?vue&type=template&id=11f66ff8& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/UserInfo.vue?vue&type=template&id=11f66ff8&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_UserInfo_vue_vue_type_template_id_11f66ff8___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_UserInfo_vue_vue_type_template_id_11f66ff8___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
+
+/***/ }),
+
 /***/ "./resources/js/components/UserListAction.vue":
 /*!****************************************************!*\
   !*** ./resources/js/components/UserListAction.vue ***!
@@ -56300,6 +57139,75 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_UserListAction_vue_vue_type_template_id_21d7136c___WEBPACK_IMPORTED_MODULE_0__["render"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_UserListAction_vue_vue_type_template_id_21d7136c___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
+
+/***/ }),
+
+/***/ "./resources/js/components/UserProfile.vue":
+/*!*************************************************!*\
+  !*** ./resources/js/components/UserProfile.vue ***!
+  \*************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _UserProfile_vue_vue_type_template_id_67528743___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./UserProfile.vue?vue&type=template&id=67528743& */ "./resources/js/components/UserProfile.vue?vue&type=template&id=67528743&");
+/* harmony import */ var _UserProfile_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./UserProfile.vue?vue&type=script&lang=js& */ "./resources/js/components/UserProfile.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _UserProfile_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _UserProfile_vue_vue_type_template_id_67528743___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _UserProfile_vue_vue_type_template_id_67528743___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  null,
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/components/UserProfile.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/components/UserProfile.vue?vue&type=script&lang=js&":
+/*!**************************************************************************!*\
+  !*** ./resources/js/components/UserProfile.vue?vue&type=script&lang=js& ***!
+  \**************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_UserProfile_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/babel-loader/lib??ref--4-0!../../../node_modules/vue-loader/lib??vue-loader-options!./UserProfile.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/UserProfile.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_UserProfile_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/components/UserProfile.vue?vue&type=template&id=67528743&":
+/*!********************************************************************************!*\
+  !*** ./resources/js/components/UserProfile.vue?vue&type=template&id=67528743& ***!
+  \********************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_UserProfile_vue_vue_type_template_id_67528743___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../node_modules/vue-loader/lib??vue-loader-options!./UserProfile.vue?vue&type=template&id=67528743& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/UserProfile.vue?vue&type=template&id=67528743&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_UserProfile_vue_vue_type_template_id_67528743___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_UserProfile_vue_vue_type_template_id_67528743___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
 
 
 
@@ -56440,6 +57348,60 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_ViewUserModal_vue_vue_type_template_id_3b7869a2___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
 
 
+
+/***/ }),
+
+/***/ "./resources/js/modules/SideNavMenu.js":
+/*!*********************************************!*\
+  !*** ./resources/js/modules/SideNavMenu.js ***!
+  \*********************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+var SideNavMenu = /*#__PURE__*/function () {
+  function SideNavMenu() {
+    _classCallCheck(this, SideNavMenu);
+
+    this.menuIcon = document.querySelector(".sidebar__menu__icon");
+    this.menuContent = document.querySelector(".sidebar__menu");
+    this.sidebarNav = document.querySelector(".sidebar__nav");
+    this.mainLeftContent = document.querySelector(".content__main__left");
+    this.mainRightContent = document.querySelector(".content__main__right");
+    this.events();
+  }
+
+  _createClass(SideNavMenu, [{
+    key: "events",
+    value: function events() {
+      var _this = this;
+
+      this.menuIcon.addEventListener("click", function () {
+        return _this.toggleTheMenu();
+      });
+    }
+  }, {
+    key: "toggleTheMenu",
+    value: function toggleTheMenu() {
+      this.menuContent.classList.toggle("sidebar__menu--visible");
+      this.mainLeftContent.classList.toggle("content__main__left--expanded");
+      this.sidebarNav.classList.toggle("sidebar__nav--expanded");
+      this.mainRightContent.classList.toggle("content__main__right--expanded");
+      this.menuIcon.classList.toggle("sidebar__menu__icon--close-x");
+    }
+  }]);
+
+  return SideNavMenu;
+}();
+
+/* harmony default export */ __webpack_exports__["default"] = (SideNavMenu);
 
 /***/ }),
 

@@ -15,10 +15,12 @@
 @import './modules/_buttons';
 @import './modules/_sidebar';
 @import './modules/_content';
+@import './modules/_card';
 @import './modules/_todo-list';
 @import './modules/_edit-item-icon';
 @import './modules/_form';
 @import './modules/_bootstrap-override';
 @import './modules/_flash-messages';
+@import './modules/_filter-form';
 
 @import './modules/_footer';

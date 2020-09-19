@@ -14,8 +14,8 @@
                       <div class="card">
                         <div class="card-header">
                           <div class="row">
-                            <div class="form-group col-md-4 filter-form">
-                              <label for="status">Filter by status: </label>
+                            <div class="form-group col-sm-4 col-md-4 filter-form filter-form--select">
+                              <label for="status">Status: </label>
                               <select class="form-control form-control-sm filter" name="status" id="userTaskStatus" @change="filterTask" v-model="filter.status">
                                 <option value="all">All</option>
                                 <option value="complete">Complete</option>
@@ -23,8 +23,8 @@
                                 <option value="not_started">Not Started</option>
                               </select>
                             </div>
-                            <div class="form-group col-md-4 filter-form">
-                              <label for="priority">Filter by Priority: </label>
+                            <div class="form-group col-sm-4 col-md-4 filter-form filter-form--select">
+                              <label for="priority">Priority: </label>
                               <select class="form-control form-control-sm filter" name="priority" id="userTaskPriority" @change="filterTask" v-model="filter.priority">
                                 <option value="all">All</option>
                                 <option value="high">High</option>
@@ -32,8 +32,8 @@
                                 <option value="low">Low</option>
                               </select>
                             </div>
-                            <div class="form-group col-md-4 filter-form">
-                              <label for="search" class="search-label">Search :</label>
+                            <div class="form-group col-sm-4 col-md-4 filter-form filter-form--search">
+                              <label for="search" class="search-label">Search:</label>
                               
                               <input type="text" class="form-control" id="userTaskSearch" v-model="filter.keyword" placeholder="Seache here..." @change="filterTask">
                             </div>
@@ -41,7 +41,7 @@
                         </div>
                         <div class="card-body">
                           <div class="row" v-if="pagination.total">
-                            <div class="col-md-6 col-sm-12">
+                            <div class="col-md-6 col-sm-12 pd-0">
                               <div class="task-title" id="task-title">
                                 <div class="pull-left"><span><i class="fa fa-tasks"></i>  {{ task_title }}</span></div>
                               </div>
@@ -74,7 +74,7 @@
                               </nav>
                             </div>
                             </div>
-                             <div class="col-md-6 col-sm-12">
+                             <div class="col-md-6 col-sm-12 pd-0">
                               <div class="task-name">
                                 <span v-if="current_task"><i class="fa fa-align-left"></i> {{ current_task.name }} </span> <span class="task-date" v-if="current_task"><i class="fa fa-calendar"></i>  {{ formatDate(current_task.start_date) }} - {{ formatDate(current_task.end_date) }}</span>
                               </div>

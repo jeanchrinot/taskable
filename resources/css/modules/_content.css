@@ -1,55 +1,128 @@
 .content{
-	width: 83%;
+	width: 100%;
 	float: left;
 	overflow: hidden;
 	&__header{
-	display: block;
-    height: auto;
-    padding: 8px;
-    background: #fff;
-    text-align: left;
+		display: block;
+	    height: 40px;
+	    padding: 0 0 0 0;
+	    background: #fff;
+	    text-align: left;
+	    width: 100%;
 	}
 	&__title{
-		font-size: 16px;
-	    line-height: 20px;
-	    text-transform: uppercase;
-	    position: relative;
-	    top: 7px;
-	    margin-left: 20px;
-	    left: 20px;
-	    font-weight: bold;
+		width: 200px;
+	    float: left;
+	    height: 40px;
+		&__text{
+			font-size: 16px;
+		    line-height: 16px;
+		    text-transform: uppercase;
+		    position: relative;
+		    top: 2px;
+		    margin-left: 0;
+		    left: 20px;
+		    font-weight: bold;		
+		}
 	}
 	&__main{
-		padding:20px;
+		
+		&__left{
+			width: 0px;
+			float: left;
+			transition: width 0.3s linear;
+			position: absolute;
+			z-index: 1;
+			&--expanded{
+				width: 160px;
+
+				@mixin atLarge{
+					width: 17%;
+				}
+			}
+
+			@mixin atLarge{
+				position: unset;
+    			z-index: 0;
+			}
+		}
+		&__right{
+			width: 100%;
+			float: left;
+			padding:5px 5px;
+			transition: width 0.3s linear;
+
+			@mixin atPreMedium{
+				padding: 5px 15px;
+			}
+
+			@mixin atLarge{
+					width: 83%;
+				}
+
+			&--expanded{
+				width:100%;
+			}
+		}
 	}
 }
 
 .numbers{
-	display: flex;
+	display: inline-block;
 	position: relative;
+	width: 100%;
+	margin-bottom: -6px;
+	@mixin atMedium{
+		display: flex;
+	}
 	&__item{
-		width:25% ;
+		width:48%;
 		height: 65px;
-		margin:10px;
+		margin:6px 1%;
 		background-color: #fff;
 		padding:10px;
 		display: flex;
 		text-align: center;
+		flex-grow: 1;
+		float: left;
+		@mixin atMedium{
+			width:25% ;
+			flex-grow: 1;
+		}
+
 		&__icon{
-			width: 45px;
-			height: 45px;
+			width: 35px;
+			height: 35px;
 			background-color: $tsk-yellow;
 			border-radius: 50%;
 			color: #fff;
+			position: relative;
+			top: 5px;
 			i{
 				color: #fff;
 			    position: relative;
-			    top: 10px;
+			    top: 7px;
+			    @mixin atLarge{
+			    	top:10px;
+			    }
+			}
+
+			@mixin atLarge{
+			width: 45px;
+			height: 45px;
+			top: 0;
 			}
 		}
 		&__value{
 			margin-left: 10px;
 			font-size: 15px;
+
+			.item__label{
+				font-size: 13px;
+				@mixin atLarge{
+					font-size: 15px;
+				}
+			}
 		}
 	}
 }

@@ -1,12 +1,12 @@
 <template>
   <div v-if="user_role=='admin'">
        <div class="row">
-          <div class="col-12">
+          <div class="col-12 pd-0">
             <div class="card">
                 <div class="card-header">
                   <div class="row">
-                    <div class="form-group col-md-4 filter-form">
-                      <label for="status">Filter by status: </label>
+                    <div class="form-group col-sm-4 col-md-4 filter-form filter-form--select">
+                      <label for="status">Status: </label>
                       <select class="form-control form-control-sm filter" name="status" id="status">
                         <option value="all">All</option>
                         <option value="complete">Complete</option>
@@ -14,8 +14,8 @@
                         <option value="not_started">Not Started</option>
                       </select>
                     </div>
-                    <div class="form-group col-md-4 filter-form">
-                      <label for="priority">Filter by Priority: </label>
+                    <div class="form-group col-sm-4 col-md-4 filter-form filter-form--select">
+                      <label for="priority">Priority: </label>
                       <select class="form-control form-control-sm filter" name="priority" id="priority">
                         <option value="all">All</option>
                         <option value="high">High</option>
@@ -23,8 +23,8 @@
                         <option value="low">Low</option>
                       </select>
                     </div>
-                    <div class="form-group col-md-4 filter-form">
-                      <label for="search" class="search-label">Search :</label>
+                    <div class="form-group col-sm-4 col-md-4 filter-form filter-form--search">
+                      <label for="search" class="search-label">Search:</label>
                       
                         <input type="text" class="form-control" id="search" placeholder="Seache here...">
                       
@@ -141,7 +141,7 @@
 
                 //console.log(vm);
 
-                api_url = api_url || '/api/users';
+                api_url = api_url || '/api/admin/users';
                 axios.get(api_url)
                 .then((response) => {
                   response = response.data;
@@ -150,15 +150,6 @@
                         // this.current_task = this.tasks[0];
                         // this.todos = response.meta.todos;
                         vm.paginator(response.meta, response.links);
-                    })
-                    .catch(err => console.log(err));
-            },
-             getUser(id) {
-                let api_url = '/api/task/'+id;
-                axios.get(api_url)
-                    .then(response => {
-                        response = response.data;
-                        this.user = response.data;
                     })
                     .catch(err => console.log(err));
             },
@@ -173,7 +164,7 @@
             },
             filterUsers(filterType){
               
-              var api_url = "/api/users?f=true";
+              var api_url = "/api/admin/users?f=true";
 
               this.url_request = '';
 

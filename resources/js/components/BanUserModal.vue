@@ -39,7 +39,7 @@
     },
     methods:{
         banUser(id){
-          axios.put('/api/user/ban/'+id)
+          axios.put('/api/admin/user/ban/'+id)
           .then(response=>{
             response = response.data;
             if (response.success==true) {

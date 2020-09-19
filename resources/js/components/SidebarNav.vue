@@ -1,10 +1,6 @@
 <template>
-    <div>
-        <nav class="sidebar__nav">
-            <ul class="sidebar__menu">
-                <li class="title--small">
-                    MAIN NAVIGATION
-                </li>
+    <nav class="sidebar__nav sidebar__nav--expanded">
+            <ul class="sidebar__menu sidebar__menu--visible">
                 <li class="active">
                     <a :href="links.dashboard" class="menu-toggle">
                         <i class="fa fa-bar-chart"></i>
@@ -25,8 +21,7 @@
                 </li>
                 
             </ul>
-        </nav>
-    </div>
+    </nav>
 </template>
 
 <script>

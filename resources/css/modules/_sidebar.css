@@ -1,16 +1,57 @@
 .sidebar{
 	float: left;
 	display: block;
-	width: 17%;
+	width: 100%;
 	&__nav{
 		position: relative;
-		width: 100%;
+		width: 0px;
 		padding:0;
 		background-color: $tsk-green;
 		height: 100%;
+		transition: width 0.2s linear;
+		overflow: hidden;
+
 		ul{
 			list-style: none;
 			padding:0;
+		}
+
+		&__head{
+			display: flex;
+		    float: left;
+		    width: 40px;
+		    height: 40px;
+		    background: #00a15d;
+		    color: #fff;
+		    text-align: center;
+		    position: relative;
+		    @mixin atMedium{
+		    	width: 160px;
+		    }
+		    @mixin atLarge{
+		    	width: 17%;
+		    }
+			div{
+				float: left;
+			}
+
+			.title--small{
+				font-size: 13px;
+			    line-height: 40px;
+			    /* text-align: center; */
+			    margin-left: 20px;
+			    display: none;
+
+			    @mixin atLarge{
+			    	font-size: 14px;
+			    	display: block;
+			    	margin-left: 10px;
+			    }
+			}
+		}
+
+		&--expanded{
+			width: 100%;
 		}
 	}
 	&__menu > li{
@@ -18,7 +59,7 @@
 		width: 100%;
 		height: 40px;
 		color: #fff;
-
+		text-align: left;
 		a{
 			color: #fff;
 			display: block;
@@ -39,10 +80,75 @@
 
 		}
 	}
-
-	.title--small{
-		text-align: center;
-		font-size: 14px;
-		line-height: 40px;
-	}
 }
+
+.sidebar__menu{
+	li{
+		opacity: 0;
+		/*transition: opacity 0.1s linear;*/
+	}
+
+	&--visible li{
+		opacity: 1;
+	}
+
+}
+
+.sidebar__nav{
+  margin-bottom: -5000px;
+  padding-bottom: 5000px;
+}
+
+.sidebar__menu__icon::before,.sidebar__menu__icon--middle,.sidebar__menu__icon::after{
+	position: absolute;
+    left: 0;
+    width: 20px;
+    height: 3px;
+    background-color: #fff;
+}
+.sidebar__menu__icon{
+	width: 20px;
+    height: 20px;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    z-index: 10;
+    cursor: pointer;
+    &::before{
+	    content: "";
+	    top: 0;
+	    transform-origin: 0 0;
+	    transition: transform .3s ease-out;
+    }
+    &--middle{
+    	top: 8px;
+	    transition: all .3s ease-out;
+	    transform-origin: 0 50%;
+    }
+    &::after{
+    	content: "";
+	    position: absolute;
+	    top: 16px;
+	    left: 0;
+	    width: 20px;
+	    height: 3px;
+	    background-color: #fff;
+	    transform-origin: 0 100%;
+	    transition: transform .3s ease-out;
+    }
+
+    &--close-x::before{
+    	transform: rotate(45deg) scaleX(1.25);
+    }
+    &--close-x{
+    	.sidebar__menu__icon--middle{
+    		opacity: 0;
+    		transform: scaleX(0);
+    	}
+    }
+
+    &--close-x::after{
+    	transform: rotate(-45deg) scaleX(1.25) translateY(1px);
+    }
+}
+

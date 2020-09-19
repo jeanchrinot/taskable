@@ -1,0 +1,17 @@
+.card-header{
+	&__title{
+		font-size: 1.2rem;
+    	margin-bottom: 0;
+	}
+}
+.card{
+	&--sh{
+		/*min-height: 445px;*/
+	}
+
+	.pd-20-sm{
+		@mixin atSmall{
+			padding: 20px!important;
+		}
+	}
+}

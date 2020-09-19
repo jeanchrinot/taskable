@@ -3,6 +3,7 @@
  * includes Vue and other libraries. It is a great starting point when
  * building robust, powerful web applications using Vue and Laravel.
  */
+import SideNavMenu from './modules/SideNavMenu';
 
 require('./bootstrap');
 
@@ -16,7 +17,7 @@ if (localStorage.getItem('userToken')!=null) {
 axios.defaults.headers.post['content-type'] = 'application/json'; // for POST requests
 axios.defaults.headers.post['X-Requested-With'] = 'XMLHttpRequest'; // for POST requests
 
-axios.defaults.headers.put['content-type'] = 'application/json'; // for POST requests
+axios.defaults.headers.put['content-type'] = 'multipart/form-data'; // for POST requests
 axios.defaults.headers.put['X-Requested-With'] = 'XMLHttpRequest'; // for POST requests
 
 // window.helpers = {show:'task'}; // Show task by default
@@ -60,6 +61,9 @@ Vue.component('ban-user-modal', require('./components/BanUserModal.vue').default
 Vue.component('task-modal', require('./components/TaskModal.vue').default);
 Vue.component('users', require('./components/Users.vue').default);
 
+Vue.component('user-info',require('./components/UserInfo').default);
+Vue.component('user-profile',require('./components/UserProfile').default);
+
 /**
  * Next, we will create a fresh Vue application instance and attach it to
  * the page. Then, you may begin adding components to this application
@@ -73,6 +77,9 @@ const app = new Vue({
 $(function () {
   $('[data-toggle="tooltip"]').tooltip()
 })
+
+
+let sideNavMenu = new SideNavMenu();
 
 // // Task Filter 
 // $("#priority").change(function(){
@@ -113,3 +120,56 @@ $('.toast').toast();
 //         }
 
 // });
+
+window.wd = $(window).width();
+
+$(function(){
+
+$(window).bind("resize",function(){
+    console.log($(this).width())
+    if($(this).width() <1010){
+     if (window.wd!=$(this).width()) {
+     	$('.content__main__left').removeClass('content__main__left--expanded');
+    	$('.content__main__right').addClass('content__main__right--expanded');
+    	$('.sidebar__menu').removeClass('sidebar__menu--visible');
+    	$('.sidebar__nav').removeClass('sidebar__nav--expanded');
+    	$('.sidebar__menu__icon').removeClass('sidebar__menu__icon--close-x');
+     }
+    }
+    // else{
+    // $('div').removeClass('red').addClass('yellow')
+    // }
+})
+})
+
+
+var changeClass = (function() {
+    var executed = false;
+    return function() {
+        if (!executed) {
+            executed = true;
+            
+            if($(window).width() <1010){
+		    $('.content__main__left').removeClass('content__main__left--expanded');
+		    $('.content__main__right').addClass('content__main__right--expanded');
+		    $('.sidebar__menu').removeClass('sidebar__menu--visible');
+    		$('.sidebar__nav').removeClass('sidebar__nav--expanded');
+    		$('.sidebar__menu__icon').removeClass('sidebar__menu__icon--close-x');
+		    }
+
+        }
+    };
+})();
+
+changeClass();
+
+// $(function(){
+
+// if($(window).width() <800){
+//     $('.content__main__left').removeClass('content__main__left--expanded');
+//     $('.content__main__right').addClass('content__main__right--expanded');
+//     }
+//     // else{
+//     // $('div').removeClass('red').addClass('yellow')
+//     // }
+// })

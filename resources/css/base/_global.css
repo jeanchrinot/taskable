@@ -3,7 +3,7 @@
                 color: #636b6f;
                 font-family: 'Nunito', sans-serif;
                 font-weight: 200;
-                height: 100vh;
+                height: 100%;
                 margin: 0;
             }
 
@@ -13,6 +13,23 @@ html, body {
     overflow-x: hidden;
 }
 
+main{
+    height: 100%;
+    >div{
+        height: 100%;
+    }
+
+    aside{
+        height: 100%;
+    }
+}
+
+.pd-0{
+    padding: 0!important;
+}
+.sm-pd{
+    padding: 8px 20px!important;
+}
 .dark-bg{
     background-color: #ccc;
 }

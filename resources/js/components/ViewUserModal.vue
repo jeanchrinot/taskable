@@ -15,45 +15,42 @@
               </div>
               <div class="col-md-12">
                  <div class="card">
-                          <div class="card-header">
-                            User Details
-                          </div>
-                          <div class="card-body">
-                              <table class="table table-sm table-striped">
-                                <!-- <thead>
-                                  <tr>
-                                    <th scope="col">Properties</th>
-                                    <th scope="col">Value</th>
-                                  </tr>
-                                </thead> -->
-                                <tbody>
-                                  <tr>
-                                    <td>Name</td>
-                                    <td>{{ user.name }}</td>
-                                  </tr>
-                                  <tr>
-                                    <td>Email</td>
-                                    <td>{{ user.email }}</td>
-                                  </tr>
-                                  <tr>
-                                    <td>Status</td>
-                                    <td><span class="badge " :id="'user_status'"></span></td>
-                                  </tr>
-                                  <tr>
-                                    <td>Banned</td>
-                                    <td><span class="badge " :id="'user_ban_status'"></span></td>
-                                  </tr>
-                                  <tr>
-                                    <td>Joined on</td>
-                                    <td>{{ formatDate(user.created_at) }}</td>
-                                  </tr>
-                                </tbody>
-                              </table>
-                          </div>
-                        </div>
-                <!-- <div><strong>Name: </strong> Jean</div>
-                <div><strong>Email: </strong> jean@gmail.com</div>
-                <div><strong>Status: </strong> Jean</div> -->
+                    <div class="card-header">
+                      User Details
+                    </div>
+                    <div class="card-body">
+                        <table class="table table-sm table-striped">
+                          <!-- <thead>
+                            <tr>
+                              <th scope="col">Properties</th>
+                              <th scope="col">Value</th>
+                            </tr>
+                          </thead> -->
+                          <tbody>
+                            <tr>
+                              <td>Name</td>
+                              <td>{{ user.name }}</td>
+                            </tr>
+                            <tr>
+                              <td>Email</td>
+                              <td>{{ user.email }}</td>
+                            </tr>
+                            <tr>
+                              <td>Status</td>
+                              <td><span class="badge " :id="'user_status'"></span></td>
+                            </tr>
+                            <tr>
+                              <td>Banned</td>
+                              <td><span class="badge " :id="'user_ban_status'"></span></td>
+                            </tr>
+                            <tr>
+                              <td>Joined on</td>
+                              <td>{{ formatDate(user.created_at) }}</td>
+                            </tr>
+                          </tbody>
+                        </table>
+                    </div>
+                  </div>
               </div>
             </div>
           </div>
@@ -80,7 +77,7 @@
     },
     methods:{
       getUser(id){
-        axios.get('/api/user/'+id)
+        axios.get('/api/admin/user/'+id)
         .then(response => {
             response = response.data;
             this.user = response.data;

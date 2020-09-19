@@ -1,5 +1,4 @@
 <template>
-	<div>
 		<div class="numbers flex">
             <div class="numbers__item">
                 <div class="numbers__item__icon"><i class="fa fa-tasks"></i></div>
@@ -18,7 +17,6 @@
                 <div class="numbers__item__value"><span class="item__number">{{ stats.expired.value }}</span><br><span class="item__label">{{ stats.expired.name }}</span></div>
             </div>
         </div>
-	</div>
 </template>
 <script>
     import { EventBus } from '../bus.js';

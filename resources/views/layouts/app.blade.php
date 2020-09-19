@@ -23,38 +23,39 @@
     <link href="{{ mix('css/app.css') }}" rel="stylesheet">
 </head>
 <body class="dark-bg">
-    <div id="app">
-        <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
-            <div class="container">
-                <div class="logo">
-                    <a class="navbar-brand" href="{{ url('/') }}">
-                    <img class="logo-img" src="/img/taskable-logo-horizontal.png">
-                    </a>
+    <div class="page-container" id="app" style="height: 90%;">
+        <div class="content-wrap">
+            <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
+                <div class="container">
+                    <div class="logo">
+                        <a class="navbar-brand" href="{{ url('/') }}">
+                        <img class="logo-img" src="/img/taskable-logo-horizontal.png">
+                        </a>
+                    </div>
+                    
+                    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+
+                    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                        <!-- Left Side Of Navbar -->
+                        <ul class="navbar-nav mr-auto">
+
+                        </ul>
+
+                        <auth-navbar></auth-navbar>
+                    </div>
                 </div>
-                
-                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
+            </nav>
 
-                <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                    <!-- Left Side Of Navbar -->
-                    <ul class="navbar-nav mr-auto">
-
-                    </ul>
-
-                    <auth-navbar></auth-navbar>
+            <main>
+                 <div class="all-content-wrapper">
+                @yield('content')
                 </div>
-            </div>
-        </nav>
-
-        <main>
-             <div class="all-content-wrapper">
-            @yield('content')
-            </div>
-        </main>
-        
+            </main>
+        </div>
+        @include('includes.footer')
     </div>
-    @include('includes.footer')
 
     <script src="/assets/plugins/jquery/dist/jquery.min.js"></script>
     <!-- Metis Menu Js -->

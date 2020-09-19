@@ -56,4 +56,9 @@ class User extends Authenticatable
     {
         return $this->hasMany('App\Task');
     }
+
+    public function profile()
+    {
+        return $this->hasOne('App\Profile');
+    }
 }

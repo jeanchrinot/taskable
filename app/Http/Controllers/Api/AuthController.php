@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
 use App\User;
+use App\profile;
 
 class AuthController extends Controller
 {
@@ -23,6 +24,12 @@ class AuthController extends Controller
             'password' => bcrypt($request->password)
         ]);
         $user->save();
+
+        // Create a profile 
+        Profile::create([
+            'image'=>'/assets/images/user-nophoto.jpg'
+        ])->user()->associate($user->id)->save();
+
         return response()->json([
             'message' => 'Successfully created user!'
         ], 201);
