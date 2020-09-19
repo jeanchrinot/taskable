@@ -38,8 +38,8 @@
                     @else
                         <a href="{{ route('login') }}" class="button">Login</a>
 
-                        @if (Route::has('register'))
-                            <a href="{{ route('register') }}" class="button button--green">Free Signup</a>
+                        @if (Route::has('signup'))
+                            <a href="{{ route('signup') }}" class="button button--green">Free Signup</a>
                         @endif
                     @endauth
                 </div>
@@ -51,7 +51,7 @@
                         Create and Manage your tasks and to-do list.
                     </div>
                     <div>
-                       <a href="{{ route('register') }}" class="button button--green">Try it for free</a>
+                       <a href="{{ route('signup') }}" class="button button--green">Try it for free</a>
                     </div>
                 </div>
             </div>

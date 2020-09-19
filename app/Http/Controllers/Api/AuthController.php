@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
 use App\User;
 use App\profile;
+use App\Role;
 
 class AuthController extends Controller
 {
@@ -25,13 +26,17 @@ class AuthController extends Controller
         ]);
         $user->save();
 
+        // Assign a role = user
+        $user_role = Role::where('slug','user')->first();
+        $user->roles()->attach($user_role);
+
         // Create a profile 
         Profile::create([
             'image'=>'/assets/images/user-nophoto.jpg'
         ])->user()->associate($user->id)->save();
 
         return response()->json([
-            'message' => 'Successfully created user!'
+            'success' => true
         ], 201);
     }
 

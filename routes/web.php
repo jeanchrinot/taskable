@@ -22,10 +22,10 @@ Route::get('/auth/login',function ()
 	return view('auth.login');
 })->name('login');
 
-Route::get('/auth/register',function ()
+Route::get('/auth/signup',function ()
 {
-	return view('auth.register');
-})->name('register');
+	return view('auth.signup');
+})->name('signup');
 
 Route::get('/home', 'HomeController@index')->name('home');
 

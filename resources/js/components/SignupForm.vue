@@ -4,10 +4,7 @@
             <div class="card-header">Login</div>
 
             <div class="card-body">
-                <div v-if="signedup" class="text-center color-green">
-                    Successfully registered. Login now.
-                </div>
-                <form @submit.prevent="login" novalidate>
+                <form @submit.prevent="signup" novalidate>
                     <div class="form-group row">
                         <div v-if="errors.auth!=''" class="alert alert-danger centered" role="alert">
                           <strong>Error!</strong> {{ errors.auth }}
@@ -16,11 +13,26 @@
                           </button> -->
                         </div>
                     </div>
+
+                    <div class="form-group row">
+                        <label for="name" class="col-md-4 col-form-label text-md-right">Full name</label>
+
+                        <div class="col-md-6">
+                            <input id="name" type="text" class="form-control" v-bind:class="[{'is-invalid':errors.name!=''}]" name="name" v-model="user.name" required autofocus>
+
+                            
+                                <span v-if="errors.name!=''" class="invalid-feedback" role="alert">
+                                    <strong>{{ errors.name }}</strong>
+                                </span>
+                            
+                        </div>
+                    </div>
+
                     <div class="form-group row">
                         <label for="email" class="col-md-4 col-form-label text-md-right">E-mail address</label>
 
                         <div class="col-md-6">
-                            <input id="email" type="email" class="form-control" v-bind:class="[{'is-invalid':errors.email!=''}]" name="email" v-model="user.email" required autocomplete="email" autofocus>
+                            <input id="email" type="email" class="form-control" v-bind:class="[{'is-invalid':errors.email!=''}]" name="email" v-model="user.email" required>
 
                             
                                 <span v-if="errors.email!=''" class="invalid-feedback" role="alert">
@@ -34,7 +46,7 @@
                         <label for="password" class="col-md-4 col-form-label text-md-right">Password</label>
 
                         <div class="col-md-6">
-                            <input id="password" type="password" class="form-control" v-bind:class="[{'is-invalid':errors.password!=''}]" name="password" v-model="user.password" required autocomplete="current-password">
+                            <input id="password" type="password" class="form-control" v-bind:class="[{'is-invalid':errors.password!=''}]" name="password" v-model="user.password" required>
 
                             
                                 <span v-if="errors.password!=''" class="invalid-feedback" role="alert">
@@ -45,26 +57,28 @@
                     </div>
 
                     <div class="form-group row">
-                        <div class="col-md-6 offset-md-4">
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" name="remember" id="remember" v-model="user.remember_me">
+                        <label for="password_confirmation" class="col-md-4 col-form-label text-md-right">Confirm Password</label>
 
-                                <label class="form-check-label" for="remember">
-                                    Remember Me
-                                </label>
-                            </div>
+                        <div class="col-md-6">
+                            <input id="password_confirmation" type="password" class="form-control" v-bind:class="[{'is-invalid':errors.password_confirmation!=''}]" name="password_confirmation" v-model="user.password_confirmation" required>
+
+                            
+                                <span v-if="errors.password_confirmation!=''" class="invalid-feedback" role="alert">
+                                    <strong>{{ errors.password_confirmation }}</strong>
+                                </span>
+                            
                         </div>
                     </div>
 
                     <div class="form-group row mb-0">
                         <div class="col-md-8 offset-md-4">
                             <button type="submit" class="btn btn-primary">
-                                Login
+                                Sign up
                             </button>
 
                             
-                                <a class="btn btn-link" href="/auth/signup">
-                                    Don't have an account yet?
+                                <a class="btn btn-link" href="/auth/login">
+                                    Already have an account ?
                                 </a>
                             
                         </div>
@@ -79,31 +93,33 @@
     export default {
         data() {
             return {
-                signedup:false,
                 user:{
+                  name:'',
                   email:'',
                   password:'',
-                  remember_me:false
+                  password_confirmation:''
                 },
                 errors:{
+                    name:'',
                     email:'',
                     password:'',
+                    password_confirmation:'',
                     auth:''
                 }
             };
         },
  
         created() {
-            this.signedup = location.search.indexOf('signedup=true')>=0;
+            
         },
         computed: {
 
         },
  
         methods: {
-            login(){
+            signup(){
                 // alert(this.user.name+" "+this.user.password);
-                var api_url = '/api/auth/login';
+                var api_url = '/api/auth/signup';
                 fetch(api_url, {
                     method: 'post',
                     body: JSON.stringify(this.user),
@@ -117,18 +133,16 @@
 
                     if(response.errors){
                         let errors = response.errors;
+                        this.errors.name = errors.name ? errors.name : '';
                         this.errors.email = errors.email ? errors.email : '';
                         this.errors.password = errors.password ? errors.password : '';
+                        this.errors.password_confirmation = errors.password_confirmation ? errors.password_confirmation : '';
                         this.errors.auth = errors.auth ? errors.auth : '';
                     }
                     else{
-                        if (response.access_token) {
-                            localStorage.setItem('userToken', response.access_token);
-                            localStorage.setItem('user',JSON.stringify(response.user));
-                            localStorage.setItem('user_task_number',response.user_task_number);
-                            localStorage.setItem('user_role',response.user_role);
-                            //console.log(localStorage.getItem('userToken'));
-                            window.location = '/app/dashboard';
+                        if (response.success==true) {
+                            // Redirect to Login Page
+                            window.location = '/auth/login?signedup=true';
                         }
                         else{
                             this.errors.auth = "Unexpected error occured. Please try again later.";

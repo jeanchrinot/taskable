@@ -674,6 +674,8 @@
                     this.add_new_task = false;
                     this.update_task = false;
                     this.emitGlobalEvent('task-updated','Added a task');
+                    this.user_task_number += 1;
+                    localStorage.setItem('user_task_number',this.user_task_number); 
                     //this.current_task = response.data;
                     // this.current_task = response.meta.current_task;
                     // this.updateTaskStatus(this.current_task.id,this.current_task.status);

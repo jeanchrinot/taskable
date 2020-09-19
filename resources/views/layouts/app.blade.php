@@ -23,7 +23,7 @@
     <link href="{{ mix('css/app.css') }}" rel="stylesheet">
 </head>
 <body class="dark-bg">
-    <div class="page-container" id="app" style="height: 90%;">
+    <div class="page-container" id="app">
         <div class="content-wrap">
             <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
                 <div class="container">

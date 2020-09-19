@@ -4633,6 +4633,17 @@ main{
     }
 
 
+.page-container{
+	height: 100%;
+}
+
+
+.content-wrap{
+	height: 100%;
+    padding-bottom: 2.5rem;
+}
+
+
 .content{
 	width: 100%;
 	float: left;

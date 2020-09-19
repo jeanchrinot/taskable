@@ -49,6 +49,7 @@ axios.defaults.headers.put['X-Requested-With'] = 'XMLHttpRequest'; // for POST r
 Vue.component('auth-navbar', require('./components/AuthNavbar.vue').default);
 Vue.component('sidebar-nav', require('./components/SidebarNav.vue').default);
 Vue.component('login-form', require('./components/LoginForm.vue').default);
+Vue.component('signup-form', require('./components/SignupForm.vue').default);
 
 Vue.component('stats', require('./components/Stats.vue').default);
 Vue.component('delete-button', require('./components/DeleteButton.vue').default);
