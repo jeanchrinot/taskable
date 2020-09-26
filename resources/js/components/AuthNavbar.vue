@@ -3,12 +3,12 @@
             <!-- Right Side Of Navbar -->
         <ul class="navbar-nav ml-auto">
             <!-- Parameters -->
-                <li class="nav-item" v-if="loggedIn">
+                <!-- <li class="nav-item" v-if="loggedIn">
                     <a class="nav-link nav-link--icon color-green" href="#"><i class="fa fa-bell"></i></a>
                 </li>
                 <li class="nav-item" v-if="loggedIn">
                     <a class="nav-link nav-link--icon color-green" href="#"><i class="fa fa-cog"></i></a>
-                </li>
+                </li> -->
 
             <!-- Authentication Links -->
             
@@ -22,7 +22,7 @@
                 <li class="nav-item dropdown" v-if="loggedIn">
                     <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         <div style="float: left;margin-top: -6px;">
-                            <img src="/assets/images/avatar.jpg" style="width: 35px;border-radius: 50%;">
+                            <img :src="image" style="width: 35px;border-radius: 50%;">
                         </div>
                         <div style="float: left;padding-left: 10px;">
                             {{ user.name }} <span class="caret"></span>
@@ -44,11 +44,12 @@
         data(){
             return {
                 loggedIn:localStorage.getItem('userToken') ? true : false,
-                user:JSON.parse(localStorage.getItem('user'))
+                user:JSON.parse(localStorage.getItem('user')),
+                image:''
             }
         },
         created(){
-            this.test()
+            this.getImage();
         },
         computed:{
 
@@ -73,9 +74,14 @@
                     console.log(err);
                 });
             },
-            test(){
-                console.log(this.user.name);
-            }
+            getImage(){
+                axios.get('/api/user/profile/show')
+                .then(response => {
+                    response = response.data;
+                    this.image = response.data.image;
+                })
+                .catch(err => console.log(err));
+              }
         }
     }
 </script>

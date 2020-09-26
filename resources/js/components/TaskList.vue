@@ -114,7 +114,7 @@
                         <span v-if="current_task"><i class="fa fa-align-left"></i> {{ current_task.name }} </span> <span class="task-date" v-if="current_task"><i class="fa fa-calendar"></i>  {{ formatDate(current_task.start_date) }} - {{ formatDate(current_task.end_date) }}</span>
                       </div>
                       <div class="todo-list">
-                        <form @submit.prevent="addTodo">
+                        <form v-if="user_task_number!=0" @submit.prevent="addTodo">
                           <div class="input-group mb-3">
                             <input type="text" class="form-control" placeholder="Add item to list..." aria-label="Add item to list" aria-describedby="basic-addon2" v-model="todo.name">
                             <div class="input-group-append">
@@ -673,6 +673,7 @@
                     this.getTasks();
                     this.add_new_task = false;
                     this.update_task = false;
+                    this.task_title = 'My Tasks';
                     this.emitGlobalEvent('task-updated','Added a task');
                     this.user_task_number += 1;
                     localStorage.setItem('user_task_number',this.user_task_number); 

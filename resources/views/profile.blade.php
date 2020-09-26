@@ -29,10 +29,10 @@
                 </div>
                 <div class="content__main__right">
                     <div class="row">
-                        <div class="col-md-6 pd-0">
+                        <!-- <div class="col-md-6 pd-0">
                             <user-profile></user-profile>
-                        </div>
-                        <div class="col-md-6 pd-0">
+                        </div> -->
+                        <div class="col-md-12 pd-0">
                             <user-info></user-info>
                         </div>
                     </div>

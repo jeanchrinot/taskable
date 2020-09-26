@@ -1,7 +1,7 @@
 <template>
     <div>
         <div class="card">
-            <div class="card-header">Login</div>
+            <div class="card-header">Sign up</div>
 
             <div class="card-body">
                 <form @submit.prevent="signup" novalidate>

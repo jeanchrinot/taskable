@@ -12,7 +12,11 @@
 		&>a{
 			color:$tsk-white;
 			letter-spacing: 1px;
-			padding: 0 15px;
+			padding: 0 8px;
+
+			@mixin atSmall{
+				padding: 0 15px;
+			}
 
 			@mixin atPreMedium{
 				padding: 0 20px;
