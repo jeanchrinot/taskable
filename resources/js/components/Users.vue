@@ -6,27 +6,26 @@
                 <div class="card-header">
                   <div class="row">
                     <div class="form-group col-sm-4 col-md-4 filter-form filter-form--select">
-                      <label for="status">Status: </label>
-                      <select class="form-control form-control-sm filter" name="status" id="status">
-                        <option value="all">All</option>
-                        <option value="complete">Complete</option>
-                        <option value="in_progress">In Progress</option>
-                        <option value="not_started">Not Started</option>
+                      <label for="status">Sort: </label>
+                      <select class="form-control form-control-sm filter" name="date" id="date" @change="filterUsers" v-model="filter.date">
+                        <option value="desc">Newest</option>
+                        <option value="asc">Oldest</option>
                       </select>
                     </div>
                     <div class="form-group col-sm-4 col-md-4 filter-form filter-form--select">
-                      <label for="priority">Priority: </label>
-                      <select class="form-control form-control-sm filter" name="priority" id="priority">
+                      <label for="status">Status: </label>
+                      <select class="form-control form-control-sm filter" name="status" id="status" @change="filterUsers" v-model="filter.status">
                         <option value="all">All</option>
-                        <option value="high">High</option>
-                        <option value="medium">Medium</option>
-                        <option value="low">Low</option>
+                        <option value="activated">Activated</option>
+                        <option value="not_activated">Not activated</option>
+                        <option value="banned">Banned</option>
+                        <option value="not_banned">Not banned</option>
                       </select>
                     </div>
                     <div class="form-group col-sm-4 col-md-4 filter-form filter-form--search">
                       <label for="search" class="search-label">Search:</label>
                       
-                        <input type="text" class="form-control" id="search" placeholder="Seache here...">
+                        <input type="text" class="form-control" id="search" v-model="filter.keyword" @change="filterUsers" placeholder="Search here...">
                       
                     </div>
                   </div>
@@ -84,6 +83,9 @@
                   </tr>
                 </tfoot>
               </table>
+              <div class="text-center" v-if="pagination.total == 0">
+                <span>No user found.</span>
+              </div>
             </div>
           </div>
           </div>
@@ -111,8 +113,8 @@
                 clicks: 0,
                 timer: null,
                 filter:{
-                  priority:'all',
                   status:'all',
+                  date:'desc',
                   keyword:''
                 },
                 userToken:localStorage.getItem('userToken') ? localStorage.getItem('userToken') : null,
@@ -173,9 +175,9 @@
                 this.url_request += "&status="+this.filter.status;
               }
 
-              if (this.filter.priority!="all") {
-                api_url += "&priority="+this.filter.priority;
-                this.url_request += "&priority="+this.filter.priority;
+              if (this.filter.date!="desc") {
+                api_url += "&sort="+this.filter.date;
+                this.url_request += "&sort="+this.filter.date;
               }
 
               if ((this.filter.keyword).length) {

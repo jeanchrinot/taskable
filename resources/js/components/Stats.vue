@@ -33,10 +33,12 @@
             EventBus.$on('task-updated', data => {
                   console.log(data)
                   this.getStats();
-                  this.updateLocalStorage();
                 });
             EventBus.$on('task-button-click', data => {
                   this.getStats(data.id);
+                });
+            EventBus.$on('task-added', data => {
+                  this.getStats();
                 });
 
 		},
@@ -60,7 +62,7 @@
                     .catch(err => console.log(err));
             },
             updateLocalStorage(){
-                user_task_number = localStorage.getItem('user_task_number');
+                let user_task_number = localStorage.getItem('user_task_number');
                 user_task_number+=1;
                 localStorage.setItem('user_task_number',user_task_number);
             }

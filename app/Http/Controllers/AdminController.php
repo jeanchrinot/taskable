@@ -24,7 +24,38 @@ class AdminController extends Controller
     public function users(Request $request)
     {
     	if (Auth::user()->hasRole('admin')) {
-	    	$users = User::paginate($this->pagination);
+
+            $users = User::query();
+
+             if (request()->status) {
+                // Filter by status
+                $status = $this->getStatus(request()->status);
+                $users = $users->where([$status[0]=>$status[1]]);
+            }
+
+            if (request()->sort) {
+               if (request()->sort=='asc') {
+                   $users->orderBy('created_at');
+               }
+               else{
+                   $users->orderBy('created_at','desc');
+               }
+            }
+            else{
+                $users->orderBy('created_at','desc');
+            }
+
+             // Search 
+            if(request()->search) {
+                $keyword = request()->search;
+                $users = $users->where(function ($query) use($keyword) {
+                    $query->where('name', 'like', '%' . $keyword . '%');
+                })->paginate($this->pagination);
+            }
+            else{
+                $users = $users->paginate($this->pagination);
+            }
+
 	    	return TaskResource::collection($users);
     	}
 
@@ -70,5 +101,17 @@ class AdminController extends Controller
             'success'=>false
         ],401);
         
+    }
+
+    private function getStatus($statusName)
+    {
+        $statusArr = [
+         'not_activated' => ['status',0],
+         'activated' => ['status',1],
+         'not_banned' => ['banned',0],
+         'banned' => ['banned',1]
+        ];
+
+        return $statusArr[$statusName];
     }
 }

@@ -26,7 +26,7 @@
                     <div class="form-group col-sm-4 col-md-4 filter-form filter-form--search">
                       <label for="search" class="search-label">Search:</label>
                       
-                      <input type="text" class="form-control" id="search" v-model="filter.keyword" placeholder="Seache here..." @change="filterTask">
+                      <input type="text" class="form-control" id="search" v-model="filter.keyword" placeholder="Search here..." @change="filterTask">
                     </div>
                   </div>
                 </div>
@@ -341,6 +341,7 @@
                         this.tasks = response.data;
                         this.current_task = this.tasks[0];
                         this.todos = response.meta.todos;
+                        this.completeToBoolean();
                         vm.paginator(response.meta, response.links);
                     })
                     .catch(err => console.log(err));
@@ -378,6 +379,7 @@
                           if(response.data){
                             this.clearTodoForm();
                             this.todos = response.data;
+                            this.completeToBoolean();
                             this.current_task = response.meta.current_task;
                             this.updateTaskStatus(this.current_task.id,this.current_task.status);
                             this.emitGlobalEvent('task-updated','Todo added');
@@ -411,6 +413,7 @@
                     .then(response => {
                         response = response.data;
                         this.todos = response.data;
+                        this.completeToBoolean();
                         this.current_task = response.meta.current_task;
                     })
                     .catch(err => console.log(err));
@@ -427,6 +430,19 @@
                 this.todo.id = null;
                 this.todo.task_id = null;
                 this.todo.name = '';
+            },
+            completeToBoolean(){
+              this.todos.forEach((v,i)=>{
+               if (this.todos[i].complete==0) {
+                this.todos[i].complete = false;
+               }
+               else if (this.todos[i].complete==1) {
+                this.todos[i].complete = true;
+               }
+
+               // console.log(this.todos[i].complete);
+
+              });
             },
             toggleComplete(id){
               axios.post('/api/todo/toggle/' + id)
@@ -642,7 +658,6 @@
                     this.getTasks();
                     this.add_new_task = false;
                     this.update_task = false;
-                    this.user_task_number = this.user_task_number + this.user_task_number;
                     this.emitGlobalEvent('task-updated','Updated a task');
                     //this.current_task = response.data;
                     // this.current_task = response.meta.current_task;
@@ -674,8 +689,8 @@
                     this.add_new_task = false;
                     this.update_task = false;
                     this.task_title = 'My Tasks';
-                    this.emitGlobalEvent('task-updated','Added a task');
-                    this.user_task_number += 1;
+                    this.emitGlobalEvent('task-added','Added a task');
+                    this.user_task_number = this.user_task_number + this.user_task_number;
                     localStorage.setItem('user_task_number',this.user_task_number); 
                     //this.current_task = response.data;
                     // this.current_task = response.meta.current_task;

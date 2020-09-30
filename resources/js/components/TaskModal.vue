@@ -35,7 +35,7 @@
                             <div class="form-group col-sm-4 col-md-4 filter-form filter-form--search">
                               <label for="search" class="search-label">Search:</label>
                               
-                              <input type="text" class="form-control" id="userTaskSearch" v-model="filter.keyword" placeholder="Seache here..." @change="filterTask">
+                              <input type="text" class="form-control" id="userTaskSearch" v-model="filter.keyword" placeholder="Search here..." @change="filterTask">
                             </div>
                           </div>
                         </div>
@@ -167,8 +167,6 @@
             getTasks(api_url) {
                 let vm = this;
 
-
-
                 api_url = api_url || '/api/tasks';
                 axios.get(api_url)
                 .then((response) => {
@@ -177,6 +175,7 @@
                         this.tasks = response.data;
                         this.current_task = this.tasks[0];
                         this.todos = response.meta.todos;
+                        this.completeToBoolean();
                         vm.paginator(response.meta, response.links);
                     })
                     .catch(err => console.log(err));
@@ -196,9 +195,21 @@
                     .then(response => {
                         response = response.data;
                         this.todos = response.data;
+                        this.completeToBoolean();
                         this.current_task = response.meta.current_task;
                     })
                     .catch(err => console.log(err));
+            },
+            completeToBoolean(){
+              this.todos.forEach((v,i)=>{
+               if (this.todos[i].complete==0) {
+                this.todos[i].complete = false;
+               }
+               else if (this.todos[i].complete==1) {
+                this.todos[i].complete = true;
+               }
+
+              });
             },
             taskStatus(status,index){
               var statusArr = [

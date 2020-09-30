@@ -20,7 +20,7 @@
     <!-- Font Awesome Css -->
     <link href="/assets/plugins/font-awesome/css/font-awesome.min.css" rel="stylesheet" />
     <!-- Styles -->
-    <link href="{{ mix('css/app.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/app.css') }}" rel="stylesheet">
 </head>
 <body class="dark-bg">
     <div class="page-container" id="app">
